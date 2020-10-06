@@ -38,7 +38,6 @@ const highlightStyle = ({ primaryColor, titleColor }) => css`
 
 const Suggestions = ({
     currentValue,
-    categories,
     getItemProps,
     highlightedIndex,
     parsedSuggestions,
@@ -78,10 +77,11 @@ const Suggestions = ({
                     alignItems: 'center',
                     display: 'flex',
                 }}
+                // eslint-disable-next-line
                 dangerouslySetInnerHTML={{
                     __html: get(
                         customMessage,
-                        'fetchingSuggestion',
+                        'loading',
                         'Loading Suggestions',
                     ),
                 }}
@@ -92,10 +92,11 @@ const Suggestions = ({
                     <React.Fragment>
                         <div
                             className={highlightStyle(themeConfig.colors)}
+                            // eslint-disable-next-line
                             dangerouslySetInnerHTML={{
                                 __html: get(
                                     customMessage,
-                                    'noSuggestion',
+                                    'noResults',
                                     'No suggestions found for <mark>[term]</mark>',
                                 ).replace('[term]', currentValue),
                             }}

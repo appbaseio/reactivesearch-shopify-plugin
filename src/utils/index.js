@@ -1,20 +1,4 @@
-import { accapi } from '../constants';
-// eslint-disable-next-line
-export const getPreferences = (appname, credentials) => {
-    return new Promise((resolve, reject) => {
-        if (appname && credentials) {
-            return fetch(`${accapi}/app/${appname}/preferences`, {
-                headers: {
-                    Authorization: `Basic ${btoa(credentials)}`,
-                },
-            })
-                .then(res => res.json())
-                .then(resolve)
-                .catch(reject);
-        }
-        return reject(new Error('Credentials not available'));
-    });
-};
+import get from 'lodash.get';
 
 export const browserColors = {
     aliceblue: '#f0f8ff',
@@ -166,3 +150,90 @@ export const browserColors = {
     yellow: '#ffff00',
     yellowgreen: '#9acd32',
 };
+
+export const defaultPreferences = {
+    themeSettings: {
+        type: 'classic',
+        rsConfig: {},
+    },
+    searchSettings: {
+        showPopularSearches: true,
+        searchButton: {
+            icon: '',
+            text: 'Click here to Search',
+        },
+        rsConfig: null,
+    },
+    resultSettings: {
+        rsConfig: null,
+    },
+    facetSettings: {
+        globalSettings: {
+            isCollapsible: true,
+        },
+        staticFacets: [],
+        dynamicFacets: [],
+    },
+    globalSettings: {
+        currency: '$',
+        locale: 'en',
+        customCss: '',
+        showSelectedFilters: true,
+    },
+    productRecommendationSettings: {
+        title: 'You might also like',
+        rsConfig: {},
+    },
+    appbaseSettings: null,
+};
+
+export const getReactDependenciesFromPreferences = (preferences = {}) => {
+    const react = [];
+    const searchId = get(preferences, 'searchSettings.rsConfig.componentId');
+    if (searchId) {
+        react.push(searchId);
+    }
+    const staticFacets = get(preferences, 'facetSettings.staticFacets');
+    if (staticFacets && Array.isArray(staticFacets)) {
+        staticFacets.forEach(facet => {
+            const componentId = get(
+                staticFacets[facet],
+                'rsConfig.componentId',
+            );
+            if (componentId) {
+                react.push(componentId);
+            } else if (facet.name) {
+                react.push(facet.name);
+            }
+        });
+    }
+    const dynamicFacets = get(preferences, 'facetSettings.dynamicFacets');
+    if (dynamicFacets && Array.isArray(dynamicFacets)) {
+        dynamicFacets.forEach(facet => {
+            const componentId = get(
+                dynamicFacets[facet],
+                'rsConfig.componentId',
+            );
+            if (componentId) {
+                react.push(componentId);
+            }
+        });
+    }
+    return react;
+};
+
+export const getPreferences = () => {
+    let preferences = {};
+    if (window.PREFERENCES) {
+        try {
+            preferences = JSON.parse(window.PREFERENCES);
+        } catch (e) {
+            console.warn(
+                'Appbase: Error encountered while parsing the preferences, fall-backing to the default preferences',
+            );
+        }
+    }
+    return preferences;
+};
+
+export const accapi = 'https://accapi.appbase.io';

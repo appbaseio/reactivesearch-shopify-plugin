@@ -4,22 +4,11 @@ import { Button, Modal, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import get from 'lodash.get';
-import { getPreferences } from '../utils';
-
 import Search from './Search';
+import { getPreferences, defaultPreferences } from '../utils/index';
 
-const appname = window.APPNAME;
-const credentials = window.CREDENTIALS;
 const buttonStyle = window.REACTIVESEARCH_SEARCH_BUTTON_STYLE;
 const iconStyle = window.REACTIVESEARCH_SEARCH_ICON_STYLE;
-
-// available from shopify store
-if (!appname) {
-    console.warn('APPNAME not available'); // eslint-disable-line
-}
-if (!credentials) {
-    console.warn('CREDENTIALS not available'); // eslint-disable-line
-}
 
 const modalStyles = css`
     top: 0 !important;
@@ -88,26 +77,22 @@ class App extends Component {
         super(props);
         this.state = {
             isOpen: Boolean(props.isOpen),
-            theme: {},
-            searchButton: {},
-            preferences: null,
         };
-    }
 
-    async componentDidMount() {
-        if (appname && credentials) {
-            try {
-                const preferences = await getPreferences(appname, credentials);
-                this.setState({
-                    theme: get(preferences, 'message._theme', {}),
-                    searchButton: get(preferences, 'message.searchButton', {}),
-                    preferences,
-                });
-            } catch (error) {
-                // eslint-disable-next-line
-                console.error(error);
-            }
-        }
+        let preferences = getPreferences();
+        this.theme = get(
+            preferences,
+            'theme.type',
+            defaultPreferences.themeSettings.rsConfig,
+        );
+        this.searchButton = get(
+            preferences,
+            'searchSettings.searchButton',
+            defaultPreferences.searchSettings.searchButton,
+        );
+        this.index = get(preferences, 'appbaseSettings.index');
+        this.credentials = get(preferences, 'appbaseSettings.credentials');
+        this.url = get(preferences, 'appbaseSettings.url');
     }
 
     toggleModal = () => {
@@ -117,9 +102,12 @@ class App extends Component {
     };
 
     render() {
-        const { isOpen, theme, searchButton, preferences } = this.state;
+        const { isOpen } = this.state;
+        const { theme, searchButton } = this;
         const { openWithModal, disableSearchText } = this.props;
-        const isValid = appname && credentials;
+        if (!this.index || !this.credentials || !this.url) {
+            return null;
+        }
         const isOpenWithModal = Boolean(openWithModal);
         const isSearchTextHidden = Boolean(disableSearchText);
 
@@ -135,42 +123,37 @@ class App extends Component {
             );
         }
         if (isOpenWithModal) {
-            return <Search appname={appname} credentials={credentials} />;
+            return (
+                <Search
+                    appname={this.index}
+                    credentials={this.credentials}
+                    url={this.url}
+                />
+            );
         }
         return (
             <Fragment>
                 {fontFamilyLink ? <Helmet>{fontFamilyLink}</Helmet> : null}
-                {preferences ? (
-                    <Button
-                        css={getButtonClass(theme)}
-                        onClick={this.toggleModal}
-                    >
-                        <div className="icon-container">
-                            {searchButton.searchIcon ? (
-                                <img
-                                    src={searchButton.searchIcon}
-                                    alt="Search Icon"
-                                />
-                            ) : (
-                                <Icon
-                                    className={getIconClass(theme)}
-                                    type="search"
-                                />
-                            )}
-                        </div>
-                        {isSearchTextHidden ? null : (
-                            <div
-                                className={`text-container ${getTextClass(
-                                    theme,
-                                )}`}
-                            >
-                                {searchButton.searchText ||
-                                    'Click here to Search'}
-                            </div>
+                <Button css={getButtonClass(theme)} onClick={this.toggleModal}>
+                    <div className="icon-container">
+                        {searchButton.icon ? (
+                            <img src={searchButton.icon} alt="Search Icon" />
+                        ) : (
+                            <Icon
+                                className={getIconClass(theme)}
+                                type="search"
+                            />
                         )}
-                    </Button>
-                ) : null}
-                {isValid && isOpen && (
+                    </div>
+                    {isSearchTextHidden ? null : (
+                        <div
+                            className={`text-container ${getTextClass(theme)}`}
+                        >
+                            {searchButton.text || 'Click here to Search'}
+                        </div>
+                    )}
+                </Button>
+                {isOpen && (
                     <Modal
                         visible={isOpen}
                         onCancel={this.toggleModal}
@@ -178,7 +161,11 @@ class App extends Component {
                         width="100%"
                         className={modalStyles}
                     >
-                        <Search appname={appname} credentials={credentials} />
+                        <Search
+                            appname={this.index}
+                            credentials={this.credentials}
+                            url={this.url}
+                        />
                     </Modal>
                 )}
             </Fragment>

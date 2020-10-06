@@ -7,12 +7,12 @@ import { css } from 'react-emotion';
 import { mediaMax } from '@divyanshu013/media';
 import { ReactiveBase, ReactiveList } from '@appbaseio/reactivesearch';
 import get from 'lodash.get';
+import {
+    defaultPreferences,
+    getReactDependenciesFromPreferences,
+    getPreferences,
+} from '../utils';
 import SuggestionCard from './SuggestionCard';
-import { getPreferences } from '../utils';
-import Loader from './Loader';
-
-const appname = window.APPNAME;
-const credentials = window.CREDENTIALS;
 
 const maxProductSize = 4;
 
@@ -57,21 +57,43 @@ const main = css`
     }
 `;
 
-if (!appname) {
-    console.warn('APPNAME not available'); // eslint-disable-line
-}
-if (!credentials) {
-    console.warn('CREDENTIALS not available'); // eslint-disable-line
-}
-
 class ProductSuggestions extends React.Component {
-    state = {
-        preferences: null,
-        theme: {},
-        currency: '',
-        currentPage: 1,
-        maxSize: maxProductSize,
-    };
+    constructor() {
+        super();
+        this.state = {
+            currentPage: 1,
+            maxSize: maxProductSize,
+        };
+        const preferences = getPreferences();
+        this.theme = get(
+            preferences,
+            'theme.type',
+            defaultPreferences.themeSettings.rsConfig,
+        );
+        this.themeType = get(
+            preferences,
+            'themeSettings.rsConfig',
+            defaultPreferences.themeSettings.type,
+        );
+        this.currency = get(
+            preferences,
+            'globalSettings.currency',
+            defaultPreferences.globalSettings.currency,
+        );
+        this.customTitle = get(
+            preferences,
+            'productRecommendationSettings.title',
+            defaultPreferences.productRecommendationSettings.title,
+        );
+        this.resultConfig = get(
+            preferences,
+            'productRecommendationSettings.rsConfig',
+            defaultPreferences.productRecommendationSettings.rsConfig,
+        );
+        this.index = get(preferences, 'appbaseSettings.index');
+        this.credentials = get(preferences, 'appbaseSettings.credentials');
+        this.url = get(preferences, 'appbaseSettings.url');
+    }
 
     componentWillMount() {
         this.updateMaxSize();
@@ -79,36 +101,6 @@ class ProductSuggestions extends React.Component {
 
     async componentDidMount() {
         window.addEventListener('resize', this.updateMaxSize);
-        if (appname && credentials) {
-            try {
-                const preferences = await getPreferences(appname, credentials);
-                const preferenceMessage = get(preferences, 'message', {});
-                this.setState({
-                    preferences: get(preferenceMessage, 'default', {}),
-                    theme: get(preferenceMessage, '_theme', {
-                        colors: {
-                            primaryColor: '#0B6AFF',
-                            primaryTextColor: '#fff',
-                            textColor: '#424242',
-                            titleColor: '#424242',
-                        },
-                        typography: {
-                            fontFamily: 'default',
-                        },
-                    }),
-                    currency: get(preferenceMessage, '_store.currency', ''),
-                    themeType: get(preferenceMessage, '_themeType', 'classic'),
-                    customTitle: get(
-                        preferenceMessage,
-                        'productRecommendation.title',
-                        '',
-                    ),
-                });
-            } catch (error) {
-                // eslint-disable-next-line
-                console.error(error);
-            }
-        }
     }
 
     componentWillUnmount() {
@@ -162,22 +154,7 @@ class ProductSuggestions extends React.Component {
     };
 
     render() {
-        const {
-            theme,
-            currency,
-            preferences,
-            maxSize,
-            themeType,
-            customTitle,
-            currentPage,
-        } = this.state;
-        if (!preferences) {
-            return <Loader />;
-        }
-        const { result } = preferences;
-        const otherComponents = Object.keys(preferences).filter(
-            key => key !== 'search' && key !== 'result',
-        );
+        const { maxSize, customTitle, currentPage } = this.state;
         const settings = {
             dots: false,
             infinite: false,
@@ -186,12 +163,19 @@ class ProductSuggestions extends React.Component {
             slidesToScroll: maxSize,
             initialSlide: 0,
         };
+        if (!this.index || !this.credentials || !this.url) {
+            return null;
+        }
         return (
             <ReactiveBase
-                app={appname}
-                credentials={credentials}
-                theme={theme}
-                analytics
+                app={this.index}
+                credentials={this.credentials}
+                url={this.url}
+                theme={this.theme}
+                enableAppbase
+                appbaseConfig={{
+                    recordAnalytics: true,
+                }}
             >
                 <div css={{ margin: '25px auto', position: 'relative' }}>
                     <div css={titleCls}>
@@ -243,15 +227,15 @@ class ProductSuggestions extends React.Component {
                                             ) => (
                                                 <SuggestionCard
                                                     key={_id}
-                                                    theme={theme}
-                                                    themeType={themeType}
+                                                    theme={this.theme}
+                                                    themeType={this.themeType}
                                                     {...{
                                                         handle,
                                                         image,
                                                         title,
                                                         body_html,
                                                         variants,
-                                                        currency,
+                                                        currency: this.currency,
                                                         index,
                                                         clickId: _click_id,
                                                         triggerAnalytics,
@@ -274,7 +258,11 @@ class ProductSuggestions extends React.Component {
                         )}
                         componentId="results"
                         dataField="title"
-                        react={{ and: ['search', ...otherComponents] }}
+                        react={{
+                            and: getReactDependenciesFromPreferences(
+                                window.PREFERENCES,
+                            ),
+                        }}
                         innerClass={{
                             list: css({
                                 display: 'grid',
@@ -306,7 +294,7 @@ class ProductSuggestions extends React.Component {
                                 display: 'none',
                             }),
                         }}
-                        {...result}
+                        {...this.resultConfig}
                         size={10}
                     />
                 </div>
