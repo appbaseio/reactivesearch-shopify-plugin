@@ -863,7 +863,7 @@ class Search extends Component {
                                 <SelectedFilters />
                             ) : null}
                             <ReactiveComponent
-                                id="filter_by_product"
+                                componentId="filter_by_product"
                                 customQuery={() => ({
                                     query: { term: { type: 'products' } },
                                 })}

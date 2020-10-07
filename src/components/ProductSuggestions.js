@@ -186,7 +186,7 @@ class ProductSuggestions extends React.Component {
                         {customTitle || 'You might also like'}
                     </div>
                     <ReactiveComponent
-                        id="filter_by_product"
+                        componentId="filter_by_product"
                         customQuery={() => ({
                             query: { term: { type: 'products' } },
                         })}
