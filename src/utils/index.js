@@ -157,7 +157,7 @@ export const defaultPreferences = {
         rsConfig: {},
     },
     searchSettings: {
-        showPopularSearches: true,
+        showPopularSearches: false,
         searchButton: {
             icon: '',
             text: 'Click here to Search',
