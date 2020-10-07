@@ -6,6 +6,7 @@ import {
     ReactiveList,
     SelectedFilters,
     DynamicRangeSlider,
+    ReactiveComponent,
 } from '@appbaseio/reactivesearch';
 import get from 'lodash.get';
 import { string } from 'prop-types';
@@ -861,13 +862,15 @@ class Search extends Component {
                             ) && this.themeType !== 'minimal' ? (
                                 <SelectedFilters />
                             ) : null}
-
+                            <ReactiveComponent
+                                id="filter_by_product"
+                                customQuery={() => ({
+                                    query: { term: { type: 'products' } },
+                                })}
+                            />
                             <ReactiveList
                                 componentId="results"
                                 dataField="title"
-                                defaultQuery={() => ({
-                                    query: { term: { type: 'products' } },
-                                })}
                                 ref={resultRef}
                                 renderNoResults={() => (
                                     <div
@@ -1084,9 +1087,12 @@ class Search extends Component {
                                 }}
                                 {...this.resultSettings.rsConfig}
                                 react={{
-                                    and: getReactDependenciesFromPreferences(
-                                        this.preferences,
-                                    ),
+                                    and: [
+                                        'filter_by_product',
+                                        ...getReactDependenciesFromPreferences(
+                                            this.preferences,
+                                        ),
+                                    ],
                                 }}
                             />
                         </div>

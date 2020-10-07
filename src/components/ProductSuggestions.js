@@ -5,7 +5,11 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { css } from 'react-emotion';
 import { mediaMax } from '@divyanshu013/media';
-import { ReactiveBase, ReactiveList } from '@appbaseio/reactivesearch';
+import {
+    ReactiveBase,
+    ReactiveList,
+    ReactiveComponent,
+} from '@appbaseio/reactivesearch';
 import get from 'lodash.get';
 import {
     defaultPreferences,
@@ -181,10 +185,13 @@ class ProductSuggestions extends React.Component {
                     <div css={titleCls}>
                         {customTitle || 'You might also like'}
                     </div>
-                    <ReactiveList
-                        defaultQuery={() => ({
+                    <ReactiveComponent
+                        id="filter_by_product"
+                        customQuery={() => ({
                             query: { term: { type: 'products' } },
                         })}
+                    />
+                    <ReactiveList
                         onData={({ resultStats: { numberOfResults } }) => {
                             this.total = numberOfResults;
                         }}
@@ -259,9 +266,12 @@ class ProductSuggestions extends React.Component {
                         componentId="results"
                         dataField="title"
                         react={{
-                            and: getReactDependenciesFromPreferences(
-                                window.PREFERENCES,
-                            ),
+                            and: [
+                                'filter_by_product',
+                                ...getReactDependenciesFromPreferences(
+                                    this.preferences,
+                                ),
+                            ],
                         }}
                         innerClass={{
                             list: css({
