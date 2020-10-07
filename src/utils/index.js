@@ -224,7 +224,6 @@ export const getReactDependenciesFromPreferences = (preferences = {}) => {
 
 export const getPreferences = () => {
     let preferences = {};
-    console.log('THIS IS PREFERENCES', window.PREFERENCES);
     if (window.PREFERENCES) {
         try {
             preferences = JSON.parse(window.PREFERENCES);
