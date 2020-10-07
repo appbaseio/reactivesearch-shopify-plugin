@@ -301,9 +301,15 @@ class Search extends Component {
 
     renderCollectionFilter = font => {
         const defaultQuery = {
-            query: { term: { 'type.keyword': 'collections' } },
-            aggregations: {
-                collections: { terms: { field: 'title.keyword' } },
+            query: { term: { type: 'collections' } },
+            aggs: {
+                collections: {
+                    terms: {
+                        field: 'title.keyword',
+                        size: 100,
+                        order: { _count: 'desc' },
+                    },
+                },
             },
         };
         if (!this.collectionFilter) {
