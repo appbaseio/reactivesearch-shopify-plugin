@@ -79,17 +79,18 @@ class App extends Component {
             isOpen: Boolean(props.isOpen),
         };
 
-        let preferences = getPreferences();
+        const preferences = getPreferences();
         this.theme = get(
             preferences,
-            'theme.type',
+            'themeSettings.rsConfig',
             defaultPreferences.themeSettings.rsConfig,
         );
-        this.searchButton = get(
+        this.themeType = get(
             preferences,
-            'searchSettings.searchButton',
-            defaultPreferences.searchSettings.searchButton,
+            'themeSettings.type',
+            defaultPreferences.themeSettings.type,
         );
+        this.searchButton = get(preferences, 'searchSettings.searchButton');
         this.index = get(preferences, 'appbaseSettings.index');
         this.credentials = get(preferences, 'appbaseSettings.credentials');
         this.url = get(preferences, 'appbaseSettings.url');

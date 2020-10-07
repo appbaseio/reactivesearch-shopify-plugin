@@ -67,12 +67,12 @@ class ProductSuggestions extends React.Component {
         const preferences = getPreferences();
         this.theme = get(
             preferences,
-            'theme.type',
+            'themeSettings.rsConfig',
             defaultPreferences.themeSettings.rsConfig,
         );
         this.themeType = get(
             preferences,
-            'themeSettings.rsConfig',
+            'themeSettings.type',
             defaultPreferences.themeSettings.type,
         );
         this.currency = get(

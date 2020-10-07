@@ -170,12 +170,12 @@ class Search extends Component {
         this.preferences = getPreferences();
         this.theme = get(
             this.preferences,
-            'theme.type',
+            'themeSettings.rsConfig',
             defaultPreferences.themeSettings.rsConfig,
         );
         this.themeType = get(
             this.preferences,
-            'themeSettings.rsConfig',
+            'themeSettings.type',
             defaultPreferences.themeSettings.type,
         );
         this.currency = get(
@@ -194,15 +194,14 @@ class Search extends Component {
             get(this.preferences, 'facetSettings.dynamicFacets') || [];
         this.staticFacets =
             get(this.preferences, 'facetSettings.staticFacets') || [];
-        this.colorFilter = this.staticFacets.filter(o => o.name === 'color');
-        this.collectionFilter = this.staticFacets.filter(
+        this.colorFilter = this.staticFacets.find(o => o.name === 'color');
+        this.collectionFilter = this.staticFacets.find(
             o => o.name === 'collection',
         );
-        this.priceFilter = this.staticFacets.filter(
+
+        this.sizeFilter = this.staticFacets.find(o => o.name === 'size');
+        this.priceFilter = this.staticFacets.find(
             o => o.name === 'price' && get(o, 'rsConfig.dataField'),
-        );
-        this.sizeFilter = this.staticFacets.filter(
-            o => o.name === 'size' && get(o, 'rsConfig.dataField'),
         );
     }
 
@@ -614,9 +613,10 @@ class Search extends Component {
                                 },
                                 boxShadow:
                                     this.themeType === 'minimal'
-                                        ? `0 0 4px ${
-                                              this.theme.colors.titleColor
-                                          }1a`
+                                        ? `0 0 4px ${get(
+                                              this.theme,
+                                              'colors.titleColor',
+                                          )}1a`
                                         : 0,
                             }}
                         >
@@ -927,7 +927,7 @@ class Search extends Component {
                                             hoverable
                                             bordered={false}
                                             className={`${cardStyles({
-                                                ...this.theme.colors,
+                                                ...get(this.theme, 'colors'),
                                             })} card`}
                                             cover={
                                                 image && (
@@ -958,7 +958,10 @@ class Search extends Component {
                                                 title={
                                                     <h3
                                                         className={cardTitleStyles(
-                                                            this.theme.colors,
+                                                            get(
+                                                                this.theme,
+                                                                'colors',
+                                                            ),
                                                         )}
                                                         css={
                                                             this.themeType ===
