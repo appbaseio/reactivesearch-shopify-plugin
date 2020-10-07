@@ -200,9 +200,7 @@ class Search extends Component {
         );
 
         this.sizeFilter = this.staticFacets.find(o => o.name === 'size');
-        this.priceFilter = this.staticFacets.find(
-            o => o.name === 'price' && get(o, 'rsConfig.dataField'),
-        );
+        this.priceFilter = this.staticFacets.find(o => o.name === 'price');
     }
 
     async componentDidMount() {
@@ -717,7 +715,7 @@ class Search extends Component {
                                         />
                                     </Panel>
                                 ))}
-                                {this.colorFilter ? (
+                                {this.collectionFilter ? (
                                     <Panel
                                         header={
                                             <span
