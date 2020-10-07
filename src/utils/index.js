@@ -192,6 +192,8 @@ export const getReactDependenciesFromPreferences = (preferences = {}) => {
     const searchId = get(preferences, 'searchSettings.rsConfig.componentId');
     if (searchId) {
         react.push(searchId);
+    } else {
+        react.push('search');
     }
     const staticFacets = get(preferences, 'facetSettings.staticFacets');
     if (staticFacets && Array.isArray(staticFacets)) {
