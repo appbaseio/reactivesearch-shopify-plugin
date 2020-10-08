@@ -185,9 +185,13 @@ export const defaultPreferences = {
         rsConfig: {},
     },
     appbaseSettings: null,
+    exportType: 'other',
 };
 
-export const getReactDependenciesFromPreferences = (preferences = {}) => {
+export const getReactDependenciesFromPreferences = (
+    preferences = {},
+    id = '',
+) => {
     const react = [];
     const searchId = get(preferences, 'searchSettings.rsConfig.componentId');
     if (searchId) {
@@ -202,9 +206,9 @@ export const getReactDependenciesFromPreferences = (preferences = {}) => {
                 staticFacets[facet],
                 'rsConfig.componentId',
             );
-            if (componentId) {
+            if (componentId && componentId !== id) {
                 react.push(componentId);
-            } else if (facet.name) {
+            } else if (facet.name && facet.name !== id) {
                 react.push(facet.name);
             }
         });
@@ -216,7 +220,7 @@ export const getReactDependenciesFromPreferences = (preferences = {}) => {
                 dynamicFacets[facet],
                 'rsConfig.componentId',
             );
-            if (componentId) {
+            if (componentId && componentId !== id) {
                 react.push(componentId);
             }
         });

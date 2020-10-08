@@ -94,6 +94,12 @@ class ProductSuggestions extends React.Component {
             'productRecommendationSettings.rsConfig',
             defaultPreferences.productRecommendationSettings.rsConfig,
         );
+        this.resultSettings = get(preferences, 'resultSettings');
+        this.exportType = get(
+            preferences,
+            'exportType',
+            defaultPreferences.exportType,
+        );
         this.index = get(preferences, 'appbaseSettings.index');
         this.credentials = get(preferences, 'appbaseSettings.credentials');
         this.url = get(preferences, 'appbaseSettings.url');
@@ -187,9 +193,13 @@ class ProductSuggestions extends React.Component {
                     </div>
                     <ReactiveComponent
                         componentId="filter_by_product"
-                        customQuery={() => ({
-                            query: { term: { type: 'products' } },
-                        })}
+                        customQuery={() =>
+                            this.exportType === 'shopify'
+                                ? {
+                                      query: { term: { type: 'products' } },
+                                  }
+                                : null
+                        }
                     />
                     <ReactiveList
                         onData={({ resultStats: { numberOfResults } }) => {
@@ -222,13 +232,10 @@ class ProductSuggestions extends React.Component {
                                         {data.map(
                                             (
                                                 {
-                                                    handle,
                                                     _id,
-                                                    image,
-                                                    title,
-                                                    body_html,
                                                     variants,
                                                     _click_id,
+                                                    ...rest
                                                 },
                                                 index,
                                             ) => (
@@ -237,10 +244,50 @@ class ProductSuggestions extends React.Component {
                                                     theme={this.theme}
                                                     themeType={this.themeType}
                                                     {...{
-                                                        handle,
-                                                        image,
-                                                        title,
-                                                        body_html,
+                                                        handle:
+                                                            rest[
+                                                                get(
+                                                                    this
+                                                                        .resultSettings,
+                                                                    'fields.handle',
+                                                                    'handle',
+                                                                )
+                                                            ],
+                                                        image:
+                                                            rest[
+                                                                get(
+                                                                    this
+                                                                        .resultSettings,
+                                                                    'fields.image',
+                                                                    'image.src',
+                                                                )
+                                                            ],
+                                                        title:
+                                                            rest[
+                                                                get(
+                                                                    this
+                                                                        .resultSettings,
+                                                                    'fields.title',
+                                                                    'title',
+                                                                )
+                                                            ],
+                                                        body_html:
+                                                            rest[
+                                                                get(
+                                                                    this
+                                                                        .resultSettings,
+                                                                    'fields.description',
+                                                                    'body_html',
+                                                                )
+                                                            ],
+                                                        price:
+                                                            rest[
+                                                                get(
+                                                                    this
+                                                                        .resultSettings,
+                                                                    'fields.price',
+                                                                )
+                                                            ],
                                                         variants,
                                                         currency: this.currency,
                                                         index,
@@ -270,6 +317,7 @@ class ProductSuggestions extends React.Component {
                                 'filter_by_product',
                                 ...getReactDependenciesFromPreferences(
                                     this.preferences,
+                                    'result',
                                 ),
                             ],
                         }}

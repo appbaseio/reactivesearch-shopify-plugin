@@ -17,6 +17,7 @@ const SuggestionCard = ({
     body_html,
     currency,
     variants,
+    price,
     themeType,
     theme,
     ...props
@@ -26,7 +27,7 @@ const SuggestionCard = ({
             onClick={() => {
                 triggerAnalytics(clickId);
             }}
-            href={`/products/${handle}`}
+            href={handle ? `/products/${handle}` : undefined}
         >
             <Card
                 hoverable
@@ -34,9 +35,7 @@ const SuggestionCard = ({
                 className={`${cardStyles({
                     ...theme.colors,
                 })} card`}
-                cover={
-                    image && <img src={image.src} width="100%" alt={title} />
-                }
+                cover={image && <img src={image} width="100%" alt={title} />}
                 css={{
                     padding: themeType === 'minimal' ? '10px' : 0,
                 }}
@@ -59,35 +58,44 @@ const SuggestionCard = ({
                                       }
                                     : {}
                             }
+                            // eslint-disable-next-line
                             dangerouslySetInnerHTML={{
                                 __html: title,
                             }}
                         />
                     }
                     description={
-                        themeType === 'classic' && (
-                            <Truncate lines={4} ellipsis={<span>...</span>}>
-                                {strip(body_html)}
-                            </Truncate>
-                        )
+                        body_html
+                            ? themeType === 'classic' && (
+                                  <Truncate
+                                      lines={4}
+                                      ellipsis={<span>...</span>}
+                                  >
+                                      {strip(body_html)}
+                                  </Truncate>
+                              )
+                            : undefined
                     }
                 />
-                <div>
-                    <h3
-                        style={{
-                            fontWeight: 500,
-                            fontSize: '1rem',
-                            marginTop: 6,
-                            color:
-                                themeType === 'minimal'
-                                    ? theme.colors.textColor
-                                    : theme.colors.titleColor,
-                        }}
-                    >
-                        {variants &&
-                            `${currency} ${get(variants[0], 'price', '')}`}
-                    </h3>
-                </div>
+                {price || variants ? (
+                    <div>
+                        <h3
+                            style={{
+                                fontWeight: 500,
+                                fontSize: '1rem',
+                                marginTop: 6,
+                                color:
+                                    themeType === 'minimal'
+                                        ? theme.colors.textColor
+                                        : theme.colors.titleColor,
+                            }}
+                        >
+                            {`${currency} ${
+                                variants ? get(variants[0], 'price', '') : price
+                            }`}
+                        </h3>
+                    </div>
+                ) : null}
                 <Button type="primary" size="large" className="product-button">
                     <Icon type="eye" />
                     View Product

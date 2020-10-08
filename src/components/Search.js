@@ -202,6 +202,12 @@ class Search extends Component {
 
         this.sizeFilter = this.staticFacets.find(o => o.name === 'size');
         this.priceFilter = this.staticFacets.find(o => o.name === 'price');
+
+        this.exportType = get(
+            this.preferences,
+            'exportType',
+            defaultPreferences.exportType,
+        );
     }
 
     async componentDidMount() {
@@ -334,6 +340,12 @@ class Search extends Component {
                 )}
                 defaultQuery={() => defaultQuery}
                 showCheckbox={this.themeType !== 'minimal'}
+                react={{
+                    and: getReactDependenciesFromPreferences(
+                        this.preferences,
+                        'collection',
+                    ),
+                }}
                 {...this.collectionFilter.rsConfig}
             />
         );
@@ -351,7 +363,15 @@ class Search extends Component {
             <MultiList
                 dataField="options.values.keyword"
                 componentId="color"
-                react={{ and: ['colorOption'] }}
+                react={{
+                    and: [
+                        'colorOption',
+                        ...getReactDependenciesFromPreferences(
+                            this.preferences,
+                            'color',
+                        ),
+                    ],
+                }}
                 css={font}
                 showCheckbox={this.themeType !== 'minimal'}
                 render={({ loading, error, data, handleChange, value }) => {
@@ -440,7 +460,15 @@ class Search extends Component {
             <MultiList
                 dataField="options.values.keyword"
                 componentId="size"
-                react={{ and: ['sizeOption'] }}
+                react={{
+                    and: [
+                        'sizeOption',
+                        ...getReactDependenciesFromPreferences(
+                            this.preferences,
+                            'size',
+                        ),
+                    ],
+                }}
                 css={font}
                 loader={() => (
                     <div
@@ -480,6 +508,7 @@ class Search extends Component {
                 componentId="search"
                 filterLabel="Search"
                 className="search"
+                debounce={100}
                 placeholder="Search for products..."
                 iconPosition="right"
                 icon={
@@ -503,6 +532,7 @@ class Search extends Component {
                     downshiftProps.isOpen && Boolean(value.length) ? (
                         <Suggestions
                             themeType={this.themeType}
+                            fields={get(this.searchSettings, 'fields', {})}
                             currentValue={value}
                             categories={categories}
                             customMessage={get(
@@ -719,6 +749,15 @@ class Search extends Component {
                                                 this.themeType !== 'minimal'
                                             }
                                             css={this.getFontFamily()}
+                                            react={{
+                                                and: getReactDependenciesFromPreferences(
+                                                    this.preferences,
+                                                    get(
+                                                        listComponent,
+                                                        'rsConfig.componentId',
+                                                    ),
+                                                ),
+                                            }}
                                         />
                                     </Panel>
                                 ))}
@@ -844,9 +883,17 @@ class Search extends Component {
                                             rangeLabels={(min, max) => ({
                                                 start: `${
                                                     this.currency
-                                                } ${min}`,
-                                                end: `${this.currency} ${max}`,
+                                                } ${min.toFixed(2)}`,
+                                                end: `${
+                                                    this.currency
+                                                } ${max.toFixed(2)}`,
                                             })}
+                                            react={{
+                                                and: getReactDependenciesFromPreferences(
+                                                    this.preferences,
+                                                    'price',
+                                                ),
+                                            }}
                                             {...this.priceFilter.rsConfig}
                                         />
                                     </Panel>
@@ -862,17 +909,21 @@ class Search extends Component {
                                     ),
                                 })}
 
-                            {get(
-                                this.globalSettings,
-                                'settings.showSelectedFilters',
-                            ) && this.themeType !== 'minimal' ? (
+                            {get(this.globalSettings, 'showSelectedFilters') &&
+                            this.themeType !== 'minimal' ? (
                                 <SelectedFilters />
                             ) : null}
                             <ReactiveComponent
                                 componentId="filter_by_product"
-                                customQuery={() => ({
-                                    query: { term: { type: 'products' } },
-                                })}
+                                customQuery={() =>
+                                    this.exportType === 'shopify'
+                                        ? {
+                                              query: {
+                                                  term: { type: 'products' },
+                                              },
+                                          }
+                                        : null
+                                }
                             />
                             <ReactiveList
                                 componentId="results"
@@ -913,135 +964,195 @@ class Search extends Component {
                                     />
                                 )}
                                 renderItem={(
-                                    {
-                                        _id,
-                                        title,
-                                        body_html,
-                                        handle,
-                                        image,
-                                        variants,
-                                    },
+                                    { _id, variants, ...rest },
                                     triggerClickAnalytics,
-                                ) => (
-                                    <a
-                                        onClick={triggerClickAnalytics}
-                                        href={`/products/${handle}`}
-                                        target="_blank"
-                                        rel="noreferrer noopener"
-                                        key={_id}
-                                    >
-                                        <Card
-                                            hoverable
-                                            bordered={false}
-                                            className={`${cardStyles({
-                                                ...get(this.theme, 'colors'),
-                                            })} card`}
-                                            cover={
-                                                image && (
-                                                    <img
-                                                        src={image.src}
-                                                        width="100%"
-                                                        alt={title}
-                                                    />
-                                                )
+                                ) => {
+                                    const handle =
+                                        rest[
+                                            get(
+                                                this.resultSettings,
+                                                'fields.handle',
+                                                'handle',
+                                            )
+                                        ];
+                                    const image =
+                                        rest[
+                                            get(
+                                                this.resultSettings,
+                                                'fields.image',
+                                                'image.src',
+                                            )
+                                        ];
+                                    const title =
+                                        rest[
+                                            get(
+                                                this.resultSettings,
+                                                'fields.title',
+                                                'title',
+                                            )
+                                        ];
+                                    const description =
+                                        rest[
+                                            get(
+                                                this.resultSettings,
+                                                'fields.description',
+                                                'body_html',
+                                            )
+                                        ];
+                                    const price =
+                                        rest[
+                                            get(
+                                                this.resultSettings,
+                                                'fields.price',
+                                            )
+                                        ];
+                                    return (
+                                        <a
+                                            onClick={triggerClickAnalytics}
+                                            href={
+                                                handle
+                                                    ? `/products/${handle}`
+                                                    : undefined
                                             }
-                                            css={{
-                                                ...this.getFontFamily(),
-                                                padding:
-                                                    this.themeType === 'minimal'
-                                                        ? '10px'
-                                                        : 0,
-                                            }}
-                                            bodyStyle={
-                                                this.themeType === 'minimal'
-                                                    ? {
-                                                          padding:
-                                                              '15px 10px 10px',
-                                                      }
-                                                    : {}
-                                            }
+                                            target="_blank"
+                                            rel="noreferrer noopener"
+                                            key={_id}
                                         >
-                                            <Meta
-                                                title={
-                                                    <h3
-                                                        className={cardTitleStyles(
-                                                            get(
-                                                                this.theme,
-                                                                'colors',
-                                                            ),
-                                                        )}
-                                                        css={
-                                                            this.themeType ===
-                                                            'minimal'
-                                                                ? {
-                                                                      fontWeight: 600,
-                                                                  }
-                                                                : {}
-                                                        }
-                                                        // eslint-disable-next-line
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: title,
-                                                        }}
-                                                    />
-                                                }
-                                                description={
-                                                    get(
-                                                        this.resultSettings,
-                                                        'showDescription',
-                                                    ) &&
-                                                    this.themeType ===
-                                                        'classic' && (
-                                                        <Truncate
-                                                            lines={4}
-                                                            ellipsis={
-                                                                <span>...</span>
-                                                            }
-                                                        >
-                                                            {strip(body_html)}
-                                                        </Truncate>
+                                            <Card
+                                                hoverable
+                                                bordered={false}
+                                                className={`${cardStyles({
+                                                    ...get(
+                                                        this.theme,
+                                                        'colors',
+                                                    ),
+                                                })} card`}
+                                                cover={
+                                                    image && (
+                                                        <img
+                                                            src={image}
+                                                            width="100%"
+                                                            alt={title}
+                                                        />
                                                     )
                                                 }
-                                            />
-                                            <div>
-                                                <h3
-                                                    style={{
-                                                        fontWeight: 500,
-                                                        fontSize: '1rem',
-                                                        marginTop: 6,
-                                                        color:
-                                                            this.themeType ===
-                                                            'minimal'
-                                                                ? get(
-                                                                      this
-                                                                          .theme,
-                                                                      'colors.textColor',
-                                                                  )
-                                                                : get(
-                                                                      this
-                                                                          .theme,
-                                                                      'colors.titleColor',
-                                                                  ),
-                                                    }}
-                                                >
-                                                    {variants &&
-                                                        `${this.currency} ${get(
-                                                            variants[0],
-                                                            'price',
-                                                            '',
-                                                        )}`}
-                                                </h3>
-                                            </div>
-                                            <Button
-                                                type="primary"
-                                                size="large"
-                                                className="product-button"
+                                                css={{
+                                                    ...this.getFontFamily(),
+                                                    padding:
+                                                        this.themeType ===
+                                                        'minimal'
+                                                            ? '10px'
+                                                            : 0,
+                                                }}
+                                                bodyStyle={
+                                                    this.themeType === 'minimal'
+                                                        ? {
+                                                              padding:
+                                                                  '15px 10px 10px',
+                                                          }
+                                                        : {}
+                                                }
                                             >
-                                                <Icon type="eye" />
-                                                View Product
-                                            </Button>
-                                        </Card>
-                                    </a>
-                                )}
+                                                <Meta
+                                                    title={
+                                                        <h3
+                                                            className={cardTitleStyles(
+                                                                get(
+                                                                    this.theme,
+                                                                    'colors',
+                                                                ),
+                                                            )}
+                                                            css={
+                                                                this
+                                                                    .themeType ===
+                                                                'minimal'
+                                                                    ? {
+                                                                          fontWeight: 600,
+                                                                      }
+                                                                    : {}
+                                                            }
+                                                            // eslint-disable-next-line
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: title,
+                                                            }}
+                                                        />
+                                                    }
+                                                    description={
+                                                        description
+                                                            ? get(
+                                                                  this
+                                                                      .resultSettings,
+                                                                  'showDescription',
+                                                              ) &&
+                                                              this.themeType ===
+                                                                  'classic' && (
+                                                                  <Truncate
+                                                                      lines={4}
+                                                                      ellipsis={
+                                                                          <span>
+                                                                              ...
+                                                                          </span>
+                                                                      }
+                                                                  >
+                                                                      {strip(
+                                                                          description,
+                                                                      )}
+                                                                  </Truncate>
+                                                              )
+                                                            : undefined
+                                                    }
+                                                />
+                                                {variants || price ? (
+                                                    <div>
+                                                        <h3
+                                                            style={{
+                                                                fontWeight: 500,
+                                                                fontSize:
+                                                                    '1rem',
+                                                                marginTop: 6,
+                                                                color:
+                                                                    this
+                                                                        .themeType ===
+                                                                    'minimal'
+                                                                        ? get(
+                                                                              this
+                                                                                  .theme,
+                                                                              'colors.textColor',
+                                                                          )
+                                                                        : get(
+                                                                              this
+                                                                                  .theme,
+                                                                              'colors.titleColor',
+                                                                          ),
+                                                            }}
+                                                        >
+                                                            {`${
+                                                                this.currency
+                                                            } ${
+                                                                variants
+                                                                    ? get(
+                                                                          variants[0],
+                                                                          'price',
+                                                                          '',
+                                                                      )
+                                                                    : price
+                                                            }`}
+                                                        </h3>
+                                                    </div>
+                                                ) : null}
+
+                                                <Button
+                                                    type="primary"
+                                                    size="large"
+                                                    className="product-button"
+                                                >
+                                                    <Icon type="eye" />
+                                                    View Product
+                                                </Button>
+                                            </Card>
+                                        </a>
+                                    );
+                                }}
                                 size={9}
                                 innerClass={{
                                     list: css({
@@ -1097,6 +1208,7 @@ class Search extends Component {
                                         'filter_by_product',
                                         ...getReactDependenciesFromPreferences(
                                             this.preferences,
+                                            'result',
                                         ),
                                     ],
                                 }}
