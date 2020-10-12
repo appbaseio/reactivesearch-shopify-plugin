@@ -244,50 +244,50 @@ class ProductSuggestions extends React.Component {
                                                     theme={this.theme}
                                                     themeType={this.themeType}
                                                     {...{
-                                                        handle:
-                                                            rest[
-                                                                get(
-                                                                    this
-                                                                        .resultSettings,
-                                                                    'fields.handle',
-                                                                    'handle',
-                                                                )
-                                                            ],
-                                                        image:
-                                                            rest[
-                                                                get(
-                                                                    this
-                                                                        .resultSettings,
-                                                                    'fields.image',
-                                                                    'image.src',
-                                                                )
-                                                            ],
-                                                        title:
-                                                            rest[
-                                                                get(
-                                                                    this
-                                                                        .resultSettings,
-                                                                    'fields.title',
-                                                                    'title',
-                                                                )
-                                                            ],
-                                                        body_html:
-                                                            rest[
-                                                                get(
-                                                                    this
-                                                                        .resultSettings,
-                                                                    'fields.description',
-                                                                    'body_html',
-                                                                )
-                                                            ],
-                                                        price:
-                                                            rest[
-                                                                get(
-                                                                    this
-                                                                        .resultSettings,
-                                                                    'fields.price',
-                                                                )
-                                                            ],
+                                                        handle: get(
+                                                            rest,
+                                                            get(
+                                                                this
+                                                                    .resultSettings,
+                                                                'fields.handle',
+                                                                'handle',
+                                                            ),
+                                                        ),
+                                                        image: get(
+                                                            rest,
+                                                            get(
+                                                                this
+                                                                    .resultSettings,
+                                                                'fields.image',
+                                                                'image.src',
+                                                            ),
+                                                        ),
+                                                        title: get(
+                                                            rest,
+                                                            get(
+                                                                this
+                                                                    .resultSettings,
+                                                                'fields.title',
+                                                                'title',
+                                                            ),
+                                                        ),
+                                                        body_html: get(
+                                                            rest,
+                                                            get(
+                                                                this
+                                                                    .resultSettings,
+                                                                'fields.description',
+                                                                'body_html',
+                                                            ),
+                                                        ),
+                                                        price: get(
+                                                            rest,
+                                                            get(
+                                                                this
+                                                                    .resultSettings,
+                                                                'fields.price',
+                                                            ),
+                                                        ),
                                                         variants,
                                                         currency: this.currency,
                                                         index,

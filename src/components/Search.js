@@ -226,7 +226,7 @@ class Search extends Component {
                 ${globalStyles}
             `;
 
-            if (get(this.resultSettings, 'rsConfig.pagination')) {
+            if (get(this.resultSettings, 'rsConfig.pagination', true)) {
                 const containerCollection = document.getElementsByClassName(
                     'ant-modal',
                 );
@@ -306,18 +306,6 @@ class Search extends Component {
     };
 
     renderCollectionFilter = font => {
-        const defaultQuery = {
-            query: { term: { type: 'collections' } },
-            aggs: {
-                collections: {
-                    terms: {
-                        field: 'title.keyword',
-                        size: 100,
-                        order: { _count: 'desc' },
-                    },
-                },
-            },
-        };
         if (!this.collectionFilter) {
             return null;
         }
@@ -338,15 +326,30 @@ class Search extends Component {
                         }}
                     />
                 )}
-                defaultQuery={() => defaultQuery}
+                size={50}
                 showCheckbox={this.themeType !== 'minimal'}
                 react={{
-                    and: getReactDependenciesFromPreferences(
-                        this.preferences,
-                        'collection',
-                    ),
+                    and: [
+                        ...getReactDependenciesFromPreferences(
+                            this.preferences,
+                            'collection',
+                        ),
+                    ],
                 }}
-                {...this.collectionFilter.rsConfig}
+                loader={
+                    <div
+                        className={loaderStyle}
+                        // eslint-disable-next-line
+                        dangerouslySetInnerHTML={{
+                            __html: get(
+                                this.sizeFilter,
+                                'customMessages.loading',
+                                'Loading collections',
+                            ),
+                        }}
+                    />
+                }
+                {...get(this.collectionFilter, 'rsConfig')}
             />
         );
     };
@@ -354,14 +357,7 @@ class Search extends Component {
     renderColorFilter = font => (
         <React.Fragment>
             <MultiList
-                dataField="options.name.keyword"
-                defaultValue={['color', 'Color']}
-                componentId="colorOption"
-                showFilter={false}
-                style={{ display: 'none' }}
-            />
-            <MultiList
-                dataField="options.values.keyword"
+                dataField="variants.option2.keyword"
                 componentId="color"
                 react={{
                     and: [
@@ -424,19 +420,19 @@ class Search extends Component {
                                 ) ? (
                                     // eslint-disable-next-line
                                     <div
-                                        key={item.key}
                                         onClick={() => handleChange(item.key)}
+                                        key={item.key}
                                         css={{
                                             width: '100%',
                                             height: 30,
                                             background: item.key,
                                             transition: 'all ease .2s',
-                                            border: `2px solid ${
+                                            cursor: 'pointer',
+                                            border:
                                                 values &&
                                                 values.includes(item.key)
-                                                    ? primaryColor
-                                                    : 'transparent'
-                                            }`,
+                                                    ? `2px solid ${primaryColor}`
+                                                    : `1px solid #ccc`,
                                         }}
                                     />
                                 ) : null,
@@ -444,6 +440,20 @@ class Search extends Component {
                         </div>
                     );
                 }}
+                loader={
+                    <div
+                        className={loaderStyle}
+                        // eslint-disable-next-line
+                        dangerouslySetInnerHTML={{
+                            __html: get(
+                                this.colorFilter,
+                                'customMessages.loading',
+                                'Loading colors',
+                            ),
+                        }}
+                    />
+                }
+                {...get(this.colorFilter, 'rsConfig')}
             />
         </React.Fragment>
     );
@@ -451,14 +461,7 @@ class Search extends Component {
     renderSizeFilter = font => (
         <React.Fragment>
             <MultiList
-                dataField="options.name.keyword"
-                defaultValue={['size', 'Size']}
-                componentId="sizeOption"
-                showFilter={false}
-                css={{ display: 'none' }}
-            />
-            <MultiList
-                dataField="options.values.keyword"
+                dataField="variants.option1.keyword"
                 componentId="size"
                 react={{
                     and: [
@@ -470,19 +473,19 @@ class Search extends Component {
                     ],
                 }}
                 css={font}
-                loader={() => (
+                loader={
                     <div
                         className={loaderStyle}
                         // eslint-disable-next-line
                         dangerouslySetInnerHTML={{
                             __html: get(
                                 this.sizeFilter,
-                                'customMessages.noResults',
-                                'No sizes Found',
+                                'customMessages.loading',
+                                'Loading sizes',
                             ),
                         }}
                     />
-                )}
+                }
                 renderNoResults={() => (
                     <div
                         // eslint-disable-next-line
@@ -496,6 +499,7 @@ class Search extends Component {
                     />
                 )}
                 showCheckbox={this.themeType !== 'minimal'}
+                {...get(this.sizeFilter, 'rsConfig')}
             />
         </React.Fragment>
     );
@@ -725,7 +729,7 @@ class Search extends Component {
                                                         __html: get(
                                                             listComponent,
                                                             'customMessages.loading',
-                                                            '',
+                                                            'Loading options',
                                                         ),
                                                     }}
                                                 />
@@ -967,45 +971,47 @@ class Search extends Component {
                                     { _id, variants, ...rest },
                                     triggerClickAnalytics,
                                 ) => {
-                                    const handle =
-                                        rest[
-                                            get(
-                                                this.resultSettings,
-                                                'fields.handle',
-                                                'handle',
-                                            )
-                                        ];
-                                    const image =
-                                        rest[
-                                            get(
-                                                this.resultSettings,
-                                                'fields.image',
-                                                'image.src',
-                                            )
-                                        ];
-                                    const title =
-                                        rest[
-                                            get(
-                                                this.resultSettings,
-                                                'fields.title',
-                                                'title',
-                                            )
-                                        ];
-                                    const description =
-                                        rest[
-                                            get(
-                                                this.resultSettings,
-                                                'fields.description',
-                                                'body_html',
-                                            )
-                                        ];
-                                    const price =
-                                        rest[
-                                            get(
-                                                this.resultSettings,
-                                                'fields.price',
-                                            )
-                                        ];
+                                    const handle = get(
+                                        rest,
+                                        get(
+                                            this.resultSettings,
+                                            'fields.handle',
+                                            'handle',
+                                        ),
+                                    );
+
+                                    const image = get(
+                                        rest,
+                                        get(
+                                            this.resultSettings,
+                                            'fields.image',
+                                            'image.src',
+                                        ),
+                                    );
+                                    const title = get(
+                                        rest,
+                                        get(
+                                            this.resultSettings,
+                                            'fields.title',
+                                            'title',
+                                        ),
+                                    );
+
+                                    const description = get(
+                                        rest,
+                                        get(
+                                            this.resultSettings,
+                                            'fields.description',
+                                            'body_html',
+                                        ),
+                                    );
+                                    const price = get(
+                                        rest,
+                                        get(
+                                            this.resultSettings,
+                                            'fields.price',
+                                        ),
+                                    );
                                     return (
                                         <a
                                             onClick={triggerClickAnalytics}
@@ -1017,6 +1023,7 @@ class Search extends Component {
                                             target="_blank"
                                             rel="noreferrer noopener"
                                             key={_id}
+                                            id={_id}
                                         >
                                             <Card
                                                 hoverable
