@@ -1029,7 +1029,7 @@ class Search extends Component {
                                             id={_id}
                                         >
                                             <Card
-                                                hoverable
+                                                hoverable={false}
                                                 bordered={false}
                                                 className={`${cardStyles({
                                                     ...get(
@@ -1151,14 +1151,16 @@ class Search extends Component {
                                                     </div>
                                                 ) : null}
 
-                                                <Button
-                                                    type="primary"
-                                                    size="large"
-                                                    className="product-button"
-                                                >
-                                                    <Icon type="eye" />
-                                                    View Product
-                                                </Button>
+                                                {handle ? (
+                                                    <Button
+                                                        type="primary"
+                                                        size="large"
+                                                        className="product-button"
+                                                    >
+                                                        <Icon type="eye" />
+                                                        View Product
+                                                    </Button>
+                                                ) : null}
                                             </Card>
                                         </a>
                                     );
