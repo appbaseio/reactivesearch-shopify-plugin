@@ -170,11 +170,7 @@ const Suggestions = ({
                                             searchWords={currentValue.split(
                                                 ' ',
                                             )}
-                                            textToHighlight={get(
-                                                suggestion,
-                                                '_source.title',
-                                                '',
-                                            )}
+                                            textToHighlight={title}
                                             highlightStyle={{
                                                 fontWeight: 700,
                                                 padding: 0,

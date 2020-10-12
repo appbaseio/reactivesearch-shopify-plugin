@@ -933,6 +933,9 @@ class Search extends Component {
                                 componentId="results"
                                 dataField="title"
                                 ref={resultRef}
+                                defaultQuery={() => ({
+                                    track_total_hits: true,
+                                })}
                                 renderNoResults={() => (
                                     <div
                                         css={{ textAlign: 'right' }}
