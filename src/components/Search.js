@@ -924,7 +924,7 @@ class Search extends Component {
 
                             {get(this.globalSettings, 'showSelectedFilters') &&
                             this.themeType !== 'minimal' ? (
-                                <SelectedFilters />
+                                <SelectedFilters showClearAll="default" />
                             ) : null}
                             <ReactiveComponent
                                 componentId="filter_by_product"
