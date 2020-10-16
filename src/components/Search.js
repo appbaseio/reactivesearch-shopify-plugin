@@ -8,6 +8,7 @@ import {
     DynamicRangeSlider,
     ReactiveComponent,
 } from '@appbaseio/reactivesearch';
+import SearchIcon from '@appbaseio/reactivesearch/lib/components/shared/SearchSvg';
 import get from 'lodash.get';
 import { string } from 'prop-types';
 import { mediaMax } from '@divyanshu013/media';
@@ -516,7 +517,15 @@ class Search extends Component {
                 placeholder="Search for products..."
                 iconPosition="right"
                 icon={
-                    get(this.searchSettings, 'searchButton.icon') || undefined
+                    get(this.searchSettings, 'searchButton.icon') || (
+                        <div
+                            style={{
+                                marginTop: -3,
+                            }}
+                        >
+                            <SearchIcon />
+                        </div>
+                    )
                 }
                 ref={searchRef}
                 css={{
