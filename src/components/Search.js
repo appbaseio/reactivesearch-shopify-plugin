@@ -13,7 +13,7 @@ import get from 'lodash.get';
 import { string } from 'prop-types';
 import { mediaMax } from '@divyanshu013/media';
 import { css, injectGlobal } from 'react-emotion';
-import { Card, Collapse, Button, Icon, message, Affix } from 'antd';
+import { Card, Collapse, Button, Icon, message, Affix, Tooltip } from 'antd';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import Suggestions from './Suggestions';
@@ -209,6 +209,11 @@ class Search extends Component {
             'exportType',
             defaultPreferences.exportType,
         );
+        const globalStyles = get(this.globalSettings, 'customCss', '');
+        // eslint-disable-next-line
+        injectGlobal`
+            ${globalStyles}
+        `;
     }
 
     async componentDidMount() {
@@ -220,12 +225,6 @@ class Search extends Component {
             if (inputRef) {
                 inputRef.focus();
             }
-
-            const globalStyles = get(this.globalSettings, 'globalSettings', '');
-            // eslint-disable-next-line
-            injectGlobal`
-                ${globalStyles}
-            `;
 
             if (get(this.resultSettings, 'rsConfig.pagination', true)) {
                 const containerCollection = document.getElementsByClassName(
@@ -369,6 +368,7 @@ class Search extends Component {
                         ),
                     ],
                 }}
+                showSearch={false}
                 css={font}
                 showCheckbox={this.themeType !== 'minimal'}
                 render={({ loading, error, data, handleChange, value }) => {
@@ -413,29 +413,49 @@ class Search extends Component {
                     }
                     const primaryColor =
                         get(this.theme, 'colors.primaryColor', '') || '#0B6AFF';
+                    const normalizedData = [];
+                    data.forEach(i => {
+                        if (
+                            !normalizedData.find(
+                                n => n.key === i.key.toLowerCase(),
+                            )
+                        ) {
+                            normalizedData.push({
+                                ...i,
+                                key: i.key.toLowerCase(),
+                            });
+                        }
+                    });
                     return (
                         <div className={colorContainer}>
-                            {data.map(item =>
+                            {normalizedData.map(item =>
                                 browserStringColors.includes(
                                     item.key.toLowerCase(),
                                 ) ? (
-                                    // eslint-disable-next-line
-                                    <div
-                                        onClick={() => handleChange(item.key)}
+                                    <Tooltip
                                         key={item.key}
-                                        css={{
-                                            width: '100%',
-                                            height: 30,
-                                            background: item.key,
-                                            transition: 'all ease .2s',
-                                            cursor: 'pointer',
-                                            border:
-                                                values &&
-                                                values.includes(item.key)
-                                                    ? `2px solid ${primaryColor}`
-                                                    : `1px solid #ccc`,
-                                        }}
-                                    />
+                                        placement="top"
+                                        title={item.key}
+                                    >
+                                        {/* eslint-disable-next-line */}
+                                        <div
+                                            onClick={() =>
+                                                handleChange(item.key)
+                                            }
+                                            css={{
+                                                width: '100%',
+                                                height: 30,
+                                                background: item.key,
+                                                transition: 'all ease .2s',
+                                                cursor: 'pointer',
+                                                border:
+                                                    values &&
+                                                    values.includes(item.key)
+                                                        ? `2px solid ${primaryColor}`
+                                                        : `1px solid #ccc`,
+                                            }}
+                                        />
+                                    </Tooltip>
                                 ) : null,
                             )}
                         </div>
@@ -878,8 +898,10 @@ class Search extends Component {
                                             dataField="variants.price"
                                             tooltipTrigger="hover"
                                             showHistogram={false}
-                                            style={{ marginTop: 50 }}
                                             css={this.getFontFamily()}
+                                            style={{
+                                                marginTop: 50,
+                                            }}
                                             loader={
                                                 <div
                                                     className={loaderStyle}
