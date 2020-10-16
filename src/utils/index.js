@@ -176,7 +176,6 @@ export const defaultPreferences = {
     },
     globalSettings: {
         currency: '$',
-        locale: 'en',
         customCss: '',
         showSelectedFilters: true,
     },
