@@ -9,6 +9,10 @@ import {
     ReactiveComponent,
 } from '@appbaseio/reactivesearch';
 import SearchIcon from '@appbaseio/reactivesearch/lib/components/shared/SearchSvg';
+import {
+    UL,
+    Checkbox,
+} from '@appbaseio/reactivesearch/lib/styles/FormControlList';
 import get from 'lodash.get';
 import { string } from 'prop-types';
 import { mediaMax } from '@divyanshu013/media';
@@ -310,173 +314,268 @@ class Search extends Component {
             return null;
         }
         return (
-            <MultiList
-                componentId="collection"
-                dataField="collections"
-                css={font}
-                renderNoResults={() => (
-                    <div
-                        // eslint-disable-next-line
-                        dangerouslySetInnerHTML={{
-                            __html: get(
-                                this.collectionFilter,
-                                'customMessages.noResults',
-                                'No items Found',
-                            ),
-                        }}
-                    />
-                )}
-                size={50}
-                showCheckbox={this.themeType !== 'minimal'}
-                react={{
-                    and: [
-                        ...getReactDependenciesFromPreferences(
-                            this.preferences,
-                            'collection',
-                        ),
-                    ],
-                }}
-                loader={
-                    <div
-                        className={loaderStyle}
-                        // eslint-disable-next-line
-                        dangerouslySetInnerHTML={{
-                            __html: get(
-                                this.sizeFilter,
-                                'customMessages.loading',
-                                'Loading collections',
-                            ),
-                        }}
-                    />
-                }
-                {...get(this.collectionFilter, 'rsConfig')}
-            />
+            <React.Fragment>
+                <ReactiveComponent
+                    componentId="filter_by_collection"
+                    customQuery={() =>
+                        this.exportType === 'shopify'
+                            ? {
+                                  query: {
+                                      term: { type: 'collections' },
+                                  },
+                              }
+                            : null
+                    }
+                />
+                <MultiList
+                    componentId="collection"
+                    dataField="collections"
+                    css={font}
+                    defaultQuery={() => ({
+                        aggs: {
+                            collections: {
+                                terms: {
+                                    field: '_id',
+                                    size: 50,
+                                    order: {
+                                        'product_count.value': 'desc',
+                                    },
+                                },
+                                aggs: {
+                                    top_collections: {
+                                        top_hits: {
+                                            _source: {
+                                                includes: [
+                                                    'title',
+                                                    'product_count',
+                                                ],
+                                            },
+                                            size: 1,
+                                        },
+                                    },
+                                    product_count: {
+                                        sum: {
+                                            field: 'product_count.sum',
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    })}
+                    size={50}
+                    showCheckbox={this.themeType !== 'minimal'}
+                    react={{
+                        and: [
+                            'filter_by_collection',
+                            // TODO: Make it reactive to other filters
+                            // ...getReactDependenciesFromPreferences(
+                            //     this.preferences,
+                            //     'collection',
+                            // ),
+                        ],
+                    }}
+                    // TODO: transform the value to title later
+                    showFilter={false}
+                    render={({ loading, data, value, handleChange }) => {
+                        if (loading) {
+                            return (
+                                <div
+                                    className={loaderStyle}
+                                    // eslint-disable-next-line
+                                    dangerouslySetInnerHTML={{
+                                        __html: get(
+                                            this.sizeFilter,
+                                            'customMessages.loading',
+                                            'Loading collections',
+                                        ),
+                                    }}
+                                />
+                            );
+                        }
+                        return (
+                            <UL role="listbox" aria-label="collection-items">
+                                {data.length ? null : (
+                                    <div
+                                        // eslint-disable-next-line
+                                        dangerouslySetInnerHTML={{
+                                            __html: get(
+                                                this.collectionFilter,
+                                                'customMessages.noResults',
+                                                'No items Found',
+                                            ),
+                                        }}
+                                    />
+                                )}
+                                {data.map(item => {
+                                    const isChecked = !!value[item.key];
+                                    const title = get(
+                                        item,
+                                        'top_collections.hits.hits[0]._source.title',
+                                    );
+                                    const count = get(
+                                        item,
+                                        'top_collections.hits.hits[0]._source.product_count',
+                                    );
+                                    return (
+                                        <li
+                                            key={item.key}
+                                            className={`${
+                                                isChecked ? 'active' : ''
+                                            }`}
+                                            role="option"
+                                            aria-checked={isChecked}
+                                            aria-selected={isChecked}
+                                        >
+                                            <Checkbox
+                                                id={`collection-${item.key}`}
+                                                name={`collection-${item.key}`}
+                                                value={item.key}
+                                                onChange={handleChange}
+                                                checked={isChecked}
+                                                show
+                                            />
+                                            {/* eslint-disable-next-line */}
+                                            <label
+                                                htmlFor={`collection-${
+                                                    item.key
+                                                }`}
+                                            >
+                                                {
+                                                    <span>
+                                                        <span>{title}</span>
+                                                        <span>{count}</span>
+                                                    </span>
+                                                }
+                                            </label>
+                                        </li>
+                                    );
+                                })}
+                            </UL>
+                        );
+                    }}
+                    {...get(this.collectionFilter, 'rsConfig')}
+                />
+            </React.Fragment>
         );
     };
 
     renderColorFilter = font => (
-        <React.Fragment>
-            <MultiList
-                dataField="variants.option2.keyword"
-                componentId="color"
-                react={{
-                    and: [
-                        'colorOption',
-                        ...getReactDependenciesFromPreferences(
-                            this.preferences,
-                            'color',
-                        ),
-                    ],
-                }}
-                showSearch={false}
-                css={font}
-                showCheckbox={this.themeType !== 'minimal'}
-                render={({ loading, error, data, handleChange, value }) => {
-                    const values = [...new Set(Object.keys(value))];
-                    const browserStringColors = Object.keys(browserColors);
-                    if (loading) {
-                        return (
-                            <div
-                                className={loaderStyle}
-                                // eslint-disable-next-line
-                                dangerouslySetInnerHTML={{
-                                    __html: get(
-                                        this.colorFilter,
-                                        'customMessages.noResults',
-                                        'Fetching Colors',
-                                    ),
-                                }}
-                            />
-                        );
-                    }
-                    if (error) {
-                        return (
-                            <div>
-                                Something went wrong! Error details{' '}
-                                {JSON.stringify(error)}
-                            </div>
-                        );
-                    }
-                    if (data.length === 0) {
-                        return (
-                            <div
-                                // eslint-disable-next-line
-                                dangerouslySetInnerHTML={{
-                                    __html: get(
-                                        this.colorFilter,
-                                        'customMessages.noResults',
-                                        'Fetching Colors',
-                                    ),
-                                }}
-                            />
-                        );
-                    }
-                    const primaryColor =
-                        get(this.theme, 'colors.primaryColor', '') || '#0B6AFF';
-                    const normalizedData = [];
-                    data.forEach(i => {
-                        if (
-                            !normalizedData.find(
-                                n => n.key === i.key.toLowerCase(),
-                            )
-                        ) {
-                            normalizedData.push({
-                                ...i,
-                                key: i.key.toLowerCase(),
-                            });
-                        }
-                    });
+        <MultiList
+            dataField="variants.option2.keyword"
+            componentId="color"
+            react={{
+                and: [
+                    'colorOption',
+                    ...getReactDependenciesFromPreferences(
+                        this.preferences,
+                        'color',
+                    ),
+                ],
+            }}
+            showSearch={false}
+            css={font}
+            showCheckbox={this.themeType !== 'minimal'}
+            render={({ loading, error, data, handleChange, value }) => {
+                const values = [...new Set(Object.keys(value))];
+                const browserStringColors = Object.keys(browserColors);
+                if (loading) {
                     return (
-                        <div className={colorContainer}>
-                            {normalizedData.map(item =>
-                                browserStringColors.includes(
-                                    item.key.toLowerCase(),
-                                ) ? (
-                                    <Tooltip
-                                        key={item.key}
-                                        placement="top"
-                                        title={item.key}
-                                    >
-                                        {/* eslint-disable-next-line */}
-                                        <div
-                                            onClick={() =>
-                                                handleChange(item.key)
-                                            }
-                                            css={{
-                                                width: '100%',
-                                                height: 30,
-                                                background: item.key,
-                                                transition: 'all ease .2s',
-                                                cursor: 'pointer',
-                                                border:
-                                                    values &&
-                                                    values.includes(item.key)
-                                                        ? `2px solid ${primaryColor}`
-                                                        : `1px solid #ccc`,
-                                            }}
-                                        />
-                                    </Tooltip>
-                                ) : null,
-                            )}
+                        <div
+                            className={loaderStyle}
+                            // eslint-disable-next-line
+                            dangerouslySetInnerHTML={{
+                                __html: get(
+                                    this.colorFilter,
+                                    'customMessages.noResults',
+                                    'Fetching Colors',
+                                ),
+                            }}
+                        />
+                    );
+                }
+                if (error) {
+                    return (
+                        <div>
+                            Something went wrong! Error details{' '}
+                            {JSON.stringify(error)}
                         </div>
                     );
-                }}
-                loader={
-                    <div
-                        className={loaderStyle}
-                        // eslint-disable-next-line
-                        dangerouslySetInnerHTML={{
-                            __html: get(
-                                this.colorFilter,
-                                'customMessages.loading',
-                                'Loading colors',
-                            ),
-                        }}
-                    />
                 }
-                {...get(this.colorFilter, 'rsConfig')}
-            />
-        </React.Fragment>
+                if (data.length === 0) {
+                    return (
+                        <div
+                            // eslint-disable-next-line
+                            dangerouslySetInnerHTML={{
+                                __html: get(
+                                    this.colorFilter,
+                                    'customMessages.noResults',
+                                    'Fetching Colors',
+                                ),
+                            }}
+                        />
+                    );
+                }
+                const primaryColor =
+                    get(this.theme, 'colors.primaryColor', '') || '#0B6AFF';
+                const normalizedData = [];
+                data.forEach(i => {
+                    if (
+                        !normalizedData.find(n => n.key === i.key.toLowerCase())
+                    ) {
+                        normalizedData.push({
+                            ...i,
+                            key: i.key.toLowerCase(),
+                        });
+                    }
+                });
+                return (
+                    <div className={colorContainer}>
+                        {normalizedData.map(item =>
+                            browserStringColors.includes(
+                                item.key.toLowerCase(),
+                            ) ? (
+                                <Tooltip
+                                    key={item.key}
+                                    placement="top"
+                                    title={item.key}
+                                >
+                                    {/* eslint-disable-next-line */}
+                                    <div
+                                        onClick={() => handleChange(item.key)}
+                                        css={{
+                                            width: '100%',
+                                            height: 30,
+                                            background: item.key,
+                                            transition: 'all ease .2s',
+                                            cursor: 'pointer',
+                                            border:
+                                                values &&
+                                                values.includes(item.key)
+                                                    ? `2px solid ${primaryColor}`
+                                                    : `1px solid #ccc`,
+                                        }}
+                                    />
+                                </Tooltip>
+                            ) : null,
+                        )}
+                    </div>
+                );
+            }}
+            loader={
+                <div
+                    className={loaderStyle}
+                    // eslint-disable-next-line
+                    dangerouslySetInnerHTML={{
+                        __html: get(
+                            this.colorFilter,
+                            'customMessages.loading',
+                            'Loading colors',
+                        ),
+                    }}
+                />
+            }
+            {...get(this.colorFilter, 'rsConfig')}
+        />
     );
 
     renderSizeFilter = font => (
