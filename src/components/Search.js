@@ -355,7 +355,7 @@ class Search extends Component {
                                     },
                                     product_count: {
                                         sum: {
-                                            field: 'product_count.sum',
+                                            field: 'product_count',
                                         },
                                     },
                                 },
@@ -384,7 +384,7 @@ class Search extends Component {
                                     // eslint-disable-next-line
                                     dangerouslySetInnerHTML={{
                                         __html: get(
-                                            this.sizeFilter,
+                                            this.collectionFilter,
                                             'customMessages.loading',
                                             'Loading collections',
                                         ),
