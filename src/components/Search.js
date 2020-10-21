@@ -26,6 +26,7 @@ import {
     defaultPreferences,
     getReactDependenciesFromPreferences,
     getPreferences,
+    shopifyDefaultFields,
 } from '../utils';
 
 const { Meta } = Card;
@@ -461,7 +462,6 @@ class Search extends Component {
 
     renderColorFilter = font => (
         <MultiList
-            dataField="variants.option2.keyword"
             componentId="color"
             react={{
                 and: [
@@ -575,13 +575,19 @@ class Search extends Component {
                 />
             }
             {...get(this.colorFilter, 'rsConfig')}
+            dataField={getFilterField(
+                get(
+                    this.colorFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.color,
+                ),
+            )}
         />
     );
 
     renderSizeFilter = font => (
         <React.Fragment>
             <MultiList
-                dataField="variants.option1.keyword"
                 componentId="size"
                 react={{
                     and: [
@@ -620,6 +626,13 @@ class Search extends Component {
                 )}
                 showCheckbox={this.themeType !== 'minimal'}
                 {...get(this.sizeFilter, 'rsConfig')}
+                dataField={getFilterField(
+                    get(
+                        this.sizeFilter,
+                        'rsConfig.dataField',
+                        shopifyDefaultFields.size,
+                    ),
+                )}
             />
         </React.Fragment>
     );

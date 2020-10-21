@@ -187,6 +187,16 @@ export const defaultPreferences = {
     exportType: 'other',
 };
 
+export const shopifyDefaultFields = {
+    size: 'variants.option1',
+    color: 'variants.option2',
+    price: 'variants.price',
+    title: 'title',
+    image: 'image.src',
+    description: 'body_html',
+    handle: 'handle',
+};
+
 export const getReactDependenciesFromPreferences = (
     preferences = {},
     id = '',
