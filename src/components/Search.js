@@ -17,7 +17,7 @@ import get from 'lodash.get';
 import { string, bool } from 'prop-types';
 import { mediaMax } from '@divyanshu013/media';
 import { css, injectGlobal } from 'react-emotion';
-import { Card, Collapse, Button, Icon, message, Affix, Tooltip } from 'antd';
+import { Card, Collapse, Button, Icon, Affix, Tooltip } from 'antd';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import Suggestions from './Suggestions';
@@ -646,8 +646,8 @@ class Search extends Component {
                     popularSuggestions,
                     downshiftProps,
                     loading,
-                }) => {
-                    return downshiftProps.isOpen && Boolean(value.length) ? (
+                }) =>
+                    downshiftProps.isOpen && Boolean(value.length) ? (
                         <Suggestions
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
@@ -674,8 +674,8 @@ class Search extends Component {
                             )}
                             popularSuggestions={popularSuggestions}
                         />
-                    ) : null;
-                }}
+                    ) : null
+                }
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
                 enablePopularSuggestions={get(
