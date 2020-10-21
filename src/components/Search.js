@@ -455,6 +455,7 @@ class Search extends Component {
                         );
                     }}
                     {...get(this.collectionFilter, 'rsConfig')}
+                    title=""
                 />
             </React.Fragment>
         );
@@ -582,6 +583,7 @@ class Search extends Component {
                     shopifyDefaultFields.color,
                 ),
             )}
+            title=""
         />
     );
 
@@ -633,6 +635,7 @@ class Search extends Component {
                         shopifyDefaultFields.size,
                     ),
                 )}
+                title=""
             />
         </React.Fragment>
     );
@@ -904,6 +907,7 @@ class Search extends Component {
                                                     ),
                                                 ),
                                             }}
+                                            title=""
                                         />
                                     </Panel>
                                 ))}
@@ -920,7 +924,11 @@ class Search extends Component {
                                                     fontSize: '15px',
                                                 }}
                                             >
-                                                Collections
+                                                {get(
+                                                    this.collectionFilter,
+                                                    'rsConfig.title',
+                                                    'Collections',
+                                                )}
                                             </span>
                                         }
                                         showArrow={this.themeType !== 'minimal'}
@@ -947,7 +955,11 @@ class Search extends Component {
                                                     fontSize: '15px',
                                                 }}
                                             >
-                                                Color
+                                                {get(
+                                                    this.colorFilter,
+                                                    'rsConfig.title',
+                                                    'Color',
+                                                )}
                                             </span>
                                         }
                                         showArrow={this.themeType !== 'minimal'}
@@ -973,7 +985,11 @@ class Search extends Component {
                                                     fontSize: '15px',
                                                 }}
                                             >
-                                                Size
+                                                {get(
+                                                    this.sizeFilter,
+                                                    'rsConfig.title',
+                                                    'Size',
+                                                )}
                                             </span>
                                         }
                                         showArrow={this.themeType !== 'minimal'}
@@ -998,7 +1014,11 @@ class Search extends Component {
                                                     fontSize: '15px',
                                                 }}
                                             >
-                                                Price
+                                                {get(
+                                                    this.priceFilter,
+                                                    'rsConfig.title',
+                                                    'Price',
+                                                )}
                                             </span>
                                         }
                                         showArrow={this.themeType !== 'minimal'}
@@ -1043,6 +1063,7 @@ class Search extends Component {
                                                 ),
                                             }}
                                             {...this.priceFilter.rsConfig}
+                                            title=""
                                         />
                                     </Panel>
                                 ) : null}
