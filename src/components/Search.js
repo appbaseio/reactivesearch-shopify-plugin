@@ -14,7 +14,7 @@ import {
     Checkbox,
 } from '@appbaseio/reactivesearch/lib/styles/FormControlList';
 import get from 'lodash.get';
-import { string } from 'prop-types';
+import { string, bool } from 'prop-types';
 import { mediaMax } from '@divyanshu013/media';
 import { css, injectGlobal } from 'react-emotion';
 import { Card, Collapse, Button, Icon, message, Affix, Tooltip } from 'antd';
@@ -729,6 +729,7 @@ class Search extends Component {
 
     render() {
         const { toggleFilters } = this.state;
+        const { isPreview } = this.props;
         const isMobile = window.innerWidth < 768;
         return (
             <ReactiveBase
@@ -1117,14 +1118,16 @@ class Search extends Component {
                                     { _id, variants, ...rest },
                                     triggerClickAnalytics,
                                 ) => {
-                                    const handle = get(
-                                        rest,
-                                        get(
-                                            this.resultSettings,
-                                            'fields.handle',
-                                            'handle',
-                                        ),
-                                    );
+                                    const handle = isPreview
+                                        ? ''
+                                        : get(
+                                              rest,
+                                              get(
+                                                  this.resultSettings,
+                                                  'fields.handle',
+                                                  'handle',
+                                              ),
+                                          );
 
                                     const image = get(
                                         rest,
@@ -1158,11 +1161,13 @@ class Search extends Component {
                                             'fields.price',
                                         ),
                                     );
+                                    const redirectToProduct =
+                                        !isPreview || handle;
                                     return (
                                         <a
                                             onClick={triggerClickAnalytics}
                                             href={
-                                                handle
+                                                redirectToProduct
                                                     ? `/products/${handle}`
                                                     : undefined
                                             }
@@ -1294,7 +1299,7 @@ class Search extends Component {
                                                     </div>
                                                 ) : null}
 
-                                                {handle ? (
+                                                {redirectToProduct ? (
                                                     <Button
                                                         type="primary"
                                                         size="large"
@@ -1376,9 +1381,14 @@ class Search extends Component {
     }
 }
 
+Search.defaultProps = {
+    isPreview: false,
+};
+
 Search.propTypes = {
     appname: string.isRequired,
     credentials: string.isRequired,
+    isPreview: bool,
 };
 
 export default Search;

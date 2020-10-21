@@ -105,11 +105,12 @@ class App extends Component {
     render() {
         const { isOpen } = this.state;
         const { theme, searchButton } = this;
-        const { openWithModal, disableSearchText } = this.props;
+        const { openWithModal, isPreview, disableSearchText } = this.props;
         if (!this.index || !this.credentials || !this.url) {
             return null;
         }
         const isOpenWithModal = Boolean(openWithModal);
+        const isShowingPreview = Boolean(isPreview);
         const isSearchTextHidden = Boolean(disableSearchText);
 
         let fontFamilyLink = '';
@@ -129,6 +130,7 @@ class App extends Component {
                     appname={this.index}
                     credentials={this.credentials}
                     url={this.url}
+                    isPreview={isShowingPreview}
                 />
             );
         }
@@ -166,6 +168,7 @@ class App extends Component {
                             appname={this.index}
                             credentials={this.credentials}
                             url={this.url}
+                            isPreview={isShowingPreview}
                         />
                     </Modal>
                 )}
@@ -176,9 +179,11 @@ class App extends Component {
 App.defaultProps = {
     openWithModal: 'true',
     disableSearchText: 'false',
+    isPreview: 'false',
     isOpen: 'false', // if true, then modal will be in open state
 };
 App.propTypes = {
+    isPreview: PropTypes.string,
     openWithModal: PropTypes.string,
     disableSearchText: PropTypes.string,
     isOpen: PropTypes.string,
