@@ -43,11 +43,10 @@ const Suggestions = ({
     parsedSuggestions,
     themeConfig,
     currency,
-    popularSearches,
-    showPopularSearches,
     loading,
     customMessage,
     customSuggestions,
+    popularSuggestions,
     themeType,
     fields,
 }) => (
@@ -111,7 +110,7 @@ const Suggestions = ({
                 ) : null}
 
                 {parsedSuggestions.slice(0, 3).map((suggestion, index) => {
-                    const source = suggestion._source;
+                    const { source } = suggestion;
                     const handle = get(source, get(fields, 'handle', 'handle'));
                     const title = get(source, get(fields, 'title', 'title'));
                     const image = get(
@@ -254,29 +253,25 @@ const Suggestions = ({
                     );
                 })}
 
-                {popularSearches.length > 0 && showPopularSearches ? (
+                {popularSuggestions.length ? (
                     <h3 className={headingStyles(themeConfig.colors)}>
                         Popular Searches
                     </h3>
                 ) : null}
-                {showPopularSearches
-                    ? popularSearches.map(item => (
-                          <div
-                              key={item.key}
-                              className={popularSearchStyles(
-                                  themeConfig.colors,
-                              )}
-                              {...getItemProps({
-                                  item: {
-                                      label: item.key,
-                                      value: item.key,
-                                  },
-                              })}
-                          >
-                              {item.key}
-                          </div>
-                      ))
-                    : null}
+                {popularSuggestions.map(item => (
+                    <div
+                        key={item.label}
+                        className={popularSearchStyles(themeConfig.colors)}
+                        {...getItemProps({
+                            item: {
+                                label: item.label,
+                                value: item.value,
+                            },
+                        })}
+                    >
+                        {item.label}
+                    </div>
+                ))}
 
                 <h3
                     className={headingStyles(themeConfig.colors)}
@@ -307,6 +302,7 @@ const Suggestions = ({
 Suggestions.propTypes = {
     currentValue: string,
     categories: arrayOf(object),
+    popularSuggestions: arrayOf(object),
     getItemProps: func,
     highlightedIndex: number,
     parsedSuggestions: arrayOf(object),

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
     ReactiveBase,
-    CategorySearch,
+    DataSearch,
     MultiList,
     ReactiveList,
     SelectedFilters,
@@ -172,7 +172,6 @@ class Search extends Component {
         super();
         this.state = {
             toggleFilters: false,
-            popularSearches: [],
         };
         this.preferences = getPreferences();
         this.theme = get(
@@ -223,8 +222,6 @@ class Search extends Component {
 
     async componentDidMount() {
         try {
-            this.getPopularSearches();
-
             const inputRef = get(searchRef, 'current._inputRef', null);
 
             if (inputRef) {
@@ -250,34 +247,6 @@ class Search extends Component {
             console.error(error);
         }
     }
-
-    getPopularSearches = async () => {
-        let topPopularSearches = [];
-        try {
-            const response = await fetch(
-                `${this.url}/_analytics/${this.index}/popular-searches`,
-                {
-                    headers: {
-                        Authorization: `Basic ${btoa(this.credentials)}`,
-                    },
-                },
-            );
-            const { popularSearches } = await response.json();
-            if (response.status >= 400) {
-                message.error(popularSearches.message);
-            } else {
-                topPopularSearches = popularSearches.sort(item => item.count);
-                if (topPopularSearches.length > 5) {
-                    topPopularSearches = topPopularSearches.slice(0, 5);
-                }
-                this.setState({
-                    popularSearches: topPopularSearches,
-                });
-            }
-        } catch (e) {
-            console.error('No Popular Searches');
-        }
-    };
 
     scrollHandler = () => {
         const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer;
@@ -641,10 +610,10 @@ class Search extends Component {
     );
 
     renderCategorySearch = categorySearchProps => {
-        const { toggleFilters, popularSearches } = this.state;
+        const { toggleFilters } = this.state;
 
         return (
-            <CategorySearch
+            <DataSearch
                 componentId="search"
                 filterLabel="Search"
                 className="search"
@@ -673,11 +642,12 @@ class Search extends Component {
                 render={({
                     value,
                     categories,
-                    rawSuggestions,
+                    data,
+                    popularSuggestions,
                     downshiftProps,
                     loading,
-                }) =>
-                    downshiftProps.isOpen && Boolean(value.length) ? (
+                }) => {
+                    return downshiftProps.isOpen && Boolean(value.length) ? (
                         <Suggestions
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
@@ -691,27 +661,27 @@ class Search extends Component {
                             getItemProps={downshiftProps.getItemProps}
                             highlightedIndex={downshiftProps.highlightedIndex}
                             loading={loading}
-                            parsedSuggestions={rawSuggestions.filter(
+                            parsedSuggestions={data.filter(
                                 suggestion =>
-                                    suggestion._source.type !== 'collections',
+                                    get(suggestion, 'source.type') !==
+                                    'collections',
                             )}
                             themeConfig={this.theme}
                             currency={this.currency}
-                            showPopularSearches={get(
-                                this.searchSettings,
-                                'showPopularSearches',
-                            )}
-                            popularSearches={popularSearches}
                             customSuggestions={get(
                                 this.searchSettings,
                                 'customSuggestions',
                             )}
+                            popularSuggestions={popularSuggestions}
                         />
-                    ) : null
-                }
+                    ) : null;
+                }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
-                categoryField="product_type.keyword"
+                enablePopularSuggestions={get(
+                    this.searchSettings,
+                    'showPopularSearches',
+                )}
             />
         );
     };
