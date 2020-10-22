@@ -8,7 +8,6 @@ import {
     DynamicRangeSlider,
     ReactiveComponent,
 } from '@appbaseio/reactivesearch';
-import SearchIcon from '@appbaseio/reactivesearch/lib/components/shared/SearchSvg';
 import {
     UL,
     Checkbox,
