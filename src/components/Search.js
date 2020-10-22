@@ -715,6 +715,13 @@ class Search extends Component {
                 appbaseConfig={{
                     recordAnalytics: true,
                 }}
+                setSearchParams={
+                    isPreview
+                        ? url => {
+                              console.log('THIS IS url', url);
+                          }
+                        : undefined
+                }
             >
                 {isMobile ? (
                     <Affix
