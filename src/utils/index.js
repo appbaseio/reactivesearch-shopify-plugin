@@ -165,7 +165,9 @@ export const defaultPreferences = {
         rsConfig: null,
     },
     resultSettings: {
-        rsConfig: null,
+        rsConfig: {
+            infiniteScroll: true,
+        },
     },
     facetSettings: {
         globalSettings: {

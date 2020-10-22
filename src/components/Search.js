@@ -229,7 +229,13 @@ class Search extends Component {
                 inputRef.focus();
             }
 
-            if (get(this.resultSettings, 'rsConfig.pagination', true)) {
+            if (
+                get(
+                    this.resultSettings,
+                    'rsConfig.infiniteScroll',
+                    defaultPreferences.resultSettings.rsConfig.infiniteScroll,
+                )
+            ) {
                 const containerCollection = document.getElementsByClassName(
                     'ant-modal',
                 );
