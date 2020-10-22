@@ -632,17 +632,7 @@ class Search extends Component {
                 debounce={100}
                 placeholder="Search for products..."
                 iconPosition="right"
-                icon={
-                    get(this.searchSettings, 'searchButton.icon') || (
-                        <div
-                            style={{
-                                marginTop: -3,
-                            }}
-                        >
-                            <SearchIcon />
-                        </div>
-                    )
-                }
+                icon={get(this.searchSettings, 'searchButton.icon')}
                 ref={searchRef}
                 css={{
                     marginBottom: 20,
