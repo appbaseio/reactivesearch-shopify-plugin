@@ -48,6 +48,7 @@ const Suggestions = ({
     customSuggestions,
     popularSuggestions,
     themeType,
+    isPreview,
     fields,
 }) => (
     <div
@@ -124,8 +125,13 @@ const Suggestions = ({
                     const price = get(source, get(fields, 'price'));
                     const variants = get(source, 'variants');
                     return (
+                        // eslint-disable-next-line
                         <a
-                            href={handle ? `/products/${handle}` : undefined}
+                            href={
+                                !isPreview && handle
+                                    ? `/products/${handle}`
+                                    : undefined
+                            }
                             key={suggestion.value}
                         >
                             <div

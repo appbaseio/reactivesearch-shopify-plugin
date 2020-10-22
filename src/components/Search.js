@@ -611,7 +611,7 @@ class Search extends Component {
 
     renderCategorySearch = categorySearchProps => {
         const { toggleFilters } = this.state;
-
+        const { isPreview } = this.props;
         return (
             <DataSearch
                 componentId="search"
@@ -672,6 +672,7 @@ class Search extends Component {
                                 this.searchSettings,
                                 'customSuggestions',
                             )}
+                            isPreview={isPreview}
                             popularSuggestions={popularSuggestions}
                         />
                     ) : null
@@ -746,7 +747,9 @@ class Search extends Component {
                         css={{
                             display: 'grid',
                             gridTemplateColumns: '300px 1fr',
-                            [mediaMax.medium]: { gridTemplateColumns: '1fr' },
+                            [mediaMax.medium]: {
+                                gridTemplateColumns: '1fr',
+                            },
                             gridGap: 20,
                         }}
                     >
@@ -1058,7 +1061,9 @@ class Search extends Component {
                                     this.exportType === 'shopify'
                                         ? {
                                               query: {
-                                                  term: { type: 'products' },
+                                                  term: {
+                                                      type: 'products',
+                                                  },
                                               },
                                           }
                                         : null
@@ -1089,7 +1094,7 @@ class Search extends Component {
                                     time,
                                 }) => (
                                     <div
-                                        css={{ textAlign: 'right' }}
+                                        css={{ textAlign: 'center' }}
                                         // eslint-disable-next-line
                                         dangerouslySetInnerHTML={{
                                             __html: get(
