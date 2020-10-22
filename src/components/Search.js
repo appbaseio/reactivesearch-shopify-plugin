@@ -652,7 +652,6 @@ class Search extends Component {
                     data,
                     popularSuggestions,
                     downshiftProps,
-                    loading,
                 }) =>
                     downshiftProps.isOpen && Boolean(value.length) ? (
                         <Suggestions
@@ -667,7 +666,6 @@ class Search extends Component {
                             )}
                             getItemProps={downshiftProps.getItemProps}
                             highlightedIndex={downshiftProps.highlightedIndex}
-                            loading={loading}
                             parsedSuggestions={data.filter(
                                 suggestion =>
                                     get(suggestion, 'source.type') !==
