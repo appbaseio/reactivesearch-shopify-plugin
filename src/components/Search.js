@@ -172,6 +172,7 @@ class Search extends Component {
         super();
         this.state = {
             toggleFilters: false,
+            isMobile: window.innerWidth < 768,
         };
         this.preferences = getPreferences();
         this.theme = get(
@@ -221,6 +222,7 @@ class Search extends Component {
     }
 
     async componentDidMount() {
+        window.addEventListener('resize', this.updateDimensions);
         try {
             const inputRef = get(searchRef, 'current._inputRef', null);
 
@@ -247,6 +249,16 @@ class Search extends Component {
             console.error(error);
         }
     }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateDimensions);
+    }
+
+    updateDimensions = () => {
+        this.setState({
+            isMobile: window.innerWidth < 768,
+        });
+    };
 
     scrollHandler = () => {
         const { scrollTop, clientHeight, scrollHeight } = this.scrollContainer;
@@ -690,8 +702,8 @@ class Search extends Component {
     showCollapseFilters = componentsIdArray => {
         const {
             settings: { isFilterCollapsible },
+            isMobile,
         } = this.state;
-        const isMobile = window.innerWidth < 768;
         if (isMobile) {
             return componentsIdArray;
         }
@@ -702,9 +714,8 @@ class Search extends Component {
     };
 
     render() {
-        const { toggleFilters } = this.state;
+        const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
-        const isMobile = window.innerWidth < 768;
         return (
             <ReactiveBase
                 app={this.index}
