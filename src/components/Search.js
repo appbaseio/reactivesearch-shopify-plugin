@@ -204,6 +204,9 @@ class Search extends Component {
         this.collectionFilter = this.staticFacets.find(
             o => o.name === 'collection',
         );
+        this.productTypeFilter = this.staticFacets.find(
+            o => o.name === 'productType',
+        );
 
         this.sizeFilter = this.staticFacets.find(o => o.name === 'size');
         this.priceFilter = this.staticFacets.find(o => o.name === 'price');
@@ -444,6 +447,31 @@ class Search extends Component {
                     title=""
                 />
             </React.Fragment>
+        );
+    };
+
+    renderProductTypeFilter = font => {
+        if (!this.productTypeFilter) {
+            return null;
+        }
+        return (
+            <MultiList
+                componentId="productType"
+                dataField="product_type.keyword"
+                css={font}
+                showCheckbox={this.themeType !== 'minimal'}
+                react={{
+                    and: [
+                        ...getReactDependenciesFromPreferences(
+                            this.preferences,
+                            'productType',
+                        ),
+                    ],
+                }}
+                filterLabel="Product Type"
+                {...get(this.productTypeFilter, 'rsConfig')}
+                title=""
+            />
         );
     };
 
@@ -719,13 +747,7 @@ class Search extends Component {
                 appbaseConfig={{
                     recordAnalytics: true,
                 }}
-                setSearchParams={
-                    isPreview
-                        ? url => {
-                              console.log('THIS IS url', url);
-                          }
-                        : undefined
-                }
+                setSearchParams={isPreview ? () => {} : undefined}
             >
                 {isMobile ? (
                     <Affix
@@ -895,6 +917,36 @@ class Search extends Component {
                                         />
                                     </Panel>
                                 ))}
+                                {this.productTypeFilter ? (
+                                    <Panel
+                                        header={
+                                            <span
+                                                css={{
+                                                    color: get(
+                                                        this.theme,
+                                                        'colors.titleColor',
+                                                    ),
+                                                    fontWeight: 'bold',
+                                                    fontSize: '15px',
+                                                }}
+                                            >
+                                                {get(
+                                                    this.productTypeFilter,
+                                                    'rsConfig.title',
+                                                    'Product Type',
+                                                )}
+                                            </span>
+                                        }
+                                        showArrow={this.themeType !== 'minimal'}
+                                        key="productType"
+                                        css={this.getFontFamily()}
+                                        className="filter"
+                                    >
+                                        {this.renderProductTypeFilter(
+                                            this.getFontFamily,
+                                        )}
+                                    </Panel>
+                                ) : null}
                                 {this.collectionFilter ? (
                                     <Panel
                                         header={
