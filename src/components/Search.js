@@ -816,107 +816,6 @@ class Search extends Component {
                                     this.preferences,
                                 )}
                             >
-                                {this.dynamicFacets.map(listComponent => (
-                                    <Panel
-                                        header={
-                                            <span
-                                                css={{
-                                                    color: get(
-                                                        this.theme,
-                                                        'colors.titleColor',
-                                                    ),
-                                                    fontWeight: 'bold',
-                                                    fontSize: '15px',
-                                                }}
-                                            >
-                                                {get(
-                                                    listComponent,
-                                                    'rsConfig.title',
-                                                )}
-                                            </span>
-                                        }
-                                        showArrow={this.themeType !== 'minimal'}
-                                        key={get(
-                                            listComponent,
-                                            'rsConfig.componentId',
-                                        )}
-                                        css={{
-                                            ...this.getFontFamily(),
-                                            maxWidth: isMobile
-                                                ? 'none'
-                                                : '298px',
-                                        }}
-                                        className="filter"
-                                    >
-                                        <MultiList
-                                            key={get(
-                                                listComponent,
-                                                'rsConfig.componentId',
-                                            )}
-                                            componentId={get(
-                                                listComponent,
-                                                'rsConfig.componentId',
-                                            )}
-                                            {...listComponent.rsConfig}
-                                            dataField={getFilterField(
-                                                get(
-                                                    listComponent,
-                                                    'rsConfig.dataField',
-                                                ),
-                                            )}
-                                            renderItem={item => (
-                                                <span
-                                                    // eslint-disable-next-line
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: item,
-                                                    }}
-                                                />
-                                            )}
-                                            loader={
-                                                <div
-                                                    className={loaderStyle}
-                                                    // eslint-disable-next-line
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: get(
-                                                            listComponent,
-                                                            'customMessages.loading',
-                                                            'Loading options',
-                                                        ),
-                                                    }}
-                                                />
-                                            }
-                                            renderNoResults={() => (
-                                                <div
-                                                    // eslint-disable-next-line
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: get(
-                                                            listComponent,
-                                                            'customMessages.noResults',
-                                                            'No items Found',
-                                                        ),
-                                                    }}
-                                                />
-                                            )}
-                                            showCount={
-                                                this.themeType !== 'minimal'
-                                            }
-                                            showCheckbox={
-                                                this.themeType !== 'minimal'
-                                            }
-                                            css={this.getFontFamily()}
-                                            react={{
-                                                and: getReactDependenciesFromPreferences(
-                                                    this.preferences,
-                                                    get(
-                                                        listComponent,
-                                                        'rsConfig.componentId',
-                                                    ),
-                                                ),
-                                            }}
-                                            title=""
-                                        />
-                                    </Panel>
-                                ))}
                                 {this.productTypeFilter ? (
                                     <Panel
                                         header={
@@ -1103,6 +1002,107 @@ class Search extends Component {
                                         />
                                     </Panel>
                                 ) : null}
+                                {this.dynamicFacets.map(listComponent => (
+                                    <Panel
+                                        header={
+                                            <span
+                                                css={{
+                                                    color: get(
+                                                        this.theme,
+                                                        'colors.titleColor',
+                                                    ),
+                                                    fontWeight: 'bold',
+                                                    fontSize: '15px',
+                                                }}
+                                            >
+                                                {get(
+                                                    listComponent,
+                                                    'rsConfig.title',
+                                                )}
+                                            </span>
+                                        }
+                                        showArrow={this.themeType !== 'minimal'}
+                                        key={get(
+                                            listComponent,
+                                            'rsConfig.componentId',
+                                        )}
+                                        css={{
+                                            ...this.getFontFamily(),
+                                            maxWidth: isMobile
+                                                ? 'none'
+                                                : '298px',
+                                        }}
+                                        className="filter"
+                                    >
+                                        <MultiList
+                                            key={get(
+                                                listComponent,
+                                                'rsConfig.componentId',
+                                            )}
+                                            componentId={get(
+                                                listComponent,
+                                                'rsConfig.componentId',
+                                            )}
+                                            {...listComponent.rsConfig}
+                                            dataField={getFilterField(
+                                                get(
+                                                    listComponent,
+                                                    'rsConfig.dataField',
+                                                ),
+                                            )}
+                                            renderItem={item => (
+                                                <span
+                                                    // eslint-disable-next-line
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: item,
+                                                    }}
+                                                />
+                                            )}
+                                            loader={
+                                                <div
+                                                    className={loaderStyle}
+                                                    // eslint-disable-next-line
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: get(
+                                                            listComponent,
+                                                            'customMessages.loading',
+                                                            'Loading options',
+                                                        ),
+                                                    }}
+                                                />
+                                            }
+                                            renderNoResults={() => (
+                                                <div
+                                                    // eslint-disable-next-line
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: get(
+                                                            listComponent,
+                                                            'customMessages.noResults',
+                                                            'No items Found',
+                                                        ),
+                                                    }}
+                                                />
+                                            )}
+                                            showCount={
+                                                this.themeType !== 'minimal'
+                                            }
+                                            showCheckbox={
+                                                this.themeType !== 'minimal'
+                                            }
+                                            css={this.getFontFamily()}
+                                            react={{
+                                                and: getReactDependenciesFromPreferences(
+                                                    this.preferences,
+                                                    get(
+                                                        listComponent,
+                                                        'rsConfig.componentId',
+                                                    ),
+                                                ),
+                                            }}
+                                            title=""
+                                        />
+                                    </Panel>
+                                ))}
                             </Collapse>
                         </div>
 
