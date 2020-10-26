@@ -28,5 +28,10 @@ module.exports = {
         'react/jsx-filename-extension': 0,
         'react/require-default-props': 0,
         'react/forbid-prop-types': 0,
+        'react/jsx-props-no-spreading': 0,
+        // TODO: Enable later
+        'react/prop-types': 0,
+        'react/jsx-fragments': 0,
+        'prettier/prettier': 0
     },
 };

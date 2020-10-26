@@ -1,3 +1,6 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
     ReactiveBase,
@@ -15,7 +18,6 @@ import {
 import get from 'lodash.get';
 import { string, bool } from 'prop-types';
 import { mediaMax } from '@divyanshu013/media';
-import { css, injectGlobal } from 'react-emotion';
 import { Card, Collapse, Button, Icon, Affix, Tooltip } from 'antd';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
@@ -53,24 +55,71 @@ const getFilterField = (field = '') => {
     }
     return field;
 };
-const paginationStyle = (toggleFilters, color) => css`
-    max-width:none;
-    a{
-        border-radius: 2px;
+
+const reactiveListCls= (toggleFilters, theme) =>css`
+    .custom-no-results {
+        display: flex;
+        justify-content: center;
+        padding: 25px 0;
     }
-    a:first-child{
-        float: left;
+    .custom-pagination {
+        max-width:none;
+        a {
+            border-radius: 2px;
+        }
+        a:first-child{
+            float: left;
+        }
+        a:last-child{
+            float: right;
+        }
+        a.active {
+            color: ${get(theme, 'colors.textColor')};
+        }
+        @media(max-width: 768px){
+            display: ${toggleFilters ? 'none' : 'block'}
+        }
     }
-    a:last-child{
-        float: right;
+    .custom-powered-by {
+        margin: 15px;
+        display: none;
+        visibility: hidden;
     }
-    a.active {
-        color: ${color};
+    .custom-result-info {
+        padding: 18px;
+        height: 60px;
+        p: {
+            margin: 0;
+            fontSize: 1rem;
+            fontWeight: 500;
+            textAlign: right;
+        }
+        ${[mediaMax.medium]}: {
+            display: ${
+                toggleFilters
+                    ? 'none'
+                    : 'grid'
+            };
+        }
     }
-    @media(max-width: 768px){
-        display: ${toggleFilters ? 'none' : 'block'}
-    },
-`;
+    .custom-result-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-gap: 10px;
+        ${[mediaMax.medium]}: {
+            grid-template-columns:
+                repeat(auto-fit, minmax(200px, 1fr));
+            display: ${
+                toggleFilters
+                    ? 'none'
+                    : 'grid'
+            };
+        }
+        ${[mediaMax.small]}: {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)),
+        }
+    }
+`
 
 export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
@@ -200,27 +249,22 @@ class Search extends Component {
             get(this.preferences, 'facetSettings.dynamicFacets') || [];
         this.staticFacets =
             get(this.preferences, 'facetSettings.staticFacets') || [];
-        this.colorFilter = this.staticFacets.find(o => o.name === 'color');
+        this.colorFilter = this.staticFacets.find((o) => o.name === 'color');
         this.collectionFilter = this.staticFacets.find(
-            o => o.name === 'collection',
+            (o) => o.name === 'collection',
         );
         this.productTypeFilter = this.staticFacets.find(
-            o => o.name === 'productType',
+            (o) => o.name === 'productType',
         );
 
-        this.sizeFilter = this.staticFacets.find(o => o.name === 'size');
-        this.priceFilter = this.staticFacets.find(o => o.name === 'price');
+        this.sizeFilter = this.staticFacets.find((o) => o.name === 'size');
+        this.priceFilter = this.staticFacets.find((o) => o.name === 'price');
 
         this.exportType = get(
             this.preferences,
             'exportType',
             defaultPreferences.exportType,
         );
-        const globalStyles = get(this.globalSettings, 'customCss', '');
-        // eslint-disable-next-line
-        injectGlobal`
-            ${globalStyles}
-        `;
     }
 
     async componentDidMount() {
@@ -265,6 +309,7 @@ class Search extends Component {
     updateDimensions = () => {
         this.setState({
             isMobile: window.innerWidth < 768,
+            toggleFilters: false
         });
     };
 
@@ -278,7 +323,7 @@ class Search extends Component {
         }
     };
 
-    getMultiListProps = listComponentProps => {
+    getMultiListProps = (listComponentProps) => {
         const { title, ...restProps } = listComponentProps;
         return restProps;
     };
@@ -298,7 +343,7 @@ class Search extends Component {
         return fontFamily ? { fontFamily } : {};
     };
 
-    renderCollectionFilter = font => {
+    renderCollectionFilter = (font) => {
         if (!this.collectionFilter) {
             return null;
         }
@@ -369,7 +414,7 @@ class Search extends Component {
                         if (loading) {
                             return (
                                 <div
-                                    className={loaderStyle}
+                                    css={loaderStyle}
                                     // eslint-disable-next-line
                                     dangerouslySetInnerHTML={{
                                         __html: get(
@@ -395,7 +440,7 @@ class Search extends Component {
                                         }}
                                     />
                                 )}
-                                {data.map(item => {
+                                {data.map((item) => {
                                     const isChecked = !!value[item.key];
                                     const title = get(
                                         item,
@@ -425,16 +470,12 @@ class Search extends Component {
                                             />
                                             {/* eslint-disable-next-line */}
                                             <label
-                                                htmlFor={`collection-${
-                                                    item.key
-                                                }`}
+                                                htmlFor={`collection-${item.key}`}
                                             >
-                                                {
-                                                    <span>
-                                                        <span>{title}</span>
-                                                        <span>{count}</span>
-                                                    </span>
-                                                }
+                                                <span>
+                                                    <span>{title}</span>
+                                                    <span>{count}</span>
+                                                </span>
                                             </label>
                                         </li>
                                     );
@@ -449,7 +490,7 @@ class Search extends Component {
         );
     };
 
-    renderProductTypeFilter = font => {
+    renderProductTypeFilter = (font) => {
         if (!this.productTypeFilter) {
             return null;
         }
@@ -474,7 +515,7 @@ class Search extends Component {
         );
     };
 
-    renderColorFilter = font => (
+    renderColorFilter = (font) => (
         <MultiList
             componentId="color"
             react={{
@@ -495,7 +536,7 @@ class Search extends Component {
                 if (loading) {
                     return (
                         <div
-                            className={loaderStyle}
+                            css={loaderStyle}
                             // eslint-disable-next-line
                             dangerouslySetInnerHTML={{
                                 __html: get(
@@ -532,9 +573,11 @@ class Search extends Component {
                 const primaryColor =
                     get(this.theme, 'colors.primaryColor', '') || '#0B6AFF';
                 const normalizedData = [];
-                data.forEach(i => {
+                data.forEach((i) => {
                     if (
-                        !normalizedData.find(n => n.key === i.key.toLowerCase())
+                        !normalizedData.find(
+                            (n) => n.key === i.key.toLowerCase(),
+                        )
                     ) {
                         normalizedData.push({
                             ...i,
@@ -543,8 +586,8 @@ class Search extends Component {
                     }
                 });
                 return (
-                    <div className={colorContainer}>
-                        {normalizedData.map(item =>
+                    <div css={colorContainer}>
+                        {normalizedData.map((item) =>
                             browserStringColors.includes(
                                 item.key.toLowerCase(),
                             ) ? (
@@ -556,7 +599,7 @@ class Search extends Component {
                                     {/* eslint-disable-next-line */}
                                     <div
                                         onClick={() => handleChange(item.key)}
-                                        css={{
+                                        style={{
                                             width: '100%',
                                             height: 30,
                                             background: item.key,
@@ -577,7 +620,7 @@ class Search extends Component {
             }}
             loader={
                 <div
-                    className={loaderStyle}
+                    css={loaderStyle}
                     // eslint-disable-next-line
                     dangerouslySetInnerHTML={{
                         __html: get(
@@ -600,7 +643,7 @@ class Search extends Component {
         />
     );
 
-    renderSizeFilter = font => (
+    renderSizeFilter = (font) => (
         <React.Fragment>
             <MultiList
                 componentId="size"
@@ -616,7 +659,7 @@ class Search extends Component {
                 css={font}
                 loader={
                     <div
-                        className={loaderStyle}
+                        css={loaderStyle}
                         // eslint-disable-next-line
                         dangerouslySetInnerHTML={{
                             __html: get(
@@ -653,7 +696,7 @@ class Search extends Component {
         </React.Fragment>
     );
 
-    renderCategorySearch = categorySearchProps => {
+    renderCategorySearch = (categorySearchProps) => {
         const { toggleFilters } = this.state;
         const { isPreview } = this.props;
         return (
@@ -666,7 +709,7 @@ class Search extends Component {
                 iconPosition="right"
                 icon={get(this.searchSettings, 'searchButton.icon')}
                 ref={searchRef}
-                css={{
+                style={{
                     marginBottom: 20,
                     position: 'sticky',
                     top: '10px',
@@ -694,7 +737,7 @@ class Search extends Component {
                             getItemProps={downshiftProps.getItemProps}
                             highlightedIndex={downshiftProps.highlightedIndex}
                             parsedSuggestions={data.filter(
-                                suggestion =>
+                                (suggestion) =>
                                     get(suggestion, 'source.type') !==
                                     'collections',
                             )}
@@ -719,7 +762,7 @@ class Search extends Component {
         );
     };
 
-    showCollapseFilters = componentsIdArray => {
+    showCollapseFilters = (componentsIdArray) => {
         const {
             settings: { isFilterCollapsible },
             isMobile,
@@ -748,9 +791,14 @@ class Search extends Component {
                 }}
                 setSearchParams={isPreview ? () => {} : undefined}
             >
+                <Global
+                    styles={css`
+                        ${get(this.globalSettings, 'customCss', '')}
+                    `}
+                />
                 {isMobile ? (
                     <Affix
-                        css={{
+                        style={{
                             position: 'fixed',
                             bottom: 0,
                             zIndex: 4,
@@ -761,7 +809,7 @@ class Search extends Component {
                         <Button
                             block
                             type="primary"
-                            className={mobileButtonStyles}
+                            css={mobileButtonStyles}
                             size="large"
                             onClick={this.handleToggleFilter}
                         >
@@ -771,7 +819,7 @@ class Search extends Component {
                     </Affix>
                 ) : null}
 
-                <div css={{ maxWidth: 1200, margin: '25px auto' }}>
+                <div style={{ maxWidth: 1200, margin: '25px auto' }}>
                     {this.themeType === 'classic' &&
                         this.renderCategorySearch()}
 
@@ -819,7 +867,7 @@ class Search extends Component {
                                     <Panel
                                         header={
                                             <span
-                                                css={{
+                                                style={{
                                                     color: get(
                                                         this.theme,
                                                         'colors.titleColor',
@@ -849,7 +897,7 @@ class Search extends Component {
                                     <Panel
                                         header={
                                             <span
-                                                css={{
+                                                style={{
                                                     color: get(
                                                         this.theme,
                                                         'colors.titleColor',
@@ -880,7 +928,7 @@ class Search extends Component {
                                         className="filter"
                                         header={
                                             <span
-                                                css={{
+                                                style={{
                                                     color: get(
                                                         this.theme,
                                                         'colors.titleColor',
@@ -910,7 +958,7 @@ class Search extends Component {
                                         className="filter"
                                         header={
                                             <span
-                                                css={{
+                                                style={{
                                                     color: get(
                                                         this.theme,
                                                         'colors.titleColor',
@@ -939,7 +987,7 @@ class Search extends Component {
                                     <Panel
                                         header={
                                             <span
-                                                css={{
+                                                style={{
                                                     color: get(
                                                         this.theme,
                                                         'colors.titleColor',
@@ -971,7 +1019,7 @@ class Search extends Component {
                                             }}
                                             loader={
                                                 <div
-                                                    className={loaderStyle}
+                                                    css={loaderStyle}
                                                     // eslint-disable-next-line
                                                     dangerouslySetInnerHTML={{
                                                         __html: get(
@@ -1001,11 +1049,11 @@ class Search extends Component {
                                         />
                                     </Panel>
                                 ) : null}
-                                {this.dynamicFacets.map(listComponent => (
+                                {this.dynamicFacets.map((listComponent) => (
                                     <Panel
                                         header={
                                             <span
-                                                css={{
+                                                style={{
                                                     color: get(
                                                         this.theme,
                                                         'colors.titleColor',
@@ -1049,7 +1097,7 @@ class Search extends Component {
                                                     'rsConfig.dataField',
                                                 ),
                                             )}
-                                            renderItem={item => (
+                                            renderItem={(item) => (
                                                 <span
                                                     // eslint-disable-next-line
                                                     dangerouslySetInnerHTML={{
@@ -1059,7 +1107,7 @@ class Search extends Component {
                                             )}
                                             loader={
                                                 <div
-                                                    className={loaderStyle}
+                                                    css={loaderStyle}
                                                     // eslint-disable-next-line
                                                     dangerouslySetInnerHTML={{
                                                         __html: get(
@@ -1108,7 +1156,7 @@ class Search extends Component {
                         <div>
                             {this.themeType === 'minimal' &&
                                 this.renderCategorySearch({
-                                    className: minimalSearchStyles(
+                                    css: minimalSearchStyles(
                                         get(this.theme, 'colors', {}),
                                     ),
                                 })}
@@ -1142,7 +1190,7 @@ class Search extends Component {
                                     })}
                                     renderNoResults={() => (
                                         <div
-                                            css={{ textAlign: 'right' }}
+                                            style={{ textAlign: 'right' }}
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
                                                 __html: get(
@@ -1158,7 +1206,7 @@ class Search extends Component {
                                         time,
                                     }) => (
                                         <div
-                                            css={{ textAlign: 'center' }}
+                                            style={{ textAlign: 'center' }}
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
                                                 __html: get(
@@ -1239,12 +1287,13 @@ class Search extends Component {
                                                 <Card
                                                     hoverable={false}
                                                     bordered={false}
-                                                    className={`${cardStyles({
+                                                    className="card"
+                                                    css={cardStyles({
                                                         ...get(
                                                             this.theme,
                                                             'colors',
                                                         ),
-                                                    })} card`}
+                                                    })}
                                                     cover={
                                                         image && (
                                                             <img
@@ -1254,7 +1303,7 @@ class Search extends Component {
                                                             />
                                                         )
                                                     }
-                                                    css={{
+                                                    style={{
                                                         ...this.getFontFamily(),
                                                         padding:
                                                             this.themeType ===
@@ -1275,14 +1324,14 @@ class Search extends Component {
                                                     <Meta
                                                         title={
                                                             <h3
-                                                                className={cardTitleStyles(
+                                                                css={cardTitleStyles(
                                                                     get(
                                                                         this
                                                                             .theme,
                                                                         'colors',
                                                                     ),
                                                                 )}
-                                                                css={
+                                                                style={
                                                                     this
                                                                         .themeType ===
                                                                     'minimal'
@@ -1381,54 +1430,14 @@ class Search extends Component {
                                     }}
                                     size={9}
                                     innerClass={{
-                                        list: css({
-                                            display: 'grid',
-                                            gridTemplateColumns:
-                                                'repeat(auto-fit, minmax(250px, 1fr))',
-                                            gridGap: 10,
-                                            [mediaMax.medium]: {
-                                                gridTemplateColumns:
-                                                    'repeat(auto-fit, minmax(200px, 1fr))',
-                                                display: toggleFilters
-                                                    ? 'none'
-                                                    : 'grid',
-                                            },
-                                            [mediaMax.small]: {
-                                                gridTemplateColumns:
-                                                    'repeat(auto-fit, minmax(150px, 1fr))',
-                                            },
-                                        }),
-                                        resultsInfo: css({
-                                            padding: 18,
-                                            height: 60,
-                                            p: {
-                                                margin: 0,
-                                                fontSize: '1rem',
-                                                fontWeight: 500,
-                                                textAlign: 'right',
-                                            },
-                                            [mediaMax.medium]: {
-                                                display: toggleFilters
-                                                    ? 'none'
-                                                    : 'grid',
-                                            },
-                                        }),
-                                        poweredBy: css({
-                                            margin: 15,
-                                            display: 'none',
-                                            visibility: 'hidden',
-                                        }),
-                                        noResults: css({
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            padding: '25px 0',
-                                        }),
-                                        pagination: paginationStyle(
-                                            toggleFilters,
-                                            get(this.theme, 'colors.textColor'),
-                                        ),
+                                        list: 'custom-result-list',
+                                        resultsInfo: 'custom-result-info',
+                                        poweredBy: 'custom-powered-by',
+                                        noResults: 'custom-no-results',
+                                        pagination: 'custom-pagination',
                                     }}
                                     {...this.resultSettings.rsConfig}
+                                    css={reactiveListCls(toggleFilters, this.theme)}
                                     react={{
                                         and: [
                                             'filter_by_product',

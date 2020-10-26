@@ -4,9 +4,9 @@ import SearchPlugin from './components/SearchPlugin';
 import ProductSuggestions from './components/ProductSuggestions';
 import './index.css';
 
-const isIdAvailble = id => document.getElementById(id);
+const isIdAvailble = (id) => document.getElementById(id);
 
-const getPropsById = id => {
+const getPropsById = (id) => {
     const container = isIdAvailble(id);
     if (container) {
         return {

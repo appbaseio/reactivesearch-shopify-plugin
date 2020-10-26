@@ -1,4 +1,6 @@
-import React from 'react';
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import { Card, Button, Icon } from 'antd';
@@ -32,11 +34,12 @@ const SuggestionCard = ({
             <Card
                 hoverable
                 bordered={false}
-                className={`${cardStyles({
+                css={cardStyles({
                     ...theme.colors,
-                })} card`}
+                })}
+                className="card"
                 cover={image && <img src={image} width="100%" alt={title} />}
-                css={{
+                style={{
                     padding: themeType === 'minimal' ? '10px' : 0,
                 }}
                 bodyStyle={
@@ -50,8 +53,8 @@ const SuggestionCard = ({
                 <Meta
                     title={
                         <h3
-                            className={cardTitleStyles(theme.colors)}
-                            css={
+                            css={cardTitleStyles(theme.colors)}
+                            style={
                                 themeType === 'minimal'
                                     ? {
                                           fontWeight: 600,

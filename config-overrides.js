@@ -1,29 +1,13 @@
-const { injectBabelPlugin } = require('react-app-rewired');
+const {
+    override,
+    fixBabelImports,
+  } = require("customize-cra");
 
-module.exports = function override(config, env) {
-    // remove chunkhash
-    config.output.filename = 'static/js/[name].js';
-    config.plugins[4].filename = 'static/css/[name].css';
-    config = injectBabelPlugin(
-        [
-            'import',
-            { libraryName: 'antd', libraryDirectory: 'es', style: 'css' },
-        ],
-        config,
-    );
-    config = injectBabelPlugin(
-        [
-            'direct-import',
-            [
-                '@appbaseio/reactivesearch',
-                {
-                    name: '@appbaseio/reactivesearch',
-                    indexFile: '@appbaseio/reactivesearch/lib/index.es.js',
-                },
-            ],
-        ],
-        config,
-    );
-    config = injectBabelPlugin('emotion', config);
-    return config;
-};
+module.exports = override(
+    fixBabelImports("import", {
+        libraryName: "antd", libraryDirectory: "es", style: 'css' // change importing css to less
+    }),
+    fixBabelImports("direct-import", {
+        name: "@appbaseio/reactivesearch", indexFile: "@appbaseio/reactivesearch/lib/index.es.js"
+    })
+)
