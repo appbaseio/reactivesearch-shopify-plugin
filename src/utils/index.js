@@ -212,7 +212,7 @@ export const getReactDependenciesFromPreferences = (
     }
     const staticFacets = get(preferences, 'facetSettings.staticFacets');
     if (staticFacets && Array.isArray(staticFacets)) {
-        staticFacets.forEach(facet => {
+        staticFacets.forEach((facet) => {
             const componentId = get(
                 staticFacets[facet],
                 'rsConfig.componentId',
@@ -226,7 +226,7 @@ export const getReactDependenciesFromPreferences = (
     }
     const dynamicFacets = get(preferences, 'facetSettings.dynamicFacets');
     if (dynamicFacets && Array.isArray(dynamicFacets)) {
-        dynamicFacets.forEach(facet => {
+        dynamicFacets.forEach((facet) => {
             const componentId = get(facet, 'rsConfig.componentId');
             if (componentId && componentId !== id) {
                 react.push(componentId);

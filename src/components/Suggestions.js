@@ -1,6 +1,8 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core';
 import React from 'react';
 import { string, object, arrayOf, func, number } from 'prop-types';
-import { css } from 'react-emotion';
 import Highlight from 'react-highlight-words';
 import strip from 'striptags';
 import get from 'lodash.get';
@@ -52,7 +54,7 @@ const Suggestions = ({
     fields,
 }) => (
     <div
-        css={{
+        style={{
             position: 'absolute',
             padding: 10,
             color: '#424242',
@@ -73,7 +75,7 @@ const Suggestions = ({
     >
         {loading ? (
             <div
-                css={{
+                style={{
                     justifyContent: 'center',
                     alignItems: 'center',
                     display: 'flex',
@@ -92,7 +94,7 @@ const Suggestions = ({
                 {!loading && parsedSuggestions.length === 0 && (
                     <React.Fragment>
                         <div
-                            className={highlightStyle(themeConfig.colors)}
+                            css={highlightStyle(themeConfig.colors)}
                             // eslint-disable-next-line
                             dangerouslySetInnerHTML={{
                                 __html: get(
@@ -105,9 +107,7 @@ const Suggestions = ({
                     </React.Fragment>
                 )}
                 {parsedSuggestions.length > 0 ? (
-                    <h3 className={headingStyles(themeConfig.colors)}>
-                        Products
-                    </h3>
+                    <h3 css={headingStyles(themeConfig.colors)}>Products</h3>
                 ) : null}
 
                 {parsedSuggestions.slice(0, 3).map((suggestion, index) => {
@@ -135,7 +135,7 @@ const Suggestions = ({
                             key={suggestion.value}
                         >
                             <div
-                                css={{
+                                style={{
                                     padding: 10,
                                     background:
                                         index === highlightedIndex
@@ -152,7 +152,7 @@ const Suggestions = ({
                                 })}
                             >
                                 <div
-                                    css={{
+                                    style={{
                                         display: 'flex',
                                         alignItems: 'center',
                                     }}
@@ -162,7 +162,7 @@ const Suggestions = ({
                                             src={image}
                                             alt=" "
                                             width="80px"
-                                            css={{ marginRight: 15 }}
+                                            style={{ marginRight: 15 }}
                                         />
                                     )}
                                     <div
@@ -179,10 +179,7 @@ const Suggestions = ({
                                             highlightStyle={{
                                                 fontWeight: 700,
                                                 padding: 0,
-                                                background: `${
-                                                    themeConfig.colors
-                                                        .primaryColor
-                                                }33`,
+                                                background: `${themeConfig.colors.primaryColor}33`,
                                                 color:
                                                     themeConfig.colors
                                                         .titleColor,
@@ -196,7 +193,7 @@ const Suggestions = ({
                                             }}
                                         />
                                         <div
-                                            css={{
+                                            style={{
                                                 fontSize: '0.8rem',
                                                 margin: '2px 0',
                                                 color:
@@ -227,10 +224,7 @@ const Suggestions = ({
                                                 highlightStyle={{
                                                     fontWeight: 600,
                                                     padding: 0,
-                                                    background: `${
-                                                        themeConfig.colors
-                                                            .primaryColor
-                                                    }33`,
+                                                    background: `${themeConfig.colors.primaryColor}33`,
                                                     color:
                                                         themeConfig.colors
                                                             .textColor,
@@ -240,7 +234,7 @@ const Suggestions = ({
                                         {((variants && variants[0]) ||
                                             price) && (
                                             <div
-                                                css={{
+                                                style={{
                                                     color:
                                                         themeConfig.colors
                                                             .titleColor,
@@ -260,14 +254,14 @@ const Suggestions = ({
                 })}
 
                 {popularSuggestions.length ? (
-                    <h3 className={headingStyles(themeConfig.colors)}>
+                    <h3 css={headingStyles(themeConfig.colors)}>
                         Popular Searches
                     </h3>
                 ) : null}
-                {popularSuggestions.map(item => (
+                {popularSuggestions.map((item) => (
                     <div
                         key={item.label}
-                        className={popularSearchStyles(themeConfig.colors)}
+                        css={popularSearchStyles(themeConfig.colors)}
                         {...getItemProps({
                             item: {
                                 label: item.label,
@@ -280,7 +274,7 @@ const Suggestions = ({
                 ))}
 
                 <h3
-                    className={headingStyles(themeConfig.colors)}
+                    css={headingStyles(themeConfig.colors)}
                     style={{
                         cursor: 'pointer',
                         fontSize: '14px',

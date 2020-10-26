@@ -1,5 +1,7 @@
-import React, { Component, Fragment } from 'react';
-import { css } from 'react-emotion';
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import { Component, Fragment } from 'react';
 import { Button, Modal, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
@@ -27,7 +29,7 @@ const modalStyles = css`
     }
 `;
 
-const getButtonClass = theme => {
+const getButtonClass = (theme) => {
     const primaryColor = get(theme, 'colors.primaryColor', '') || '#0B6AFF';
     const styles = {
         button: {
@@ -57,7 +59,7 @@ const getButtonClass = theme => {
     return css({ ...styles.button, ...buttonStyle });
 };
 
-const getIconClass = theme => {
+const getIconClass = (theme) => {
     const primaryColor = get(theme, 'colors.primaryColor', '') || '#0B6AFF';
     return css({
         color: `${primaryColor} !important`,
@@ -65,7 +67,7 @@ const getIconClass = theme => {
     });
 };
 
-const getTextClass = theme => {
+const getTextClass = (theme) => {
     const primaryColor = get(theme, 'colors.primaryColor', '') || '#0B6AFF';
     return css({
         color: `${primaryColor} !important`,
@@ -142,15 +144,13 @@ class App extends Component {
                         {searchButton.icon ? (
                             <img src={searchButton.icon} alt="Search Icon" />
                         ) : (
-                            <Icon
-                                className={getIconClass(theme)}
-                                type="search"
-                            />
+                            <Icon css={getIconClass(theme)} type="search" />
                         )}
                     </div>
                     {isSearchTextHidden ? null : (
                         <div
-                            className={`text-container ${getTextClass(theme)}`}
+                            className="text-container"
+                            css={getTextClass(theme)}
                         >
                             {searchButton.text || 'Click here to Search'}
                         </div>
@@ -162,7 +162,7 @@ class App extends Component {
                         onCancel={this.toggleModal}
                         footer={null}
                         width="100%"
-                        className={modalStyles}
+                        css={modalStyles}
                     >
                         <Search
                             appname={this.index}

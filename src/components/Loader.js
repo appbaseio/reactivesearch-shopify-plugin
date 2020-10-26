@@ -1,6 +1,7 @@
-import React from 'react';
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core';
 import PropTypes from 'prop-types';
-import { css } from 'react-emotion';
 
 const styles = css`
     width: 100%;
@@ -11,7 +12,7 @@ const styles = css`
 `;
 
 const Loader = ({ size }) => (
-    <div className={styles}>
+    <div css={styles}>
         <img
             width={size || 50}
             src="https://cdn.jsdelivr.net/gh/appbaseio/reactivesearch-shopify-plugin@9bf06b81f832f7c7613ef008748999f9b7bf0e0b/build/images/loader.svg"

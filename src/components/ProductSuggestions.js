@@ -1,9 +1,11 @@
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import { jsx, css } from '@emotion/core';
 import React from 'react';
 import { Button, Icon } from 'antd';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { css } from 'react-emotion';
 import { mediaMax } from '@divyanshu013/media';
 import {
     ReactiveBase,
@@ -103,9 +105,6 @@ class ProductSuggestions extends React.Component {
         this.index = get(preferences, 'appbaseSettings.index');
         this.credentials = get(preferences, 'appbaseSettings.credentials');
         this.url = get(preferences, 'appbaseSettings.url');
-    }
-
-    componentWillMount() {
         this.updateMaxSize();
     }
 
@@ -143,7 +142,7 @@ class ProductSuggestions extends React.Component {
 
     nextPage = () => {
         this.setState(
-            prevState => ({
+            (prevState) => ({
                 currentPage: prevState.currentPage + 1,
             }),
             () => {
@@ -154,7 +153,7 @@ class ProductSuggestions extends React.Component {
 
     prevPage = () => {
         this.setState(
-            prevState => ({
+            (prevState) => ({
                 currentPage: prevState.currentPage - 1,
             }),
             () => {
@@ -187,7 +186,7 @@ class ProductSuggestions extends React.Component {
                     recordAnalytics: true,
                 }}
             >
-                <div css={{ margin: '25px auto', position: 'relative' }}>
+                <div style={{ margin: '25px auto', position: 'relative' }}>
                     <div css={titleCls}>
                         {customTitle || 'You might also like'}
                     </div>
@@ -210,13 +209,13 @@ class ProductSuggestions extends React.Component {
                             <div css={main}>
                                 <Button
                                     disabled={currentPage === 1}
-                                    className={buttonLeft}
+                                    css={buttonLeft}
                                     onClick={this.prevPage}
                                 >
-                                    <Icon className={icon} type="left" />
+                                    <Icon css={icon} type="left" />
                                 </Button>
                                 <div
-                                    className={css({
+                                    css={css({
                                         margin: '10px 50px',
                                         [mediaMax.small]: {
                                             margin: '10px 25px',
@@ -224,7 +223,7 @@ class ProductSuggestions extends React.Component {
                                     })}
                                 >
                                     <Slider
-                                        ref={c => {
+                                        ref={(c) => {
                                             this.slick = c;
                                         }}
                                         {...settings}
@@ -303,10 +302,10 @@ class ProductSuggestions extends React.Component {
 
                                 <Button
                                     disabled={currentPage * maxSize >= 10}
-                                    className={buttonRight}
+                                    css={buttonRight}
                                     onClick={this.nextPage}
                                 >
-                                    <Icon className={icon} type="right" />
+                                    <Icon css={icon} type="right" />
                                 </Button>
                             </div>
                         )}
@@ -321,6 +320,7 @@ class ProductSuggestions extends React.Component {
                                 ),
                             ],
                         }}
+                        // TODO: Update it to emotion 10
                         innerClass={{
                             list: css({
                                 display: 'grid',
