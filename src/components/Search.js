@@ -290,8 +290,7 @@ class Search extends Component {
     };
 
     getFontFamily = () => {
-        const { theme } = this.state;
-        const receivedFont = get(theme, 'typography.fontFamily', '');
+        const receivedFont = get(this.theme, 'typography.fontFamily', '');
         let fontFamily = '';
         if (receivedFont && receivedFont !== 'default') {
             fontFamily = receivedFont; // eslint-disable-line
