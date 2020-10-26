@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import SearchPlugin from './components/SearchPlugin';
 import ProductSuggestions from './components/ProductSuggestions';
+import "antd/dist/antd.css";
 import './index.css';
 
 const isIdAvailble = (id) => document.getElementById(id);
