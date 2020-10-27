@@ -4,7 +4,6 @@ import { css, jsx } from '@emotion/core';
 import { Component, Fragment } from 'react';
 import { Button, Modal, Icon } from 'antd';
 import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
 import get from 'lodash.get';
 import Search from './Search';
 import { getPreferences, defaultPreferences } from '../utils/index';
@@ -138,7 +137,7 @@ class App extends Component {
         }
         return (
             <Fragment>
-                {fontFamilyLink ? <Helmet>{fontFamilyLink}</Helmet> : null}
+                {fontFamilyLink}
                 <Button css={getButtonClass(theme)} onClick={this.toggleModal}>
                     <div className="icon-container">
                         {searchButton.icon ? (
