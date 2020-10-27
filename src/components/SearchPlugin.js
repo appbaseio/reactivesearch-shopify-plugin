@@ -156,7 +156,7 @@ class App extends Component {
                         </div>
                     )}
                 </Button>
-                {isOpen && (
+                {/* {isOpen && (
                     <Modal
                         visible={isOpen}
                         onCancel={this.toggleModal}
@@ -171,7 +171,7 @@ class App extends Component {
                             isPreview={isShowingPreview}
                         />
                     </Modal>
-                )}
+                )} */}
             </Fragment>
         );
     }
