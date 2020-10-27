@@ -32,6 +32,8 @@ module.exports = {
         // TODO: Enable later
         'react/prop-types': 0,
         'react/jsx-fragments': 0,
-        'prettier/prettier': 0
+        'prettier/prettier': 0,
+        'react/no-danger': 0,
+        'no-console': 0
     },
 };

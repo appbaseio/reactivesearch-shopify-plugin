@@ -11,10 +11,10 @@ const getPropsById = (id) => {
     const container = isIdAvailble(id);
     if (container) {
         return {
-            isOpen: container.getAttribute('isOpen'),
-            openWithModal: container.getAttribute('openWithModal'),
-            isPreview: container.getAttribute('isPreview'),
-            disableSearchText: container.getAttribute('disableSearchText'),
+            isOpen: container.getAttribute('isOpen') === 'true',
+            openAsPage: container.getAttribute('openaspage') === 'true',
+            isPreview: container.getAttribute('isPreview') === 'true',
+            disableSearchText: container.getAttribute('disableSearchText') === 'true',
         };
     }
     return null;
