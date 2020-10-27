@@ -135,6 +135,7 @@ class App extends Component {
                 />
             );
         }
+        console.log("THIS IS FONT FAMILY LINK", fontFamilyLink)
         return (
             <Fragment>
                 {fontFamilyLink}
