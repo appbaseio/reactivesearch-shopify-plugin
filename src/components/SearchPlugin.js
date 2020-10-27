@@ -2,9 +2,7 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { Component, Fragment } from 'react';
-import { Button,
-    // Modal,
-    Icon } from 'antd';
+import { Button, Modal, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import get from 'lodash.get';
 import Search from './Search';
@@ -13,22 +11,22 @@ import { getPreferences, defaultPreferences } from '../utils/index';
 const buttonStyle = window.REACTIVESEARCH_SEARCH_BUTTON_STYLE;
 const iconStyle = window.REACTIVESEARCH_SEARCH_ICON_STYLE;
 
-// const modalStyles = css`
-//     top: 0 !important;
-//     height: 100vh;
-//     padding-bottom: 0 !important;
-//     overflow-y: scroll;
-//     .ant-modal {
-//         top: 0;
-//     }
-//     .ant-modal-content {
-//         border-radius: 0;
-//         min-height: 100%;
-//     }
-//     @media (max-width: 767px) {
-//         margin: 0 !important;
-//     }
-// `;
+const modalStyles = css`
+    top: 0 !important;
+    height: 100vh;
+    padding-bottom: 0 !important;
+    overflow-y: scroll;
+    .ant-modal {
+        top: 0;
+    }
+    .ant-modal-content {
+        border-radius: 0;
+        min-height: 100%;
+    }
+    @media (max-width: 767px) {
+        margin: 0 !important;
+    }
+`;
 
 const getButtonClass = (theme) => {
     const primaryColor = get(theme, 'colors.primaryColor', '') || '#0B6AFF';
@@ -106,7 +104,7 @@ class App extends Component {
     };
 
     render() {
-        // const { isOpen } = this.state;
+        const { isOpen } = this.state;
         const { theme, searchButton } = this;
         const { openWithModal, isPreview, disableSearchText } = this.props;
         if (!this.index || !this.credentials || !this.url) {
@@ -127,6 +125,7 @@ class App extends Component {
                 />
             );
         }
+        console.log("THIS IS FONT FAMILY LINK", fontFamilyLink);
         if (isOpenWithModal) {
             return (
                 <Search
@@ -158,7 +157,7 @@ class App extends Component {
                         </div>
                     )}
                 </Button>
-                {/* {isOpen && (
+                {isOpen && (
                     <Modal
                         visible={isOpen}
                         onCancel={this.toggleModal}
@@ -173,7 +172,7 @@ class App extends Component {
                             isPreview={isShowingPreview}
                         />
                     </Modal>
-                )} */}
+                )}
             </Fragment>
         );
     }
