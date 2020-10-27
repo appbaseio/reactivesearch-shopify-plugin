@@ -67,12 +67,6 @@ const reactiveListCls= (toggleFilters, theme) =>css`
         a {
             border-radius: 2px;
         }
-        a:first-child{
-            float: left;
-        }
-        a:last-child{
-            float: right;
-        }
         a.active {
             color: ${get(theme, 'colors.textColor')};
         }
