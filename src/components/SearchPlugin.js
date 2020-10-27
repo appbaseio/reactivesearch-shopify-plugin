@@ -128,12 +128,15 @@ class App extends Component {
         console.log("THIS IS FONT FAMILY LINK", fontFamilyLink);
         if (isOpenWithModal) {
             return (
-                <Search
-                    appname={this.index}
-                    credentials={this.credentials}
-                    url={this.url}
-                    isPreview={isShowingPreview}
-                />
+                <Fragment>
+                    {fontFamilyLink}
+                    <Search
+                        appname={this.index}
+                        credentials={this.credentials}
+                        url={this.url}
+                        isPreview={isShowingPreview}
+                    />
+                </Fragment>
             );
         }
         console.log("THIS IS FONT FAMILY LINK", fontFamilyLink)
