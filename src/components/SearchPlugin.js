@@ -106,14 +106,10 @@ class App extends Component {
     render() {
         const { isOpen } = this.state;
         const { theme, searchButton } = this;
-        const { openWithModal, isPreview, disableSearchText } = this.props;
+        const { openAsPage, isPreview, disableSearchText } = this.props;
         if (!this.index || !this.credentials || !this.url) {
             return null;
         }
-        const isOpenWithModal = Boolean(openWithModal);
-        const isShowingPreview = Boolean(isPreview);
-        const isSearchTextHidden = Boolean(disableSearchText);
-
         let fontFamilyLink = '';
         const fontFamily = get(theme, 'typography.fontFamily');
         if (fontFamily && fontFamily !== 'default') {
@@ -125,8 +121,7 @@ class App extends Component {
                 />
             );
         }
-        console.log("THIS IS FONT FAMILY LINK", fontFamilyLink);
-        if (isOpenWithModal) {
+        if (openAsPage) {
             return (
                 <Fragment>
                     {fontFamilyLink}
@@ -134,12 +129,11 @@ class App extends Component {
                         appname={this.index}
                         credentials={this.credentials}
                         url={this.url}
-                        isPreview={isShowingPreview}
+                        isPreview={isPreview}
                     />
                 </Fragment>
             );
         }
-        console.log("THIS IS FONT FAMILY LINK", fontFamilyLink)
         return (
             <Fragment>
                 {fontFamilyLink}
@@ -151,7 +145,7 @@ class App extends Component {
                             <Icon css={getIconClass(theme)} type="search" />
                         )}
                     </div>
-                    {isSearchTextHidden ? null : (
+                    {disableSearchText ? null : (
                         <div
                             className="text-container"
                             css={getTextClass(theme)}
@@ -172,7 +166,7 @@ class App extends Component {
                             appname={this.index}
                             credentials={this.credentials}
                             url={this.url}
-                            isPreview={isShowingPreview}
+                            isPreview={isPreview}
                         />
                     </Modal>
                 )}
@@ -181,15 +175,15 @@ class App extends Component {
     }
 }
 App.defaultProps = {
-    openWithModal: 'true',
-    disableSearchText: 'false',
-    isPreview: 'false',
-    isOpen: 'false', // if true, then modal will be in open state
+    openAsPage: false,
+    disableSearchText: false,
+    isPreview: false,
+    isOpen: false, // if true, then modal will be in open state
 };
 App.propTypes = {
-    isPreview: PropTypes.string,
-    openWithModal: PropTypes.string,
-    disableSearchText: PropTypes.string,
-    isOpen: PropTypes.string,
+    isPreview: PropTypes.bool,
+    openAsPage: PropTypes.bool,
+    disableSearchText: PropTypes.bool,
+    isOpen: PropTypes.bool,
 };
 export default App;
