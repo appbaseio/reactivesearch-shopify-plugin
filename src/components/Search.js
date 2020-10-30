@@ -699,7 +699,8 @@ class Search extends Component {
         const { isPreview } = this.props;
         return (
             <DataSearch
-                componentId="search"
+                // Don't change the component id it is tied to shopify
+                componentId="q"
                 filterLabel="Search"
                 className="search"
                 debounce={100}

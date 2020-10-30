@@ -208,7 +208,7 @@ export const getReactDependenciesFromPreferences = (
     if (searchId) {
         react.push(searchId);
     } else {
-        react.push('search');
+        react.push('q');
     }
     const staticFacets = get(preferences, 'facetSettings.staticFacets');
     if (staticFacets && Array.isArray(staticFacets)) {
