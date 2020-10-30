@@ -789,7 +789,23 @@ class Search extends Component {
                 appbaseConfig={{
                     recordAnalytics: true,
                 }}
-                setSearchParams={isPreview ? () => {} : undefined}
+                setSearchParams={isPreview ? () => {} : (url) => {
+                    window.history.pushState({ path: url }, '', url);
+                    return url
+                }}
+                getSearchParams={isPreview ? () => {} : () => {
+                    const params = new URLSearchParams(window.location.search)
+                    const searchParam = params.get('q');
+                    if(searchParam) {
+                        try {
+                            JSON.parse(searchParam)
+                        } catch(e) {
+                            params.set('q', JSON.stringify(params.get('q')))
+                        }
+
+                    }
+                    return params.toString()
+                }}
             >
                 <Global
                     styles={css`
