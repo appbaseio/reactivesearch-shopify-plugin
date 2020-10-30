@@ -267,7 +267,10 @@ class Search extends Component {
             const inputRef = get(searchRef, 'current._inputRef', null);
 
             if (inputRef) {
-                inputRef.focus();
+                const param = new URLSearchParams(window.location.search).get('q')
+                if(!param) {
+                    inputRef.focus();
+                }
             }
 
             if (
@@ -722,8 +725,8 @@ class Search extends Component {
                     data,
                     popularSuggestions,
                     downshiftProps,
-                }) =>
-                    downshiftProps.isOpen && Boolean(value.length) ? (
+                }) => {
+                    return downshiftProps.isOpen && Boolean(value.length) && data.length ? (
                         <Suggestions
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
@@ -751,7 +754,7 @@ class Search extends Component {
                             popularSuggestions={popularSuggestions}
                         />
                     ) : null
-                }
+                }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
                 enablePopularSuggestions={get(
