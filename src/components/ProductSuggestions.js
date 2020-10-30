@@ -6,7 +6,6 @@ import { Button, Icon } from 'antd';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { mediaMax } from '@divyanshu013/media';
 import {
     ReactiveBase,
     ReactiveList,
@@ -18,6 +17,7 @@ import {
     getReactDependenciesFromPreferences,
     getPreferences,
 } from '../utils';
+import { mediaMax } from '../utils/media';
 import SuggestionCard from './SuggestionCard';
 
 const maxProductSize = 4;

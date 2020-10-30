@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@appbaseio/reactivesearch": "3.12.7",
-    "@divyanshu013/media": "1.0.0",
     "@emotion/core": "^10.0.35",
     "antd": "3.10.9",
     "emotion": "10.0.27",

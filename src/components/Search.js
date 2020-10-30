@@ -17,10 +17,10 @@ import {
 } from '@appbaseio/reactivesearch/lib/styles/FormControlList';
 import get from 'lodash.get';
 import { string, bool } from 'prop-types';
-import { mediaMax } from '@divyanshu013/media';
-import { Card, Collapse, Button, Icon, Affix, Tooltip } from 'antd';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
+import { Card, Collapse, Button, Icon, Affix, Tooltip } from 'antd';
+import { mediaMax } from '../utils/media';
 import Suggestions from './Suggestions';
 import {
     browserColors,
@@ -82,25 +82,20 @@ const reactiveListCls= (toggleFilters, theme) =>css`
     .custom-result-info {
         padding: 18px;
         height: 60px;
-        p: {
-            margin: 0;
-            fontSize: 1rem;
-            fontWeight: 500;
-            textAlign: right;
-        }
-        ${[mediaMax.medium]}: {
+        ${mediaMax.medium} {
             display: ${
                 toggleFilters
                     ? 'none'
                     : 'grid'
             };
+            justify-content: center;
         }
     }
     .custom-result-list {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         grid-gap: 10px;
-        ${[mediaMax.medium]}: {
+        ${mediaMax.medium} {
             grid-template-columns:
                 repeat(auto-fit, minmax(200px, 1fr));
             display: ${
@@ -109,8 +104,8 @@ const reactiveListCls= (toggleFilters, theme) =>css`
                     : 'grid'
             };
         }
-        ${[mediaMax.small]}: {
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)),
+        ${mediaMax.small} {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         }
     }
 `
@@ -1226,7 +1221,6 @@ class Search extends Component {
                                         time,
                                     }) => (
                                         <div
-                                            style={{ textAlign: 'center' }}
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
                                                 __html: get(
