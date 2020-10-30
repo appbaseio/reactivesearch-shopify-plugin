@@ -477,6 +477,7 @@ class Search extends Component {
                             </UL>
                         );
                     }}
+                    URLParams
                     {...get(this.collectionFilter, 'rsConfig')}
                     title=""
                 />
@@ -503,6 +504,7 @@ class Search extends Component {
                     ],
                 }}
                 filterLabel="Product Type"
+                URLParams
                 {...get(this.productTypeFilter, 'rsConfig')}
                 title=""
             />
@@ -625,6 +627,7 @@ class Search extends Component {
                     }}
                 />
             }
+            URLParams
             {...get(this.colorFilter, 'rsConfig')}
             dataField={getFilterField(
                 get(
@@ -677,6 +680,7 @@ class Search extends Component {
                     />
                 )}
                 showCheckbox={this.themeType !== 'minimal'}
+                URLParams
                 {...get(this.sizeFilter, 'rsConfig')}
                 dataField={getFilterField(
                     get(
@@ -703,6 +707,7 @@ class Search extends Component {
                 iconPosition="right"
                 icon={get(this.searchSettings, 'searchButton.icon')}
                 ref={searchRef}
+                URLParams
                 style={{
                     marginBottom: 20,
                     position: 'sticky',
@@ -1084,6 +1089,7 @@ class Search extends Component {
                                                 listComponent,
                                                 'rsConfig.componentId',
                                             )}
+                                            URLParams
                                             {...listComponent.rsConfig}
                                             dataField={getFilterField(
                                                 get(
