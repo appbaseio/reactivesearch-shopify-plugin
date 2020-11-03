@@ -1105,7 +1105,6 @@ class Search extends Component {
                                                 'rsConfig.componentId',
                                             )}
                                             URLParams
-                                            {...listComponent.rsConfig}
                                             dataField={getFilterField(
                                                 get(
                                                     listComponent,
@@ -1151,6 +1150,7 @@ class Search extends Component {
                                             showCheckbox={
                                                 this.themeType !== 'minimal'
                                             }
+                                            {...listComponent.rsConfig}
                                             css={this.getFontFamily()}
                                             react={{
                                                 and: getReactDependenciesFromPreferences(
