@@ -20,10 +20,10 @@
   resolved "https://registry.yarnpkg.com/@ant-design/icons/-/icons-1.1.16.tgz#ac6426216934e3f4bc108f2f48f92ed66789235e"
   integrity sha512-0zNVP5JYBJkfMi9HotN6QBQjF3SFmUlumJNJXZIH+pZWp/5EbrCczzlG3YTmBWoyRHAsuOGIjSFIy8v/76DTPg==
 
-"@appbaseio/reactivecore@9.6.21":
-  version "9.6.21"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.6.21.tgz#327791d5c21c75cf2e53f5394bacca8a7bb61c01"
-  integrity sha512-yYtFE+tp5x8TOT35PzrRu+GSqdYfpBDEW3Ey2ZbPOKGBa3HzuWDs60x+XDeOcKxRPOE+CT4is6dNEqG7WsYLHA==
+"@appbaseio/reactivecore@9.6.22":
+  version "9.6.22"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.6.22.tgz#3f02bac286d31a7a92d894f831002a580f0f4c3c"
+  integrity sha512-j9MEOEiJlaC7SRTouTsqyggyCUK0Hhv99tSC3rGWsdJadgWZaWXM32bVMPm6Ygbcvq7C9fWGWlDzS4YoV2KNGg==
   dependencies:
     cross-fetch "^3.0.4"
     prop-types "^15.6.0"
@@ -31,12 +31,12 @@
     redux-thunk "^2.3.0"
     xdate "^0.8.2"
 
-"@appbaseio/reactivesearch@3.12.7":
-  version "3.12.7"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.12.7.tgz#787f3e457d9b40ce3c2bc939c4b1e562614f1382"
-  integrity sha512-/hV6CCCnaVZ9MPLga5E6wFE4Lovu1oTqtJEGgV30w4OTT0tJq/koTek6nBOUx0wi4lO3OVEBkHryaMGkALI1eg==
+"@appbaseio/reactivesearch@3.12.8":
+  version "3.12.8"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.12.8.tgz#05fd589c17c442549e256a57e9345821370da0c3"
+  integrity sha512-+eatQ6pABEZ2vf5q9JY+u9gwZgd09c347RS4i19Y0B8doj/ozwtySUoeyEeffMm51TGG/svO6naO56ZRwCtGPQ==
   dependencies:
-    "@appbaseio/reactivecore" "9.6.21"
+    "@appbaseio/reactivecore" "9.6.22"
     "@emotion/core" "^10.0.28"
     "@emotion/styled" "^10.0.27"
     appbase-js "^4.1.0"
@@ -1105,11 +1105,6 @@
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
-
-"@divyanshu013/media@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@divyanshu013/media/-/media-1.0.0.tgz#213845963960333cc69013759c4496a0250591e8"
-  integrity sha512-koihg5xOOLYVGWVE40LHcvIHLmT8z4YxogLuuEddwxcweJhdJwHcvUkxCMJKvUc58sTCkkOLGRy4f/7iqjGdXw==
 
 "@emotion/cache@^10.0.27":
   version "10.0.29"
@@ -10177,21 +10172,6 @@ react-error-overlay@^6.0.8:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.8.tgz#474ed11d04fc6bda3af643447d85e9127ed6b5de"
   integrity sha512-HvPuUQnLp5H7TouGq3kzBeioJmXms1wHy9EGjz2OURWBp4qZO6AfGEcnxts1D/CbwPLRAgTMPCEgYhA3sEM4vw==
 
-react-fast-compare@^3.1.1:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
-  integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
-
-react-helmet@6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/react-helmet/-/react-helmet-6.1.0.tgz#a750d5165cb13cf213e44747502652e794468726"
-  integrity sha512-4uMzEY9nlDlgxr61NL3XbKRy1hEkXmKNXhjbAIOVw5vcFrsdYbH2FEwcNyWvWinl103nXgzYNlns9ca+8kFiWw==
-  dependencies:
-    object-assign "^4.1.1"
-    prop-types "^15.7.2"
-    react-fast-compare "^3.1.1"
-    react-side-effect "^2.1.0"
-
 react-highlight-words@0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/react-highlight-words/-/react-highlight-words-0.16.0.tgz#4b4b9824e3d2b98789d3e3b3aedb5e961ae1b7cf"
@@ -10317,11 +10297,6 @@ react-scripts@4.0.0:
     workbox-webpack-plugin "5.1.4"
   optionalDependencies:
     fsevents "^2.1.3"
-
-react-side-effect@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-2.1.0.tgz#1ce4a8b4445168c487ed24dab886421f74d380d3"
-  integrity sha512-IgmcegOSi5SNX+2Snh1vqmF0Vg/CbkycU9XZbOHJlZ6kMzTmi3yc254oB1WCkgA7OQtIAoLmcSFuHTc/tlcqXg==
 
 react-slick@0.27.12:
   version "0.27.12"

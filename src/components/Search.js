@@ -37,7 +37,6 @@ const resultRef = React.createRef();
 
 const minimalSearchStyles = ({ titleColor }) => css`
     input {
-        background: transparent;
         border: 0;
         color: ${titleColor};
         box-shadow: 0px 0px 4px ${titleColor}1a;
@@ -1105,20 +1104,6 @@ class Search extends Component {
                                                 'rsConfig.componentId',
                                             )}
                                             URLParams
-                                            dataField={getFilterField(
-                                                get(
-                                                    listComponent,
-                                                    'rsConfig.dataField',
-                                                ),
-                                            )}
-                                            renderItem={(item) => (
-                                                <span
-                                                    // eslint-disable-next-line
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: item,
-                                                    }}
-                                                />
-                                            )}
                                             loader={
                                                 <div
                                                     css={loaderStyle}
@@ -1151,6 +1136,12 @@ class Search extends Component {
                                                 this.themeType !== 'minimal'
                                             }
                                             {...listComponent.rsConfig}
+                                            dataField={getFilterField(
+                                                get(
+                                                    listComponent,
+                                                    'rsConfig.dataField',
+                                                ),
+                                            )}
                                             css={this.getFontFamily()}
                                             react={{
                                                 and: getReactDependenciesFromPreferences(
