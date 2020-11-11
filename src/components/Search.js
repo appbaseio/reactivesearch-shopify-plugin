@@ -48,13 +48,6 @@ const loaderStyle = css`
     position: relative;
 `;
 
-const getFilterField = (field = '') => {
-    if (!(field && field.endsWith('.keyword'))) {
-        return `${field}.keyword`;
-    }
-    return field;
-};
-
 const reactiveListCls= (toggleFilters, theme) =>css`
     .custom-no-results {
         display: flex;
@@ -626,12 +619,10 @@ class Search extends Component {
             }
             URLParams
             {...get(this.colorFilter, 'rsConfig')}
-            dataField={getFilterField(
-                get(
-                    this.colorFilter,
-                    'rsConfig.dataField',
-                    shopifyDefaultFields.color,
-                ),
+            dataField={get(
+                this.colorFilter,
+                'rsConfig.dataField',
+                shopifyDefaultFields.color,
             )}
             title=""
         />
@@ -679,12 +670,10 @@ class Search extends Component {
                 showCheckbox={this.themeType !== 'minimal'}
                 URLParams
                 {...get(this.sizeFilter, 'rsConfig')}
-                dataField={getFilterField(
-                    get(
-                        this.sizeFilter,
-                        'rsConfig.dataField',
-                        shopifyDefaultFields.size,
-                    ),
+                dataField={get(
+                    this.sizeFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
                 )}
                 title=""
             />
@@ -1136,11 +1125,9 @@ class Search extends Component {
                                                 this.themeType !== 'minimal'
                                             }
                                             {...listComponent.rsConfig}
-                                            dataField={getFilterField(
-                                                get(
-                                                    listComponent,
-                                                    'rsConfig.dataField',
-                                                ),
+                                            dataField={get(
+                                                listComponent,
+                                                'rsConfig.dataField',
                                             )}
                                             css={this.getFontFamily()}
                                             react={{
