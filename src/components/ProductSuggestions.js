@@ -23,7 +23,7 @@ import {
 import { mediaMax } from '../utils/media';
 import SuggestionCard from './SuggestionCard';
 
-const maxProductSize = 5;
+const maxProductSize = 4;
 
 const buttonLeft = css({
     [mediaMax.small]: {
@@ -144,7 +144,7 @@ class ProductSuggestions extends React.Component {
             this.recommendation = {
                 title: 'You might also like',
                 maxProducts: 15,
-            }
+            };
         }
         this.exportType = get(
             preferences,
@@ -199,10 +199,10 @@ class ProductSuggestions extends React.Component {
                             .then((res) => res.json())
                             .then((products) => {
                                 this.setState({
-                                    products: products.docs.map(product => ({
+                                    products: products.docs.map((product) => ({
                                         ...product,
                                         ...product._source,
-                                        _source: {}
+                                        _source: {},
                                     })),
                                 });
                             })
@@ -388,85 +388,90 @@ class ProductSuggestions extends React.Component {
         if (!this.index || !this.credentials || !this.url) {
             return null;
         }
-        if(this.recommendation.type === RecommendationTypes.MOST_POPULAR_PRODUCTS) {
+        if (
+            this.recommendation.type ===
+            RecommendationTypes.MOST_POPULAR_PRODUCTS
+        ) {
             return this.renderResults({
                 data: products,
                 triggerClickAnalytics: () => null,
-            })
+            });
         }
 
         return (
-            <ReactiveBase
-                app={this.index}
-                credentials={this.credentials}
-                url={this.url}
-                theme={this.theme}
-                enableAppbase
-                appbaseConfig={{
-                    recordAnalytics: true,
-                }}
-            >
-                <ReactiveComponent
-                    componentId="filter_by_product"
-                    customQuery={() =>
-                        this.exportType === 'shopify'
-                            ? {
-                                  query: { term: { type: 'products' } },
-                              }
-                            : null
-                    }
-                />
-                <ReactiveList
-                    onData={({ resultStats: { numberOfResults } }) => {
-                        this.total = numberOfResults;
+            <div>
+                <ReactiveBase
+                    app={this.index}
+                    credentials={this.credentials}
+                    url={this.url}
+                    theme={this.theme}
+                    enableAppbase
+                    appbaseConfig={{
+                        recordAnalytics: true,
                     }}
-                    renderResultStats={() => null}
-                    render={({ data, triggerClickAnalytics }) => {
-                        return this.renderResults({
-                            data,
-                            triggerClickAnalytics,
-                        });
-                    }}
-                    infiniteScroll={false}
-                    componentId="results"
-                    dataField="title"
-                    defaultQuery={() =>
-                        this.recommendation.type ===
-                        RecommendationTypes.MOST_RECENT
-                            ? {
-                                  sort: [
-                                      {
-                                          [get(
-                                              this.recommendation,
-                                              'dataField',
-                                              shopifyDefaultFields.timestamp,
-                                          )]: { order: 'desc' },
-                                      },
-                                  ],
-                              }
-                            : null
-                    }
-                    react={{
-                        and: [
-                            'filter_by_product',
-                            ...getReactDependenciesFromPreferences(
-                                this.preferences,
-                                'result',
-                            ),
-                        ],
-                    }}
-                    css={reactiveListCls}
-                    innerClass={{
-                        list: 'custom-result-list',
-                        poweredBy: 'custom-powered-by',
-                        noResults: 'custom-no-results',
-                        pagination: 'custom-pagination',
-                        resultsInfo: 'custom-result-info',
-                    }}
-                    {...this.resultConfig}
-                    size={this.recommendation.maxProducts}
-                />
-            </ReactiveBase>
+                >
+                    <ReactiveComponent
+                        componentId="filter_by_product"
+                        customQuery={() =>
+                            this.exportType === 'shopify'
+                                ? {
+                                      query: { term: { type: 'products' } },
+                                  }
+                                : null
+                        }
+                    />
+                    <ReactiveList
+                        onData={({ resultStats: { numberOfResults } }) => {
+                            this.total = numberOfResults;
+                        }}
+                        renderResultStats={() => null}
+                        render={({ data, triggerClickAnalytics }) => {
+                            return this.renderResults({
+                                data,
+                                triggerClickAnalytics,
+                            });
+                        }}
+                        infiniteScroll={false}
+                        componentId="results"
+                        dataField="title"
+                        defaultQuery={() =>
+                            this.recommendation.type ===
+                            RecommendationTypes.MOST_RECENT
+                                ? {
+                                      sort: [
+                                          {
+                                              [get(
+                                                  this.recommendation,
+                                                  'dataField',
+                                                  shopifyDefaultFields.timestamp,
+                                              )]: { order: 'desc' },
+                                          },
+                                      ],
+                                  }
+                                : null
+                        }
+                        react={{
+                            and: [
+                                'filter_by_product',
+                                ...getReactDependenciesFromPreferences(
+                                    this.preferences,
+                                    'result',
+                                ),
+                            ],
+                        }}
+                        css={reactiveListCls}
+                        innerClass={{
+                            list: 'custom-result-list',
+                            poweredBy: 'custom-powered-by',
+                            noResults: 'custom-no-results',
+                            pagination: 'custom-pagination',
+                            resultsInfo: 'custom-result-info',
+                        }}
+                        {...this.resultConfig}
+                        size={this.recommendation.maxProducts}
+                    />
+                </ReactiveBase>
+            </div>
         );
     }
 }
