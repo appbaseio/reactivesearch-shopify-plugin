@@ -10,6 +10,7 @@ const getPropsById = (id) => {
     const container = isIdAvailble(id);
     if (container) {
         return {
+            widgetId: container.getAttribute('widget-id'),
             isOpen: container.getAttribute('isOpen') === 'true',
             openAsPage: container.getAttribute('openaspage') === 'true',
             isPreview: container.getAttribute('isPreview') === 'true',

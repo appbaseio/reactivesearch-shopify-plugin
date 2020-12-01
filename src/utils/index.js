@@ -197,6 +197,7 @@ export const shopifyDefaultFields = {
     image: 'image.src',
     description: 'body_html',
     handle: 'handle',
+    timestamp: 'created_at'
 };
 
 export const getReactDependenciesFromPreferences = (
@@ -248,6 +249,13 @@ export const getPreferences = () => {
         }
     }
     return preferences;
+};
+
+export const RecommendationTypes = {
+	MOST_POPULAR_PRODUCTS: 'most_popular',
+	MOST_RECENT: 'most_recent',
+	SIMILAR_PRODUCTS: 'similar',
+	FEATURED_PRODUCTS: 'featured',
 };
 
 export const accapi = 'https://accapi.appbase.io';

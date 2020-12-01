@@ -22,6 +22,7 @@ const SuggestionCard = ({
     price,
     themeType,
     theme,
+    className,
     ...props
 }) => (
     <div {...props}>
@@ -37,7 +38,7 @@ const SuggestionCard = ({
                 css={cardStyles({
                     ...theme.colors,
                 })}
-                className="card"
+                className={className || "card"}
                 cover={image && <img src={image} width="100%" alt={title} />}
                 style={{
                     padding: themeType === 'minimal' ? '10px' : 0,
