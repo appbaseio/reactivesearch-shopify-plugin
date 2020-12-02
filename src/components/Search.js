@@ -105,7 +105,6 @@ const reactiveListCls= (toggleFilters, theme) =>css`
 export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
     overflow: hidden;
-    height: 100%;
     max-width: 300px;
 
     .product-button {
