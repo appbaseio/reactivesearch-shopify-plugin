@@ -259,3 +259,7 @@ export const RecommendationTypes = {
 };
 
 export const accapi = 'https://accapi.appbase.io';
+
+export const getFieldWithoutKeyword = (fieldWithKeyword = "") => {
+    return fieldWithKeyword.split(".keyword")[0]
+}

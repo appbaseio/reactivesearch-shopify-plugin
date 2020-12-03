@@ -19,6 +19,7 @@ import {
     getPreferences,
     RecommendationTypes,
     shopifyDefaultFields,
+    getFieldWithoutKeyword,
 } from '../utils';
 import { mediaMax } from '../utils/media';
 import SuggestionCard from './SuggestionCard';
@@ -156,6 +157,7 @@ class ProductSuggestions extends React.Component {
         this.url = get(preferences, 'appbaseSettings.url');
         // fetch popular products
         this.fetchPopularProducts();
+        this.fetchSimilarProducts();
     }
 
     async componentDidMount() {
@@ -167,14 +169,127 @@ class ProductSuggestions extends React.Component {
         window.removeEventListener('resize', this.updateMaxSize);
     }
 
+    fetchSimilarProducts = () => {
+        if(this.recommendation.type === RecommendationTypes.SIMILAR_PRODUCTS) {
+            let fieldName = "";
+            let fieldValue = "";
+            // default pattern for shopify apps
+            const defaultPattern = 'products/{handle}';
+            const urlPattern = get(this.recommendation, 'productsPageUrl', defaultPattern)
+            // Regex to extract data fields from the url pattern
+            const extractFieldName = /\{([^)]+)\}/;
+            const fieldNameMatches = extractFieldName.exec(urlPattern);
+
+            if(fieldNameMatches && fieldNameMatches[1]) {
+                ([, fieldName] = fieldNameMatches);
+                // Build regex from url pattern to match the current url
+                const urlPatternWithOutField = urlPattern.replace(`{${fieldName}}`, '([^/]+)')
+                // Remove slash if pattern starts with it
+                const parsedUrlPattern = urlPatternWithOutField.replace(/^\/+|\/+$/g, '')
+                // Escape backslashes
+                const regexString = `(.*)://(.*)${parsedUrlPattern}`;
+                const finalRegexPattern = new RegExp(regexString)
+                const urlMatches = window.location.href.match(finalRegexPattern);
+                if(urlMatches && urlMatches[3]) {
+                    ([,,,fieldValue] = urlMatches);
+                } else {
+                    const queryString = get(urlPattern.split("?"), "[1]")
+                    if(queryString) {
+                        let queryParamKey;
+                        // extract URLParams
+                        const searchParams = new URLSearchParams(queryString)
+                        searchParams.forEach((value, key) => {
+                            if(value === `{${fieldName}}`) {
+                                queryParamKey = key
+                            }
+                        });
+                        if(queryParamKey) {
+                            const currentParams = new URLSearchParams(window.location.search);
+                            fieldValue = currentParams.get(queryParamKey)
+                        }
+                    }
+                }
+            }
+            if(fieldName && fieldValue) {
+                // Fetch value for the field defined in preferences
+                if(this.recommendation.dataField) {
+                    fetch(`${this.url}/_search`, {
+                        method: 'POST',
+                        headers: this.headers,
+                        body: JSON.stringify({
+                            query: {
+                                "term": {
+                                    [fieldName]: fieldValue
+                                }
+                            },
+                            _source: {
+                                "include": [getFieldWithoutKeyword(this.recommendation.dataField)]
+                            }
+                        }),
+                    }).then(res => res.json())
+                    .then(response => {
+                        const value = get(response, `hits.hits[0]._source[${getFieldWithoutKeyword(this.recommendation.dataField)}]`)
+                        if(value) {
+                            // fetch products
+                            fetch(
+                                `${this.url}/${this.index}/_reactivesearch.v3`,
+                                {
+                                    method: 'POST',
+                                    headers: this.headers,
+                                    body: JSON.stringify({
+                                        query: [{
+                                            id: 'similar_product',
+                                            dataField: [this.recommendation.dataField],
+                                            type: 'term',
+                                            value,
+                                            execute: false
+                                        }, {
+                                            id: 'results',
+                                            size: this.recommendation.maxProducts,
+                                            dataField: [this.recommendation.dataField],
+                                            react: {
+                                                and: 'similar_product'
+                                            },
+                                        }]
+                                    })
+                                },
+                            )
+                                .then((res) => res.json())
+                                .then((res) => {
+                                    if (res && res.results) {
+                                        this.setState({
+                                            products: res.results.hits.hits.map((product) => ({
+                                                ...product,
+                                                ...product._source,
+                                                _source: {},
+                                            })),
+                                        });
+                                    }
+                                })
+                                .catch((e) => {
+                                    console.warn(e);
+                                });
+                        }
+                    }).catch((e) => {
+                        console.warn(e);
+                    });
+                }
+            }
+        }
+    }
+
+    get headers() {
+        return {
+            authorization: `Basic ${btoa(this.credentials)}`,
+        }
+    }
+
     fetchPopularProducts = () => {
         if (
             this.recommendation.type ===
             RecommendationTypes.MOST_POPULAR_PRODUCTS
         ) {
-            const headers = {
-                authorization: `Basic ${btoa(this.credentials)}`,
-            };
+            const {headers} = this;
             fetch(
                 `${this.url}/_analytics/${this.index}/popular-results?size=${this.recommendation.maxProducts}`,
                 {
@@ -391,6 +506,8 @@ class ProductSuggestions extends React.Component {
         if (
             this.recommendation.type ===
             RecommendationTypes.MOST_POPULAR_PRODUCTS
+            || this.recommendation.type ===
+            RecommendationTypes.SIMILAR_PRODUCTS
         ) {
             return this.renderResults({
                 data: products,
