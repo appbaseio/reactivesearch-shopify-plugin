@@ -1,6 +1,7 @@
 /** @jsxRuntime classic */
+/** @jsxFrag React.Fragment */
 /** @jsx jsx */
-import { jsx, css } from '@emotion/core';
+import { css, jsx, Global } from '@emotion/core';
 import React from 'react';
 import { string } from 'prop-types';
 import { Button, Icon } from 'antd';
@@ -131,11 +132,17 @@ class ProductSuggestions extends React.Component {
             defaultPreferences.productRecommendationSettings.rsConfig,
         );
         this.resultSettings = get(preferences, 'resultSettings');
+        this.ctaTitle = get(preferences, 'recommendationSettings.ctaTitle');
+        this.ctaAction = get(preferences, 'recommendationSettings.ctaAction');
+        this.customCssRecommendation = get(
+            preferences,
+            'recommendationSettings.customCssRecommendation',
+        );
         const recommendation = get(
             preferences,
             'recommendationSettings.recommendations',
             [],
-        ).find((item) => item.id === props.widgetId);
+        ).find((item) => String(item.id) === props.widgetId);
         if (recommendation) {
             this.recommendation = {
                 ...defaultRecommendationSettings,
@@ -170,118 +177,155 @@ class ProductSuggestions extends React.Component {
     }
 
     fetchSimilarProducts = () => {
-        if(this.recommendation.type === RecommendationTypes.SIMILAR_PRODUCTS) {
-            let fieldName = "";
-            let fieldValue = "";
+        if (this.recommendation.type === RecommendationTypes.SIMILAR_PRODUCTS) {
+            let fieldName = '';
+            let fieldValue = '';
             // default pattern for shopify apps
             const defaultPattern = 'products/{handle}';
-            const urlPattern = get(this.recommendation, 'productsPageUrl', defaultPattern)
+            const urlPattern = get(
+                this.recommendation,
+                'productsPageUrl',
+                defaultPattern,
+            );
             // Regex to extract data fields from the url pattern
             const extractFieldName = /\{([^)]+)\}/;
             const fieldNameMatches = extractFieldName.exec(urlPattern);
 
-            if(fieldNameMatches && fieldNameMatches[1]) {
-                ([, fieldName] = fieldNameMatches);
+            if (fieldNameMatches && fieldNameMatches[1]) {
+                [, fieldName] = fieldNameMatches;
                 // Build regex from url pattern to match the current url
-                const urlPatternWithOutField = urlPattern.replace(`{${fieldName}}`, '([^/]+)')
+                const urlPatternWithOutField = urlPattern.replace(
+                    `{${fieldName}}`,
+                    '([^/]+)',
+                );
                 // Remove slash if pattern starts with it
-                const parsedUrlPattern = urlPatternWithOutField.replace(/^\/+|\/+$/g, '')
+                const parsedUrlPattern = urlPatternWithOutField.replace(
+                    /^\/+|\/+$/g,
+                    '',
+                );
                 // Escape backslashes
                 const regexString = `(.*)://(.*)${parsedUrlPattern}`;
-                const finalRegexPattern = new RegExp(regexString)
-                const urlMatches = window.location.href.match(finalRegexPattern);
-                if(urlMatches && urlMatches[3]) {
-                    ([,,,fieldValue] = urlMatches);
+                const finalRegexPattern = new RegExp(regexString);
+                const urlMatches = window.location.href.match(
+                    finalRegexPattern,
+                );
+                if (urlMatches && urlMatches[3]) {
+                    [, , , fieldValue] = urlMatches;
                 } else {
-                    const queryString = get(urlPattern.split("?"), "[1]")
-                    if(queryString) {
+                    const queryString = get(urlPattern.split('?'), '[1]');
+                    if (queryString) {
                         let queryParamKey;
                         // extract URLParams
-                        const searchParams = new URLSearchParams(queryString)
+                        const searchParams = new URLSearchParams(queryString);
                         searchParams.forEach((value, key) => {
-                            if(value === `{${fieldName}}`) {
-                                queryParamKey = key
+                            if (value === `{${fieldName}}`) {
+                                queryParamKey = key;
                             }
                         });
-                        if(queryParamKey) {
-                            const currentParams = new URLSearchParams(window.location.search);
-                            fieldValue = currentParams.get(queryParamKey)
+                        if (queryParamKey) {
+                            const currentParams = new URLSearchParams(
+                                window.location.search,
+                            );
+                            fieldValue = currentParams.get(queryParamKey);
                         }
                     }
                 }
             }
-            if(fieldName && fieldValue) {
+            if (fieldName && fieldValue) {
                 // Fetch value for the field defined in preferences
-                if(this.recommendation.dataField) {
+                if (this.recommendation.dataField) {
                     fetch(`${this.url}/_search`, {
                         method: 'POST',
                         headers: this.headers,
                         body: JSON.stringify({
                             query: {
-                                "term": {
-                                    [fieldName]: fieldValue
-                                }
+                                term: {
+                                    [fieldName]: fieldValue,
+                                },
                             },
                             _source: {
-                                "include": [getFieldWithoutKeyword(this.recommendation.dataField)]
-                            }
+                                include: [
+                                    getFieldWithoutKeyword(
+                                        this.recommendation.dataField,
+                                    ),
+                                ],
+                            },
                         }),
-                    }).then(res => res.json())
-                    .then(response => {
-                        const value = get(response, `hits.hits[0]._source[${getFieldWithoutKeyword(this.recommendation.dataField)}]`)
-                        if(value) {
-                            // fetch products
-                            fetch(
-                                `${this.url}/${this.index}/_reactivesearch.v3`,
-                                {
-                                    method: 'POST',
-                                    headers: this.headers,
-                                    body: JSON.stringify({
-                                        query: [{
-                                            id: 'similar_product',
-                                            dataField: [this.recommendation.dataField],
-                                            type: 'term',
-                                            value,
-                                            execute: false
-                                        }, {
-                                            id: 'results',
-                                            size: this.recommendation.maxProducts,
-                                            dataField: [this.recommendation.dataField],
-                                            react: {
-                                                and: 'similar_product'
-                                            },
-                                        }]
+                    })
+                        .then((res) => res.json())
+                        .then((response) => {
+                            const value = get(
+                                response,
+                                `hits.hits[0]._source[${getFieldWithoutKeyword(
+                                    this.recommendation.dataField,
+                                )}]`,
+                            );
+                            if (value) {
+                                // fetch products
+                                fetch(
+                                    `${this.url}/${this.index}/_reactivesearch.v3`,
+                                    {
+                                        method: 'POST',
+                                        headers: this.headers,
+                                        body: JSON.stringify({
+                                            query: [
+                                                {
+                                                    id: 'similar_product',
+                                                    dataField: [
+                                                        this.recommendation
+                                                            .dataField,
+                                                    ],
+                                                    type: 'term',
+                                                    value,
+                                                    execute: false,
+                                                },
+                                                {
+                                                    id: 'results',
+                                                    size: this.recommendation
+                                                        .maxProducts,
+                                                    dataField: [
+                                                        this.recommendation
+                                                            .dataField,
+                                                    ],
+                                                    react: {
+                                                        and: 'similar_product',
+                                                    },
+                                                },
+                                            ],
+                                        }),
+                                    },
+                                )
+                                    .then((res) => res.json())
+                                    .then((res) => {
+                                        if (res && res.results) {
+                                            this.setState({
+                                                products: res.results.hits.hits.map(
+                                                    (product) => ({
+                                                        ...product,
+                                                        ...product._source,
+                                                        _source: {},
+                                                    }),
+                                                ),
+                                            });
+                                        }
                                     })
-                                },
-                            )
-                                .then((res) => res.json())
-                                .then((res) => {
-                                    if (res && res.results) {
-                                        this.setState({
-                                            products: res.results.hits.hits.map((product) => ({
-                                                ...product,
-                                                ...product._source,
-                                                _source: {},
-                                            })),
-                                        });
-                                    }
-                                })
-                                .catch((e) => {
-                                    console.warn(e);
-                                });
-                        }
-                    }).catch((e) => {
-                        console.warn(e);
-                    });
+                                    .catch((e) => {
+                                        console.warn(e);
+                                    });
+                            }
+                        })
+                        .catch((e) => {
+                            console.warn(e);
+                        });
                 }
             }
         }
-    }
+    };
 
     get headers() {
         return {
             authorization: `Basic ${btoa(this.credentials)}`,
-        }
+        };
     }
 
     fetchPopularProducts = () => {
@@ -289,7 +333,7 @@ class ProductSuggestions extends React.Component {
             this.recommendation.type ===
             RecommendationTypes.MOST_POPULAR_PRODUCTS
         ) {
-            const {headers} = this;
+            const { headers } = this;
             fetch(
                 `${this.url}/_analytics/${this.index}/popular-results?size=${this.recommendation.maxProducts}`,
                 {
@@ -427,6 +471,8 @@ class ProductSuggestions extends React.Component {
                                         theme={this.theme}
                                         themeType={this.themeType}
                                         className="product-card"
+                                        ctaAction={this.ctaAction}
+                                        ctaTitle={this.ctaTitle}
                                         {...{
                                             handle: get(
                                                 rest,
@@ -503,20 +549,30 @@ class ProductSuggestions extends React.Component {
         if (!this.index || !this.credentials || !this.url) {
             return null;
         }
+        let renderCustomResults = false;
         if (
             this.recommendation.type ===
-            RecommendationTypes.MOST_POPULAR_PRODUCTS
-            || this.recommendation.type ===
-            RecommendationTypes.SIMILAR_PRODUCTS
+                RecommendationTypes.MOST_POPULAR_PRODUCTS ||
+            this.recommendation.type === RecommendationTypes.SIMILAR_PRODUCTS
         ) {
-            return this.renderResults({
-                data: products,
-                triggerClickAnalytics: () => null,
-            });
+            renderCustomResults = true;
+        }
+
+        let fontFamilyLink = '';
+        const fontFamily = get(this.theme, 'typography.fontFamily');
+        if (fontFamily && fontFamily !== 'default') {
+            const parsedFontFamily = fontFamily.split(' ').join('+');
+            fontFamilyLink = (
+                <link
+                    href={`https://fonts.googleapis.com/css?family=${parsedFontFamily}`}
+                    rel="stylesheet"
+                />
+            );
         }
 
         return (
             <div>
+                {fontFamilyLink}
                 <ReactiveBase
                     app={this.index}
                     credentials={this.credentials}
@@ -527,66 +583,84 @@ class ProductSuggestions extends React.Component {
                         recordAnalytics: true,
                     }}
                 >
-                    <ReactiveComponent
-                        componentId="filter_by_product"
-                        customQuery={() =>
-                            this.exportType === 'shopify'
-                                ? {
-                                      query: { term: { type: 'products' } },
-                                  }
-                                : null
-                        }
+                    <Global
+                        styles={css`
+                            ${this.customCssRecommendation}
+                        `}
                     />
-                    <ReactiveList
-                        onData={({ resultStats: { numberOfResults } }) => {
-                            this.total = numberOfResults;
-                        }}
-                        renderResultStats={() => null}
-                        render={({ data, triggerClickAnalytics }) => {
-                            return this.renderResults({
-                                data,
-                                triggerClickAnalytics,
-                            });
-                        }}
-                        infiniteScroll={false}
-                        componentId="results"
-                        dataField="title"
-                        defaultQuery={() =>
-                            this.recommendation.type ===
-                            RecommendationTypes.MOST_RECENT
-                                ? {
-                                      sort: [
-                                          {
-                                              [get(
-                                                  this.recommendation,
-                                                  'dataField',
-                                                  shopifyDefaultFields.timestamp,
-                                              )]: { order: 'desc' },
-                                          },
-                                      ],
-                                  }
-                                : null
-                        }
-                        react={{
-                            and: [
-                                'filter_by_product',
-                                ...getReactDependenciesFromPreferences(
-                                    this.preferences,
-                                    'result',
-                                ),
-                            ],
-                        }}
-                        css={reactiveListCls}
-                        innerClass={{
-                            list: 'custom-result-list',
-                            poweredBy: 'custom-powered-by',
-                            noResults: 'custom-no-results',
-                            pagination: 'custom-pagination',
-                            resultsInfo: 'custom-result-info',
-                        }}
-                        {...this.resultConfig}
-                        size={this.recommendation.maxProducts}
-                    />
+                    {renderCustomResults ? (
+                        this.renderResults({
+                            data: products,
+                            triggerClickAnalytics: () => null,
+                        })
+                    ) : (
+                        <React.Fragment>
+                            <ReactiveComponent
+                                componentId="filter_by_product"
+                                customQuery={() =>
+                                    this.exportType === 'shopify'
+                                        ? {
+                                              query: {
+                                                  term: { type: 'products' },
+                                              },
+                                          }
+                                        : null
+                                }
+                            />
+                            <ReactiveList
+                                onData={({
+                                    resultStats: { numberOfResults },
+                                }) => {
+                                    this.total = numberOfResults;
+                                }}
+                                renderResultStats={() => null}
+                                render={({ data, triggerClickAnalytics }) => {
+                                    return this.renderResults({
+                                        data,
+                                        triggerClickAnalytics,
+                                    });
+                                }}
+                                infiniteScroll={false}
+                                componentId="results"
+                                dataField="title"
+                                defaultQuery={() =>
+                                    this.recommendation.type ===
+                                    RecommendationTypes.MOST_RECENT
+                                        ? {
+                                              sort: [
+                                                  {
+                                                      [get(
+                                                          this.recommendation,
+                                                          'dataField',
+                                                          shopifyDefaultFields.timestamp,
+                                                      )]: { order: 'desc' },
+                                                  },
+                                              ],
+                                          }
+                                        : null
+                                }
+                                react={{
+                                    and: [
+                                        'filter_by_product',
+                                        ...getReactDependenciesFromPreferences(
+                                            this.preferences,
+                                            'result',
+                                        ),
+                                    ],
+                                }}
+                                css={reactiveListCls}
+                                innerClass={{
+                                    list: 'custom-result-list',
+                                    poweredBy: 'custom-powered-by',
+                                    noResults: 'custom-no-results',
+                                    pagination: 'custom-pagination',
+                                    resultsInfo: 'custom-result-info',
+                                }}
+                                {...this.resultConfig}
+                                size={this.recommendation.maxProducts}
+                            />
+                        </React.Fragment>
+                    )}
                 </ReactiveBase>
             </div>
         );

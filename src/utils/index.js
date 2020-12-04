@@ -263,3 +263,8 @@ export const accapi = 'https://accapi.appbase.io';
 export const getFieldWithoutKeyword = (fieldWithKeyword = "") => {
     return fieldWithKeyword.split(".keyword")[0]
 }
+
+export const CtaActions = {
+	REDIRECT_TO_PRODUCT: 'redirect_to_product',
+	NO_BUTTON: 'no_button',
+};
