@@ -422,6 +422,15 @@ class ProductSuggestions extends React.Component {
         );
     };
 
+    getFontFamily = () => {
+        const receivedFont = get(this.theme, 'typography.fontFamily', '');
+        let fontFamily = '';
+        if (receivedFont && receivedFont !== 'default') {
+            fontFamily = receivedFont; // eslint-disable-line
+        }
+        return fontFamily ? { fontFamily } : {};
+    };
+
     renderResults = ({ data, triggerClickAnalytics }) => {
         const { maxSize, currentPage } = this.state;
         const settings = {
@@ -473,6 +482,9 @@ class ProductSuggestions extends React.Component {
                                         className="product-card"
                                         ctaAction={this.ctaAction}
                                         ctaTitle={this.ctaTitle}
+                                        cardStyle={{
+                                            ...this.getFontFamily(),
+                                        }}
                                         {...{
                                             handle: get(
                                                 rest,

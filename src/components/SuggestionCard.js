@@ -26,6 +26,7 @@ const SuggestionCard = ({
     className,
     ctaAction,
     ctaTitle,
+    cardStyle,
     ...props
 }) => {
     const shouldShowCtaAction = ctaAction === CtaActions.NO_BUTTON;
@@ -49,6 +50,7 @@ const SuggestionCard = ({
                     }
                     style={{
                         padding: themeType === 'minimal' ? '10px' : 0,
+                        ...cardStyle,
                     }}
                     bodyStyle={
                         themeType === 'minimal'
