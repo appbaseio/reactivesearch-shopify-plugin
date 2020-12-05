@@ -17,10 +17,10 @@ import {
 } from '@appbaseio/reactivesearch/lib/styles/FormControlList';
 import get from 'lodash.get';
 import { string, bool } from 'prop-types';
-import { mediaMax } from '@divyanshu013/media';
-import { Card, Collapse, Button, Icon, Affix, Tooltip } from 'antd';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
+import { Card, Collapse, Button, Icon, Affix, Tooltip } from 'antd';
+import { mediaMax } from '../utils/media';
 import Suggestions from './Suggestions';
 import {
     browserColors,
@@ -37,7 +37,6 @@ const resultRef = React.createRef();
 
 const minimalSearchStyles = ({ titleColor }) => css`
     input {
-        background: transparent;
         border: 0;
         color: ${titleColor};
         box-shadow: 0px 0px 4px ${titleColor}1a;
@@ -48,13 +47,6 @@ const loaderStyle = css`
     margin: 10px 0;
     position: relative;
 `;
-
-const getFilterField = (field = '') => {
-    if (!(field && field.endsWith('.keyword'))) {
-        return `${field}.keyword`;
-    }
-    return field;
-};
 
 const reactiveListCls= (toggleFilters, theme) =>css`
     .custom-no-results {
@@ -82,25 +74,20 @@ const reactiveListCls= (toggleFilters, theme) =>css`
     .custom-result-info {
         padding: 18px;
         height: 60px;
-        p: {
-            margin: 0;
-            fontSize: 1rem;
-            fontWeight: 500;
-            textAlign: right;
-        }
-        ${[mediaMax.medium]}: {
+        ${mediaMax.medium} {
             display: ${
                 toggleFilters
                     ? 'none'
                     : 'grid'
             };
+            justify-content: center;
         }
     }
     .custom-result-list {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         grid-gap: 10px;
-        ${[mediaMax.medium]}: {
+        ${mediaMax.medium} {
             grid-template-columns:
                 repeat(auto-fit, minmax(200px, 1fr));
             display: ${
@@ -109,8 +96,8 @@ const reactiveListCls= (toggleFilters, theme) =>css`
                     : 'grid'
             };
         }
-        ${[mediaMax.small]}: {
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)),
+        ${mediaMax.small} {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         }
     }
 `
@@ -118,7 +105,6 @@ const reactiveListCls= (toggleFilters, theme) =>css`
 export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
     overflow: hidden;
-    height: 100%;
     max-width: 300px;
 
     .product-button {
@@ -267,7 +253,10 @@ class Search extends Component {
             const inputRef = get(searchRef, 'current._inputRef', null);
 
             if (inputRef) {
-                inputRef.focus();
+                const param = new URLSearchParams(window.location.search).get('q')
+                if(!param) {
+                    inputRef.focus();
+                }
             }
 
             if (
@@ -477,6 +466,7 @@ class Search extends Component {
                             </UL>
                         );
                     }}
+                    URLParams
                     {...get(this.collectionFilter, 'rsConfig')}
                     title=""
                 />
@@ -503,6 +493,7 @@ class Search extends Component {
                     ],
                 }}
                 filterLabel="Product Type"
+                URLParams
                 {...get(this.productTypeFilter, 'rsConfig')}
                 title=""
             />
@@ -625,13 +616,12 @@ class Search extends Component {
                     }}
                 />
             }
+            URLParams
             {...get(this.colorFilter, 'rsConfig')}
-            dataField={getFilterField(
-                get(
-                    this.colorFilter,
-                    'rsConfig.dataField',
-                    shopifyDefaultFields.color,
-                ),
+            dataField={get(
+                this.colorFilter,
+                'rsConfig.dataField',
+                shopifyDefaultFields.color,
             )}
             title=""
         />
@@ -677,13 +667,12 @@ class Search extends Component {
                     />
                 )}
                 showCheckbox={this.themeType !== 'minimal'}
+                URLParams
                 {...get(this.sizeFilter, 'rsConfig')}
-                dataField={getFilterField(
-                    get(
-                        this.sizeFilter,
-                        'rsConfig.dataField',
-                        shopifyDefaultFields.size,
-                    ),
+                dataField={get(
+                    this.sizeFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
                 )}
                 title=""
             />
@@ -695,7 +684,8 @@ class Search extends Component {
         const { isPreview } = this.props;
         return (
             <DataSearch
-                componentId="search"
+                // Don't change the component id it is tied to shopify
+                componentId="q"
                 filterLabel="Search"
                 className="search"
                 debounce={100}
@@ -703,6 +693,7 @@ class Search extends Component {
                 iconPosition="right"
                 icon={get(this.searchSettings, 'searchButton.icon')}
                 ref={searchRef}
+                URLParams
                 style={{
                     marginBottom: 20,
                     position: 'sticky',
@@ -716,8 +707,8 @@ class Search extends Component {
                     data,
                     popularSuggestions,
                     downshiftProps,
-                }) =>
-                    downshiftProps.isOpen && Boolean(value.length) ? (
+                }) => {
+                    return downshiftProps.isOpen && Boolean(value.length) && data.length ? (
                         <Suggestions
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
@@ -745,7 +736,7 @@ class Search extends Component {
                             popularSuggestions={popularSuggestions}
                         />
                     ) : null
-                }
+                }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
                 enablePopularSuggestions={get(
@@ -783,7 +774,23 @@ class Search extends Component {
                 appbaseConfig={{
                     recordAnalytics: true,
                 }}
-                setSearchParams={isPreview ? () => {} : undefined}
+                setSearchParams={isPreview ? () => {} : (url) => {
+                    window.history.pushState({ path: url }, '', url);
+                    return url
+                }}
+                getSearchParams={isPreview ? () => {} : () => {
+                    const params = new URLSearchParams(window.location.search)
+                    const searchParam = params.get('q');
+                    if(searchParam) {
+                        try {
+                            JSON.parse(searchParam)
+                        } catch(e) {
+                            params.set('q', JSON.stringify(params.get('q')))
+                        }
+
+                    }
+                    return params.toString()
+                }}
             >
                 <Global
                     styles={css`
@@ -1084,21 +1091,7 @@ class Search extends Component {
                                                 listComponent,
                                                 'rsConfig.componentId',
                                             )}
-                                            {...listComponent.rsConfig}
-                                            dataField={getFilterField(
-                                                get(
-                                                    listComponent,
-                                                    'rsConfig.dataField',
-                                                ),
-                                            )}
-                                            renderItem={(item) => (
-                                                <span
-                                                    // eslint-disable-next-line
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: item,
-                                                    }}
-                                                />
-                                            )}
+                                            URLParams
                                             loader={
                                                 <div
                                                     css={loaderStyle}
@@ -1130,6 +1123,11 @@ class Search extends Component {
                                             showCheckbox={
                                                 this.themeType !== 'minimal'
                                             }
+                                            {...listComponent.rsConfig}
+                                            dataField={get(
+                                                listComponent,
+                                                'rsConfig.dataField',
+                                            )}
                                             css={this.getFontFamily()}
                                             react={{
                                                 and: getReactDependenciesFromPreferences(
@@ -1200,7 +1198,6 @@ class Search extends Component {
                                         time,
                                     }) => (
                                         <div
-                                            style={{ textAlign: 'center' }}
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
                                                 __html: get(

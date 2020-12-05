@@ -190,13 +190,14 @@ export const defaultPreferences = {
 };
 
 export const shopifyDefaultFields = {
-    size: 'variants.option1',
-    color: 'variants.option2',
+    size: 'variants.option1.keyword',
+    color: 'variants.option2.keyword',
     price: 'variants.price',
     title: 'title',
     image: 'image.src',
     description: 'body_html',
     handle: 'handle',
+    timestamp: 'created_at'
 };
 
 export const getReactDependenciesFromPreferences = (
@@ -208,7 +209,7 @@ export const getReactDependenciesFromPreferences = (
     if (searchId) {
         react.push(searchId);
     } else {
-        react.push('search');
+        react.push('q');
     }
     const staticFacets = get(preferences, 'facetSettings.staticFacets');
     if (staticFacets && Array.isArray(staticFacets)) {
@@ -250,4 +251,20 @@ export const getPreferences = () => {
     return preferences;
 };
 
+export const RecommendationTypes = {
+	MOST_POPULAR_PRODUCTS: 'most_popular',
+	MOST_RECENT: 'most_recent',
+	SIMILAR_PRODUCTS: 'similar',
+	FEATURED_PRODUCTS: 'featured',
+};
+
 export const accapi = 'https://accapi.appbase.io';
+
+export const getFieldWithoutKeyword = (fieldWithKeyword = "") => {
+    return fieldWithKeyword.split(".keyword")[0]
+}
+
+export const CtaActions = {
+	REDIRECT_TO_PRODUCT: 'redirect_to_product',
+	NO_BUTTON: 'no_button',
+};
