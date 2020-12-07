@@ -97,6 +97,22 @@ const reactiveListCls = css`
     }
 `;
 
+const resultListCls = css`
+    .slick-track {
+        display: flex;
+        align-items: stretch;
+    }
+    .slick-slide {
+        display: flex;
+        align-self: stretch;
+        height: unset;
+        > div {
+            display: flex;
+            align-self: stretch;
+            width: 100%;
+        }
+    }
+`
 const defaultRecommendationSettings = {
     title: 'You might also like',
     maxProducts: 15,
@@ -468,6 +484,7 @@ class ProductSuggestions extends React.Component {
                                 this.slick = c;
                             }}
                             {...settings}
+                            css={resultListCls}
                         >
                             {data.map(
                                 (

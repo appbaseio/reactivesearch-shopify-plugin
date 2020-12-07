@@ -106,7 +106,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
     overflow: hidden;
     max-width: 300px;
-
+    height: 100%;
     .product-button {
         top: -50%;
         position: absolute;
@@ -159,7 +159,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
         }
         ::before {
             width: 100%;
-            height: 100vh;
+            height: 100%;
             background: ${primaryColor}1a !important;
         }
     }
