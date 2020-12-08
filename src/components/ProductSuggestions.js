@@ -103,7 +103,7 @@ const resultListCls = css`
         align-items: stretch;
     }
     .slick-slide {
-        display: flex;
+        display: flex !important;
         align-self: stretch;
         height: unset;
         > div {
