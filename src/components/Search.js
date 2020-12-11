@@ -26,7 +26,7 @@ import {
     browserColors,
     defaultPreferences,
     getReactDependenciesFromPreferences,
-    getPreferences,
+    getSearchPreferences,
     shopifyDefaultFields,
 } from '../utils';
 
@@ -202,11 +202,16 @@ class Search extends Component {
             toggleFilters: false,
             isMobile: window.innerWidth < 768,
         };
-        this.preferences = getPreferences();
+        this.preferences = getSearchPreferences();
         this.theme = get(
             this.preferences,
             'themeSettings.rsConfig',
             defaultPreferences.themeSettings.rsConfig,
+        );
+        this.themeSettings = get(
+            this.preferences,
+            'themeSettings',
+            defaultPreferences.themeSettings,
         );
         this.themeType = get(
             this.preferences,
@@ -739,10 +744,6 @@ class Search extends Component {
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
-                enablePopularSuggestions={get(
-                    this.searchSettings,
-                    'showPopularSearches',
-                )}
             />
         );
     };
@@ -794,7 +795,7 @@ class Search extends Component {
             >
                 <Global
                     styles={css`
-                        ${get(this.globalSettings, 'customCss', '')}
+                        ${get(this.themeSettings, 'customCss', '')}
                     `}
                 />
                 {isMobile ? (
@@ -1338,31 +1339,24 @@ class Search extends Component {
                                                             />
                                                         }
                                                         description={
-                                                            description
-                                                                ? get(
-                                                                      this
-                                                                          .resultSettings,
-                                                                      'showDescription',
-                                                                  ) &&
-                                                                  this
-                                                                      .themeType ===
-                                                                      'classic' && (
-                                                                      <Truncate
-                                                                          lines={
-                                                                              4
-                                                                          }
-                                                                          ellipsis={
-                                                                              <span>
-                                                                                  ...
-                                                                              </span>
-                                                                          }
-                                                                      >
-                                                                          {strip(
-                                                                              description,
-                                                                          )}
-                                                                      </Truncate>
-                                                                  )
-                                                                : undefined
+                                                            description &&
+                                                                this.themeType ===
+                                                                'classic' ? (
+                                                                <Truncate
+                                                                    lines={
+                                                                        4
+                                                                    }
+                                                                    ellipsis={
+                                                                        <span>
+                                                                            ...
+                                                                        </span>
+                                                                    }
+                                                                >
+                                                                    {strip(
+                                                                        description,
+                                                                    )}
+                                                                </Truncate>
+                                                            ) : null
                                                         }
                                                     />
                                                     {variants || price ? (

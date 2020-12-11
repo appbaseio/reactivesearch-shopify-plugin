@@ -6,7 +6,7 @@ import { Button, Modal, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import get from 'lodash.get';
 import Search from './Search';
-import { getPreferences, defaultPreferences } from '../utils/index';
+import { getSearchPreferences, defaultPreferences } from '../utils/index';
 
 const buttonStyle = window.REACTIVESEARCH_SEARCH_BUTTON_STYLE;
 const iconStyle = window.REACTIVESEARCH_SEARCH_ICON_STYLE;
@@ -80,7 +80,7 @@ class App extends Component {
             isOpen: Boolean(props.isOpen),
         };
 
-        const preferences = getPreferences();
+        const preferences = getSearchPreferences();
         this.theme = get(
             preferences,
             'themeSettings.rsConfig',

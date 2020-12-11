@@ -151,13 +151,15 @@ export const browserColors = {
     yellowgreen: '#9acd32',
 };
 
+
+
 export const defaultPreferences = {
     themeSettings: {
         type: 'classic',
+        customCss: '',
         rsConfig: {},
     },
     searchSettings: {
-        showPopularSearches: false,
         searchButton: {
             icon: '',
             text: 'Click here to Search',
@@ -178,7 +180,6 @@ export const defaultPreferences = {
     },
     globalSettings: {
         currency: '$',
-        customCss: '',
         showSelectedFilters: true,
     },
     productRecommendationSettings: {
@@ -237,14 +238,28 @@ export const getReactDependenciesFromPreferences = (
     return react;
 };
 
-export const getPreferences = () => {
+export const getSearchPreferences = () => {
     let preferences = {};
-    if (window.PREFERENCES) {
+    if (window.APPBASE_SEARCH_PREFERENCES) {
         try {
-            preferences = JSON.parse(window.PREFERENCES);
+            preferences = JSON.parse(window.APPBASE_SEARCH_PREFERENCES);
         } catch (e) {
             console.warn(
-                'Appbase: Error encountered while parsing the preferences, fall-backing to the default preferences',
+                'Appbase: Error encountered while parsing the search preferences, fall-backing to the default preferences',
+            );
+        }
+    }
+    return preferences;
+};
+
+export const getRecommendationsPreferences = () => {
+    let preferences = {};
+    if (window.APPBASE_RECOMMENDATIONS_PREFERENCES) {
+        try {
+            preferences = JSON.parse(window.APPBASE_RECOMMENDATIONS_PREFERENCES);
+        } catch (e) {
+            console.warn(
+                'Appbase: Error encountered while parsing the recommendations preferences, fall-backing to the default preferences',
             );
         }
     }

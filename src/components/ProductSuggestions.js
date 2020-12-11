@@ -17,7 +17,7 @@ import get from 'lodash.get';
 import {
     defaultPreferences,
     getReactDependenciesFromPreferences,
-    getPreferences,
+    getRecommendationsPreferences,
     RecommendationTypes,
     shopifyDefaultFields,
     getFieldWithoutKeyword,
@@ -112,7 +112,7 @@ const resultListCls = css`
             width: 100%;
         }
     }
-`
+`;
 const defaultRecommendationSettings = {
     title: 'You might also like',
     maxProducts: 15,
@@ -126,7 +126,7 @@ class ProductSuggestions extends React.Component {
             maxSize: undefined,
             products: [],
         };
-        const preferences = getPreferences();
+        const preferences = getRecommendationsPreferences();
         this.theme = get(
             preferences,
             'themeSettings.rsConfig',
@@ -150,10 +150,7 @@ class ProductSuggestions extends React.Component {
         this.resultSettings = get(preferences, 'resultSettings');
         this.ctaTitle = get(preferences, 'recommendationSettings.ctaTitle');
         this.ctaAction = get(preferences, 'recommendationSettings.ctaAction');
-        this.customCssRecommendation = get(
-            preferences,
-            'recommendationSettings.customCssRecommendation',
-        );
+        this.customCss = get(preferences, 'themeSettings.customCss', '');
         const recommendation = get(
             preferences,
             'recommendationSettings.recommendations',
@@ -614,7 +611,7 @@ class ProductSuggestions extends React.Component {
                 >
                     <Global
                         styles={css`
-                            ${this.customCssRecommendation}
+                            ${this.customCss}
                         `}
                     />
                     {renderCustomResults ? (
