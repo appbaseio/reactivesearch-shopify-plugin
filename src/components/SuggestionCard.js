@@ -35,7 +35,7 @@ const SuggestionCard = ({
             setFontLoad(true);
         });
     }, []);
-    const shouldShowCtaAction = ctaAction === CtaActions.NO_BUTTON;
+    const shouldShowCtaAction = ctaAction !== CtaActions.NO_BUTTON;
     return (
         <div {...props}>
             <a
@@ -120,7 +120,7 @@ const SuggestionCard = ({
                             </h3>
                         </div>
                     )}
-                    {shouldShowCtaAction ? null : (
+                    {shouldShowCtaAction ? (
                         <Button
                             type="primary"
                             size="large"
@@ -129,7 +129,7 @@ const SuggestionCard = ({
                             <Icon type="eye" />
                             {ctaTitle || 'View Product'}
                         </Button>
-                    )}
+                    ) : null}
                 </Card>
             </a>
         </div>

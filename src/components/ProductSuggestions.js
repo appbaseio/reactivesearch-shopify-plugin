@@ -273,6 +273,10 @@ class ProductSuggestions extends React.Component {
                                     this.recommendation.dataField,
                                 )}]`,
                             );
+                            const documentId = get(
+                                response,
+                                `hits.hits[0]._id`,
+                            );
                             if (value) {
                                 // fetch products
                                 fetch(
@@ -293,6 +297,22 @@ class ProductSuggestions extends React.Component {
                                                     execute: false,
                                                 },
                                                 {
+                                                    id: 'exclude_product',
+                                                    dataField: ['_id'],
+                                                    execute: false,
+                                                    customQuery: {
+                                                        query: {
+                                                            bool: {
+                                                                must_not: {
+                                                                    term: {
+                                                                        _id: documentId,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                {
                                                     id: 'results',
                                                     size: this.recommendation
                                                         .maxProducts,
@@ -301,7 +321,10 @@ class ProductSuggestions extends React.Component {
                                                             .dataField,
                                                     ],
                                                     react: {
-                                                        and: 'similar_product',
+                                                        and: [
+                                                            'similar_product',
+                                                            'exclude_product',
+                                                        ],
                                                     },
                                                 },
                                             ],
