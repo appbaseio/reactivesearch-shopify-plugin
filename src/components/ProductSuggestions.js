@@ -169,7 +169,7 @@ class ProductSuggestions extends React.Component {
         }
         this.exportType = get(
             preferences,
-            'exportType',
+            'exportSettings.type',
             defaultPreferences.exportType,
         );
         this.index = get(preferences, 'appbaseSettings.index');

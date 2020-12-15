@@ -4,7 +4,6 @@ import { jsx } from '@emotion/core';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import { Card, Button, Icon } from 'antd';
-import get from 'lodash.get';
 import { cardStyles, cardTitleStyles } from './Search';
 import { CtaActions } from '../utils';
 

@@ -247,7 +247,7 @@ class Search extends Component {
 
         this.exportType = get(
             this.preferences,
-            'exportType',
+            'exportSettings.type',
             defaultPreferences.exportType,
         );
     }
