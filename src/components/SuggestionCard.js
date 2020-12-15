@@ -1,18 +1,13 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { useEffect, useState } from 'react';
 import { jsx } from '@emotion/core';
 import strip from 'striptags';
-import { css } from 'emotion'
 import Truncate from 'react-truncate';
 import { Card, Button, Icon } from 'antd';
 import { cardStyles, cardTitleStyles } from './Search';
 import { CtaActions } from '../utils';
 
-const descriptionCls = css`
-> span {
-    white-space: nowrap;
-}
-`
 const { Meta } = Card;
 
 const SuggestionCard = ({
@@ -34,6 +29,12 @@ const SuggestionCard = ({
     cardStyle,
     ...props
 }) => {
+    const [isFontLoaded, setFontLoad] = useState(false);
+    useEffect(() => {
+        document.fonts.ready.then(() => {
+            setFontLoad(true);
+        });
+    }, []);
     const shouldShowCtaAction = ctaAction === CtaActions.NO_BUTTON;
     return (
         <div {...props}>
@@ -88,11 +89,10 @@ const SuggestionCard = ({
                         }
                         description={
                             body_html
-                                ? themeType === 'classic' && (
+                                ? isFontLoaded && themeType === 'classic' && (
                                       <Truncate
                                           lines={4}
                                           ellipsis={<span>...</span>}
-                                          className={descriptionCls}
                                       >
                                           {strip(body_html)}
                                       </Truncate>
