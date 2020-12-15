@@ -1225,7 +1225,6 @@ class Search extends Component {
                                                   get(
                                                       this.resultSettings,
                                                       'fields.handle',
-                                                      'handle',
                                                   ),
                                               );
 
@@ -1234,7 +1233,6 @@ class Search extends Component {
                                             get(
                                                 this.resultSettings,
                                                 'fields.image',
-                                                'image.src',
                                             ),
                                         );
                                         const title = get(
@@ -1242,7 +1240,6 @@ class Search extends Component {
                                             get(
                                                 this.resultSettings,
                                                 'fields.title',
-                                                'title',
                                             ),
                                         );
 
@@ -1251,7 +1248,6 @@ class Search extends Component {
                                             get(
                                                 this.resultSettings,
                                                 'fields.description',
-                                                'body_html',
                                             ),
                                         );
                                         const price = get(

@@ -151,8 +151,6 @@ export const browserColors = {
     yellowgreen: '#9acd32',
 };
 
-
-
 export const defaultPreferences = {
     themeSettings: {
         type: 'classic',

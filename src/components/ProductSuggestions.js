@@ -505,7 +505,6 @@ class ProductSuggestions extends React.Component {
                                                 get(
                                                     this.resultSettings,
                                                     'fields.handle',
-                                                    'handle',
                                                 ),
                                             ),
                                             image: get(
@@ -513,7 +512,6 @@ class ProductSuggestions extends React.Component {
                                                 get(
                                                     this.resultSettings,
                                                     'fields.image',
-                                                    'image.src',
                                                 ),
                                             ),
                                             title: get(
@@ -521,7 +519,6 @@ class ProductSuggestions extends React.Component {
                                                 get(
                                                     this.resultSettings,
                                                     'fields.title',
-                                                    'title',
                                                 ),
                                             ),
                                             body_html: get(
@@ -529,7 +526,6 @@ class ProductSuggestions extends React.Component {
                                                 get(
                                                     this.resultSettings,
                                                     'fields.description',
-                                                    'body_html',
                                                 ),
                                             ),
                                             price: get(

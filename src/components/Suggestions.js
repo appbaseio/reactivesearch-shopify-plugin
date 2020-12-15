@@ -94,12 +94,12 @@ const Suggestions = ({
 
             {parsedSuggestions.slice(0, 3).map((suggestion, index) => {
                 const { source } = suggestion;
-                const handle = get(source, get(fields, 'handle', 'handle'));
-                const title = get(source, get(fields, 'title', 'title'));
-                const image = get(source, get(fields, 'image', 'image.src'));
+                const handle = get(source, get(fields, 'handle'));
+                const title = get(source, get(fields, 'title'));
+                const image = get(source, get(fields, 'image'));
                 const description = get(
                     source,
-                    get(fields, 'description', 'body_html'),
+                    get(fields, 'description'),
                 );
                 const price = get(source, get(fields, 'price'));
                 const variants = get(source, 'variants');
