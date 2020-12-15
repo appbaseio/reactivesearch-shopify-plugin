@@ -2,11 +2,17 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import strip from 'striptags';
+import { css } from 'emotion'
 import Truncate from 'react-truncate';
 import { Card, Button, Icon } from 'antd';
 import { cardStyles, cardTitleStyles } from './Search';
 import { CtaActions } from '../utils';
 
+const descriptionCls = css`
+> span {
+    white-space: nowrap;
+}
+`
 const { Meta } = Card;
 
 const SuggestionCard = ({
@@ -86,6 +92,7 @@ const SuggestionCard = ({
                                       <Truncate
                                           lines={4}
                                           ellipsis={<span>...</span>}
+                                          className={descriptionCls}
                                       >
                                           {strip(body_html)}
                                       </Truncate>
