@@ -26,7 +26,7 @@ import {
     browserColors,
     defaultPreferences,
     getReactDependenciesFromPreferences,
-    getPreferences,
+    getSearchPreferences,
     shopifyDefaultFields,
 } from '../utils';
 
@@ -106,7 +106,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
     overflow: hidden;
     max-width: 300px;
-
+    height: 100%;
     .product-button {
         top: -50%;
         position: absolute;
@@ -159,7 +159,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
         }
         ::before {
             width: 100%;
-            height: 100vh;
+            height: 100%;
             background: ${primaryColor}1a !important;
         }
     }
@@ -202,11 +202,16 @@ class Search extends Component {
             toggleFilters: false,
             isMobile: window.innerWidth < 768,
         };
-        this.preferences = getPreferences();
+        this.preferences = getSearchPreferences();
         this.theme = get(
             this.preferences,
             'themeSettings.rsConfig',
             defaultPreferences.themeSettings.rsConfig,
+        );
+        this.themeSettings = get(
+            this.preferences,
+            'themeSettings',
+            defaultPreferences.themeSettings,
         );
         this.themeType = get(
             this.preferences,
@@ -242,7 +247,7 @@ class Search extends Component {
 
         this.exportType = get(
             this.preferences,
-            'exportType',
+            'exportSettings.type',
             defaultPreferences.exportType,
         );
     }
@@ -739,10 +744,6 @@ class Search extends Component {
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
-                enablePopularSuggestions={get(
-                    this.searchSettings,
-                    'showPopularSearches',
-                )}
             />
         );
     };
@@ -794,7 +795,7 @@ class Search extends Component {
             >
                 <Global
                     styles={css`
-                        ${get(this.globalSettings, 'customCss', '')}
+                        ${get(this.themeSettings, 'customCss', '')}
                     `}
                 />
                 {isMobile ? (
@@ -1224,7 +1225,6 @@ class Search extends Component {
                                                   get(
                                                       this.resultSettings,
                                                       'fields.handle',
-                                                      'handle',
                                                   ),
                                               );
 
@@ -1233,7 +1233,6 @@ class Search extends Component {
                                             get(
                                                 this.resultSettings,
                                                 'fields.image',
-                                                'image.src',
                                             ),
                                         );
                                         const title = get(
@@ -1241,7 +1240,6 @@ class Search extends Component {
                                             get(
                                                 this.resultSettings,
                                                 'fields.title',
-                                                'title',
                                             ),
                                         );
 
@@ -1250,7 +1248,6 @@ class Search extends Component {
                                             get(
                                                 this.resultSettings,
                                                 'fields.description',
-                                                'body_html',
                                             ),
                                         );
                                         const price = get(
@@ -1338,31 +1335,24 @@ class Search extends Component {
                                                             />
                                                         }
                                                         description={
-                                                            description
-                                                                ? get(
-                                                                      this
-                                                                          .resultSettings,
-                                                                      'showDescription',
-                                                                  ) &&
-                                                                  this
-                                                                      .themeType ===
-                                                                      'classic' && (
-                                                                      <Truncate
-                                                                          lines={
-                                                                              4
-                                                                          }
-                                                                          ellipsis={
-                                                                              <span>
-                                                                                  ...
-                                                                              </span>
-                                                                          }
-                                                                      >
-                                                                          {strip(
-                                                                              description,
-                                                                          )}
-                                                                      </Truncate>
-                                                                  )
-                                                                : undefined
+                                                            description &&
+                                                                this.themeType ===
+                                                                'classic' ? (
+                                                                <Truncate
+                                                                    lines={
+                                                                        4
+                                                                    }
+                                                                    ellipsis={
+                                                                        <span>
+                                                                            ...
+                                                                        </span>
+                                                                    }
+                                                                >
+                                                                    {strip(
+                                                                        description,
+                                                                    )}
+                                                                </Truncate>
+                                                            ) : null
                                                         }
                                                     />
                                                     {variants || price ? (

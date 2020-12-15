@@ -17,7 +17,7 @@ import get from 'lodash.get';
 import {
     defaultPreferences,
     getReactDependenciesFromPreferences,
-    getPreferences,
+    getRecommendationsPreferences,
     RecommendationTypes,
     shopifyDefaultFields,
     getFieldWithoutKeyword,
@@ -97,6 +97,22 @@ const reactiveListCls = css`
     }
 `;
 
+const resultListCls = css`
+    .slick-track {
+        display: flex;
+        align-items: stretch;
+    }
+    .slick-slide {
+        display: flex !important;
+        align-self: stretch;
+        height: unset;
+        > div {
+            display: flex;
+            align-self: stretch;
+            width: 100%;
+        }
+    }
+`;
 const defaultRecommendationSettings = {
     title: 'You might also like',
     maxProducts: 15,
@@ -110,7 +126,7 @@ class ProductSuggestions extends React.Component {
             maxSize: undefined,
             products: [],
         };
-        const preferences = getPreferences();
+        const preferences = getRecommendationsPreferences();
         this.theme = get(
             preferences,
             'themeSettings.rsConfig',
@@ -134,10 +150,7 @@ class ProductSuggestions extends React.Component {
         this.resultSettings = get(preferences, 'resultSettings');
         this.ctaTitle = get(preferences, 'recommendationSettings.ctaTitle');
         this.ctaAction = get(preferences, 'recommendationSettings.ctaAction');
-        this.customCssRecommendation = get(
-            preferences,
-            'recommendationSettings.customCssRecommendation',
-        );
+        this.customCss = get(preferences, 'themeSettings.customCss', '');
         const recommendation = get(
             preferences,
             'recommendationSettings.recommendations',
@@ -156,7 +169,7 @@ class ProductSuggestions extends React.Component {
         }
         this.exportType = get(
             preferences,
-            'exportType',
+            'exportSettings.type',
             defaultPreferences.exportType,
         );
         this.index = get(preferences, 'appbaseSettings.index');
@@ -468,6 +481,7 @@ class ProductSuggestions extends React.Component {
                                 this.slick = c;
                             }}
                             {...settings}
+                            css={resultListCls}
                         >
                             {data.map(
                                 (
@@ -491,7 +505,6 @@ class ProductSuggestions extends React.Component {
                                                 get(
                                                     this.resultSettings,
                                                     'fields.handle',
-                                                    'handle',
                                                 ),
                                             ),
                                             image: get(
@@ -499,7 +512,6 @@ class ProductSuggestions extends React.Component {
                                                 get(
                                                     this.resultSettings,
                                                     'fields.image',
-                                                    'image.src',
                                                 ),
                                             ),
                                             title: get(
@@ -507,7 +519,6 @@ class ProductSuggestions extends React.Component {
                                                 get(
                                                     this.resultSettings,
                                                     'fields.title',
-                                                    'title',
                                                 ),
                                             ),
                                             body_html: get(
@@ -515,7 +526,6 @@ class ProductSuggestions extends React.Component {
                                                 get(
                                                     this.resultSettings,
                                                     'fields.description',
-                                                    'body_html',
                                                 ),
                                             ),
                                             price: get(
@@ -597,7 +607,7 @@ class ProductSuggestions extends React.Component {
                 >
                     <Global
                         styles={css`
-                            ${this.customCssRecommendation}
+                            ${this.customCss}
                         `}
                     />
                     {renderCustomResults ? (
