@@ -36,7 +36,11 @@ const SuggestionCard = ({
                 onClick={() => {
                     triggerAnalytics(clickId);
                 }}
-                href={shouldShowCtaAction && handle ? `/products/${handle}` : undefined}
+                href={
+                    shouldShowCtaAction && handle
+                        ? `/products/${handle}`
+                        : undefined
+                }
             >
                 <Card
                     hoverable
@@ -90,7 +94,7 @@ const SuggestionCard = ({
                                 : undefined
                         }
                     />
-                    {price || variants ? (
+                    {((variants && variants[0]) || price) && (
                         <div>
                             <h3
                                 style={{
@@ -103,14 +107,13 @@ const SuggestionCard = ({
                                             : theme.colors.titleColor,
                                 }}
                             >
-                                {`${currency} ${
-                                    variants
-                                        ? get(variants[0], 'price', '')
-                                        : price
-                                }`}
+                                {currency}{' '}
+                                {variants && variants[0]
+                                    ? variants[0].price
+                                    : price}
                             </h3>
                         </div>
-                    ) : null}
+                    )}
                     {shouldShowCtaAction ? null : (
                         <Button
                             type="primary"
