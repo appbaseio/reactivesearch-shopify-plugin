@@ -209,48 +209,49 @@ class ProductSuggestions extends React.Component {
 
             if (fieldNameMatches && fieldNameMatches[1]) {
                 [, fieldName] = fieldNameMatches;
-                if(currentProduct) {
-                    fieldValue = currentProduct
+                if (currentProduct) {
+                    fieldValue = currentProduct;
                 } else {
                     // Build regex from url pattern to match the current url
-                const urlPatternWithOutField = urlPattern.replace(
-                    `{${fieldName}}`,
-                    '([^/]+)',
-                );
-                // Remove slash if pattern starts with it
-                const parsedUrlPattern = urlPatternWithOutField.replace(
-                    /^\/+|\/+$/g,
-                    '',
-                );
-                // Escape backslashes
-                const regexString = `(.*)://(.*)${parsedUrlPattern}`;
-                const finalRegexPattern = new RegExp(regexString);
-                const urlMatches = window.location.href.match(
-                    finalRegexPattern,
-                );
-                if (urlMatches && urlMatches[3]) {
-                    [, , , fieldValue] = urlMatches;
-                } else {
-                    const queryString = get(urlPattern.split('?'), '[1]');
-                    if (queryString) {
-                        let queryParamKey;
-                        // extract URLParams
-                        const searchParams = new URLSearchParams(queryString);
-                        searchParams.forEach((value, key) => {
-                            if (value === `{${fieldName}}`) {
-                                queryParamKey = key;
-                            }
-                        });
-                        if (queryParamKey) {
-                            const currentParams = new URLSearchParams(
-                                window.location.search,
+                    const urlPatternWithOutField = urlPattern.replace(
+                        `{${fieldName}}`,
+                        '([^/]+)',
+                    );
+                    // Remove slash if pattern starts with it
+                    const parsedUrlPattern = urlPatternWithOutField.replace(
+                        /^\/+|\/+$/g,
+                        '',
+                    );
+                    // Escape backslashes
+                    const regexString = `(.*)://(.*)${parsedUrlPattern}`;
+                    const finalRegexPattern = new RegExp(regexString);
+                    const urlMatches = window.location.href.match(
+                        finalRegexPattern,
+                    );
+                    if (urlMatches && urlMatches[3]) {
+                        [, , , fieldValue] = urlMatches;
+                    } else {
+                        const queryString = get(urlPattern.split('?'), '[1]');
+                        if (queryString) {
+                            let queryParamKey;
+                            // extract URLParams
+                            const searchParams = new URLSearchParams(
+                                queryString,
                             );
-                            fieldValue = currentParams.get(queryParamKey);
+                            searchParams.forEach((value, key) => {
+                                if (value === `{${fieldName}}`) {
+                                    queryParamKey = key;
+                                }
+                            });
+                            if (queryParamKey) {
+                                const currentParams = new URLSearchParams(
+                                    window.location.search,
+                                );
+                                fieldValue = currentParams.get(queryParamKey);
+                            }
                         }
                     }
                 }
-                }
-
             }
             if (fieldName && fieldValue) {
                 // Fetch value for the field defined in preferences
@@ -367,17 +368,21 @@ class ProductSuggestions extends React.Component {
     };
 
     fetchFeaturedProducts = () => {
-        if (this.recommendation.type === RecommendationTypes.FEATURED_PRODUCTS) {
+        if (
+            this.recommendation.type === RecommendationTypes.FEATURED_PRODUCTS
+        ) {
             const docIds = get(this.recommendation, 'docIds', []);
-            if(docIds.length) {
-                const docIdsPayload = docIds.map(docId => ({
-                    _index: this.indexName,
-                    _id: docId,
-                }))
+            if (docIds.length) {
+                const docIdsPayload = docIds
+                    .slice(0, this.recommendation.maxProducts)
+                    .map((docId) => ({
+                        _index: this.indexName,
+                        _id: docId,
+                    }));
                 this.getProductsByDocIds(docIdsPayload);
             }
         }
-    }
+    };
 
     fetchPopularProducts = () => {
         if (
@@ -436,7 +441,7 @@ class ProductSuggestions extends React.Component {
             .catch((e) => {
                 console.warn(e);
             });
-    }
+    };
 
     updateMaxSize = () => {
         if (window.innerWidth < 860) {
@@ -624,8 +629,8 @@ class ProductSuggestions extends React.Component {
         if (
             this.recommendation.type ===
                 RecommendationTypes.MOST_POPULAR_PRODUCTS ||
-            this.recommendation.type === RecommendationTypes.SIMILAR_PRODUCTS
-            || this.recommendation.type === RecommendationTypes.FEATURED_PRODUCTS
+            this.recommendation.type === RecommendationTypes.SIMILAR_PRODUCTS ||
+            this.recommendation.type === RecommendationTypes.FEATURED_PRODUCTS
         ) {
             renderCustomResults = true;
         }
