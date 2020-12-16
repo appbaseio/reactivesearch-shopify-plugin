@@ -147,6 +147,7 @@ class ProductSuggestions extends React.Component {
             'recommendationSettings.rsConfig',
             defaultPreferences.productRecommendationSettings.rsConfig,
         );
+        this.indexName = get(preferences, 'appbaseSettings.index');
         this.resultSettings = get(preferences, 'resultSettings');
         this.ctaTitle = get(preferences, 'recommendationSettings.ctaTitle');
         this.ctaAction = get(preferences, 'recommendationSettings.ctaAction');
@@ -178,6 +179,7 @@ class ProductSuggestions extends React.Component {
         // fetch popular products
         this.fetchPopularProducts();
         this.fetchSimilarProducts();
+        this.fetchFeaturedProducts();
     }
 
     async componentDidMount() {
@@ -190,6 +192,7 @@ class ProductSuggestions extends React.Component {
     }
 
     fetchSimilarProducts = () => {
+        const { currentProduct } = this.props;
         if (this.recommendation.type === RecommendationTypes.SIMILAR_PRODUCTS) {
             let fieldName = '';
             let fieldValue = '';
@@ -206,7 +209,10 @@ class ProductSuggestions extends React.Component {
 
             if (fieldNameMatches && fieldNameMatches[1]) {
                 [, fieldName] = fieldNameMatches;
-                // Build regex from url pattern to match the current url
+                if(currentProduct) {
+                    fieldValue = currentProduct
+                } else {
+                    // Build regex from url pattern to match the current url
                 const urlPatternWithOutField = urlPattern.replace(
                     `{${fieldName}}`,
                     '([^/]+)',
@@ -243,6 +249,8 @@ class ProductSuggestions extends React.Component {
                         }
                     }
                 }
+                }
+
             }
             if (fieldName && fieldValue) {
                 // Fetch value for the field defined in preferences
@@ -358,10 +366,17 @@ class ProductSuggestions extends React.Component {
         }
     };
 
-    get headers() {
-        return {
-            authorization: `Basic ${btoa(this.credentials)}`,
-        };
+    fetchFeaturedProducts = () => {
+        if (this.recommendation.type === RecommendationTypes.FEATURED_PRODUCTS) {
+            const docIds = get(this.recommendation, 'docIds', []);
+            if(docIds.length) {
+                const docIdsPayload = docIds.map(docId => ({
+                    _index: this.indexName,
+                    _id: docId,
+                }))
+                this.getProductsByDocIds(docIdsPayload);
+            }
+        }
     }
 
     fetchPopularProducts = () => {
@@ -384,26 +399,7 @@ class ProductSuggestions extends React.Component {
                             _id: item.key,
                         }));
                         // fetch products by docIds
-                        fetch(`${this.url}/_mget`, {
-                            method: 'POST',
-                            headers,
-                            body: JSON.stringify({
-                                docs: docIds,
-                            }),
-                        })
-                            .then((res) => res.json())
-                            .then((products) => {
-                                this.setState({
-                                    products: products.docs.map((product) => ({
-                                        ...product,
-                                        ...product._source,
-                                        _source: {},
-                                    })),
-                                });
-                            })
-                            .catch((e) => {
-                                console.warn(e);
-                            });
+                        this.getProductsByDocIds(docIds);
                     }
                 })
                 .catch((e) => {
@@ -411,6 +407,36 @@ class ProductSuggestions extends React.Component {
                 });
         }
     };
+
+    get headers() {
+        return {
+            authorization: `Basic ${btoa(this.credentials)}`,
+        };
+    }
+
+    getProductsByDocIds = (docIdsPayload = []) => {
+        const { headers } = this;
+        fetch(`${this.url}/_mget`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+                docs: docIdsPayload,
+            }),
+        })
+            .then((res) => res.json())
+            .then((products) => {
+                this.setState({
+                    products: products.docs.map((product) => ({
+                        ...product,
+                        ...product._source,
+                        _source: {},
+                    })),
+                });
+            })
+            .catch((e) => {
+                console.warn(e);
+            });
+    }
 
     updateMaxSize = () => {
         if (window.innerWidth < 860) {
@@ -599,6 +625,7 @@ class ProductSuggestions extends React.Component {
             this.recommendation.type ===
                 RecommendationTypes.MOST_POPULAR_PRODUCTS ||
             this.recommendation.type === RecommendationTypes.SIMILAR_PRODUCTS
+            || this.recommendation.type === RecommendationTypes.FEATURED_PRODUCTS
         ) {
             renderCustomResults = true;
         }
@@ -714,6 +741,7 @@ class ProductSuggestions extends React.Component {
 
 ProductSuggestions.propTypes = {
     widgetId: string,
+    currentProduct: string,
 };
 
 export default ProductSuggestions;
