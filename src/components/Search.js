@@ -56,6 +56,7 @@ const reactiveListCls= (toggleFilters, theme) =>css`
     }
     .custom-pagination {
         max-width:none;
+        padding-bottom: 50px;
         a {
             border-radius: 2px;
         }
@@ -133,6 +134,15 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     .ant-card-cover {
         height: 250px;
     }
+    .ant-card-body {
+        padding: 15px 10px;
+    }
+    ${mediaMax.small} {
+        .ant-card-body {
+            padding: 10px 5px;
+        }
+    }
+
 
     .ant-card-cover img {
         object-fit: cover;
@@ -142,6 +152,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
     .ant-card-meta-title {
         color: ${titleColor};
+        white-space: unset;
     }
 
     .ant-card-meta-title h3 {
@@ -151,6 +162,9 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
     .ant-card-meta-description {
         color: ${textColor};
+        ${mediaMax.small} {
+            font-size: 0.7rem;
+        }
     }
 
     &:hover {
@@ -175,6 +189,9 @@ export const cardTitleStyles = ({ titleColor, primaryColor }) => css`
     margin: 0;
     padding: 0;
     color: ${titleColor};
+    ${mediaMax.small} {
+        font-size: 0.9rem;
+    }
     mark {
         color: ${titleColor};
         background-color: ${primaryColor}4d};

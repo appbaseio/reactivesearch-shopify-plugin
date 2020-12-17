@@ -60,6 +60,7 @@ const icon = css({
 });
 
 const main = css`
+    position: relative;
     .ant-btn {
         border: none !important;
         box-shadow: none;
