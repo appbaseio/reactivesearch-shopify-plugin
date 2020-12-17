@@ -11,6 +11,7 @@ import { CtaActions } from '../utils';
 const { Meta } = Card;
 
 const SuggestionCard = ({
+    isPreview,
     index,
     triggerAnalytics,
     clickId,
@@ -38,12 +39,13 @@ const SuggestionCard = ({
     const shouldShowCtaAction = ctaAction !== CtaActions.NO_BUTTON;
     return (
         <div {...props}>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
                 onClick={() => {
                     triggerAnalytics(clickId);
                 }}
                 href={
-                    shouldShowCtaAction && handle
+                     shouldShowCtaAction && handle && !isPreview
                         ? `/products/${handle}`
                         : undefined
                 }
