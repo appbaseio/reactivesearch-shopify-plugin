@@ -3,7 +3,7 @@
 /** @jsx jsx */
 import { css, jsx, Global } from '@emotion/core';
 import React from 'react';
-import { string } from 'prop-types';
+import { string, bool } from 'prop-types';
 import { Button, Icon } from 'antd';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -500,6 +500,7 @@ class ProductSuggestions extends React.Component {
 
     renderResults = ({ data, triggerClickAnalytics }) => {
         const { maxSize, currentPage } = this.state;
+        const { isPreview } = this.props;
         const settings = {
             dots: false,
             infinite: false,
@@ -550,6 +551,7 @@ class ProductSuggestions extends React.Component {
                                         className="product-card"
                                         ctaAction={this.ctaAction}
                                         ctaTitle={this.ctaTitle}
+                                        isPreview={isPreview}
                                         cardStyle={{
                                             ...this.getFontFamily(),
                                         }}
@@ -743,10 +745,13 @@ class ProductSuggestions extends React.Component {
         );
     }
 }
-
+ProductSuggestions.defaultProps = {
+    isPreview: false,
+};
 ProductSuggestions.propTypes = {
     widgetId: string,
     currentProduct: string,
+    isPreview: bool,
 };
 
 export default ProductSuggestions;
