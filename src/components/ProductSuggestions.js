@@ -27,24 +27,29 @@ import SuggestionCard from './SuggestionCard';
 
 const maxProductSize = 4;
 
-const buttonLeft = css({
-    [mediaMax.small]: {
-        padding: 0,
-    },
-    zIndex: 10,
-    top: 0,
-    marginTop: 100,
-    left: 0,
-});
-const buttonRight = css({
-    zIndex: 10,
-    top: 0,
-    marginTop: 100,
-    right: 0,
-    [mediaMax.small]: {
-        padding: 0,
-    },
-});
+const buttonLeft = css`
+    ${mediaMax.small} {
+        padding: 0;
+    }
+    z-index: 10;
+    top:0;
+    bottom:0;
+    left:0;
+    margin-top:auto;
+    margin-bottom:auto;
+}`;
+
+const buttonRight = css`
+    ${mediaMax.small} {
+        padding: 0;
+    }
+    z-index: 10;
+    top:0;
+    right:0;
+    bottom:0;
+    margin-top:auto;
+    margin-bottom:auto;
+}`;
 const titleCls = css({
     textAlign: 'center',
     padding: 10,
@@ -52,12 +57,12 @@ const titleCls = css({
     color: '#000',
 });
 
-const icon = css({
-    fontSize: 32,
-    [mediaMax.small]: {
-        fontSize: 25,
-    },
-});
+const icon = css`
+    font-size: 32px;
+    ${mediaMax.small} {
+        font-size: 25px;
+    }
+`;
 
 const main = css`
     position: relative;
