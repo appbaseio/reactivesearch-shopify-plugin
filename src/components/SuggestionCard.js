@@ -1,16 +1,17 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import { useEffect, useState } from 'react';
 import { jsx } from '@emotion/core';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import { Card, Button, Icon } from 'antd';
-import get from 'lodash.get';
 import { cardStyles, cardTitleStyles } from './Search';
 import { CtaActions } from '../utils';
 
 const { Meta } = Card;
 
 const SuggestionCard = ({
+    isPreview,
     index,
     triggerAnalytics,
     clickId,
@@ -29,14 +30,25 @@ const SuggestionCard = ({
     cardStyle,
     ...props
 }) => {
-    const shouldShowCtaAction = ctaAction === CtaActions.NO_BUTTON;
+    const [isFontLoaded, setFontLoad] = useState(false);
+    useEffect(() => {
+        document.fonts.ready.then(() => {
+            setFontLoad(true);
+        });
+    }, []);
+    const shouldShowCtaAction = ctaAction !== CtaActions.NO_BUTTON;
     return (
         <div {...props}>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
                 onClick={() => {
                     triggerAnalytics(clickId);
                 }}
-                href={shouldShowCtaAction && handle ? `/products/${handle}` : undefined}
+                href={
+                     shouldShowCtaAction && handle && !isPreview
+                        ? `/products/${handle}`
+                        : undefined
+                }
             >
                 <Card
                     hoverable
@@ -79,7 +91,7 @@ const SuggestionCard = ({
                         }
                         description={
                             body_html
-                                ? themeType === 'classic' && (
+                                ? isFontLoaded && themeType === 'classic' && (
                                       <Truncate
                                           lines={4}
                                           ellipsis={<span>...</span>}
@@ -90,7 +102,7 @@ const SuggestionCard = ({
                                 : undefined
                         }
                     />
-                    {price || variants ? (
+                    {((variants && variants[0]) || price) && (
                         <div>
                             <h3
                                 style={{
@@ -103,15 +115,14 @@ const SuggestionCard = ({
                                             : theme.colors.titleColor,
                                 }}
                             >
-                                {`${currency} ${
-                                    variants
-                                        ? get(variants[0], 'price', '')
-                                        : price
-                                }`}
+                                {currency}{' '}
+                                {variants && variants[0]
+                                    ? variants[0].price
+                                    : price}
                             </h3>
                         </div>
-                    ) : null}
-                    {shouldShowCtaAction ? null : (
+                    )}
+                    {shouldShowCtaAction ? (
                         <Button
                             type="primary"
                             size="large"
@@ -120,7 +131,7 @@ const SuggestionCard = ({
                             <Icon type="eye" />
                             {ctaTitle || 'View Product'}
                         </Button>
-                    )}
+                    ) : null}
                 </Card>
             </a>
         </div>

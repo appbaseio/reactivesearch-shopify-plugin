@@ -45,7 +45,6 @@ const Suggestions = ({
     parsedSuggestions,
     themeConfig,
     currency,
-    loading,
     customMessage,
     customSuggestions,
     popularSuggestions,
@@ -73,101 +72,108 @@ const Suggestions = ({
                     : '0 2px 4px #d9d9d9',
         }}
     >
-        {loading ? (
-            <div
-                style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    display: 'flex',
-                }}
-                // eslint-disable-next-line
-                dangerouslySetInnerHTML={{
-                    __html: get(
-                        customMessage,
-                        'loading',
-                        'Loading Suggestions',
-                    ),
-                }}
-            />
-        ) : (
-            <div>
-                {!loading && parsedSuggestions.length === 0 && (
-                    <React.Fragment>
-                        <div
-                            css={highlightStyle(themeConfig.colors)}
-                            // eslint-disable-next-line
-                            dangerouslySetInnerHTML={{
-                                __html: get(
-                                    customMessage,
-                                    'noResults',
-                                    'No suggestions found for <mark>[term]</mark>',
-                                ).replace('[term]', currentValue),
-                            }}
-                        />
-                    </React.Fragment>
-                )}
-                {parsedSuggestions.length > 0 ? (
-                    <h3 css={headingStyles(themeConfig.colors)}>Products</h3>
-                ) : null}
-
-                {parsedSuggestions.slice(0, 3).map((suggestion, index) => {
-                    const { source } = suggestion;
-                    const handle = get(source, get(fields, 'handle', 'handle'));
-                    const title = get(source, get(fields, 'title', 'title'));
-                    const image = get(
-                        source,
-                        get(fields, 'image', 'image.src'),
-                    );
-                    const description = get(
-                        source,
-                        get(fields, 'description', 'body_html'),
-                    );
-                    const price = get(source, get(fields, 'price'));
-                    const variants = get(source, 'variants');
-                    return (
+        <div>
+            {parsedSuggestions.length === 0 && (
+                <React.Fragment>
+                    <div
+                        css={highlightStyle(themeConfig.colors)}
                         // eslint-disable-next-line
-                        <a
-                            href={
-                                !isPreview && handle
-                                    ? `/products/${handle}`
-                                    : undefined
-                            }
+                        dangerouslySetInnerHTML={{
+                            __html: get(
+                                customMessage,
+                                'noResults',
+                                'No suggestions found for <mark>[term]</mark>',
+                            ).replace('[term]', currentValue),
+                        }}
+                    />
+                </React.Fragment>
+            )}
+            {parsedSuggestions.length > 0 ? (
+                <h3 css={headingStyles(themeConfig.colors)}>Products</h3>
+            ) : null}
+
+            {parsedSuggestions.slice(0, 3).map((suggestion, index) => {
+                const { source } = suggestion;
+                const handle = get(source, get(fields, 'handle'));
+                const title = get(source, get(fields, 'title'));
+                const image = get(source, get(fields, 'image'));
+                const description = get(
+                    source,
+                    get(fields, 'description'),
+                );
+                const price = get(source, get(fields, 'price'));
+                const variants = get(source, 'variants');
+                return (
+                    // eslint-disable-next-line
+                    <a
+                        href={
+                            !isPreview && handle
+                                ? `/products/${handle}`
+                                : undefined
+                        }
+                        key={suggestion.value}
+                    >
+                        <div
+                            style={{
+                                padding: 10,
+                                background:
+                                    index === highlightedIndex
+                                        ? '#eee'
+                                        : 'transparent',
+                            }}
+                            className="suggestion"
                             key={suggestion.value}
+                            {...getItemProps({
+                                item: {
+                                    value: title || suggestion.value,
+                                    source: suggestion._source,
+                                },
+                            })}
                         >
                             <div
                                 style={{
-                                    padding: 10,
-                                    background:
-                                        index === highlightedIndex
-                                            ? '#eee'
-                                            : 'transparent',
+                                    display: 'flex',
+                                    alignItems: 'center',
                                 }}
-                                className="suggestion"
-                                key={suggestion.value}
-                                {...getItemProps({
-                                    item: {
-                                        value: title || suggestion.value,
-                                        source: suggestion._source,
-                                    },
-                                })}
                             >
+                                {image && (
+                                    <img
+                                        src={image}
+                                        alt=" "
+                                        width="80px"
+                                        style={{ marginRight: 15 }}
+                                    />
+                                )}
                                 <div
                                     style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
+                                        width: '100%',
+                                        overflow: 'hidden',
                                     }}
                                 >
-                                    {image && (
-                                        <img
-                                            src={image}
-                                            alt=" "
-                                            width="80px"
-                                            style={{ marginRight: 15 }}
-                                        />
-                                    )}
+                                    <Highlight
+                                        searchWords={currentValue.split(' ')}
+                                        textToHighlight={title}
+                                        highlightStyle={{
+                                            fontWeight: 700,
+                                            padding: 0,
+                                            background: `${themeConfig.colors.primaryColor}33`,
+                                            color:
+                                                themeConfig.colors.titleColor,
+                                            fontSize: '1rem',
+                                        }}
+                                        unhighlightStyle={{
+                                            fontSize: '1rem',
+                                            color:
+                                                themeConfig.colors.titleColor,
+                                        }}
+                                    />
                                     <div
                                         style={{
-                                            width: '100%',
+                                            fontSize: '0.8rem',
+                                            margin: '2px 0',
+                                            color: themeConfig.colors.textColor,
+                                            whiteSpace: 'nowrap',
+                                            textOverflow: 'ellipsis',
                                             overflow: 'hidden',
                                         }}
                                     >
@@ -175,127 +181,87 @@ const Suggestions = ({
                                             searchWords={currentValue.split(
                                                 ' ',
                                             )}
-                                            textToHighlight={title}
+                                            textToHighlight={
+                                                description &&
+                                                `${strip(
+                                                    description.slice(0, 200),
+                                                )}${
+                                                    description.length > 200
+                                                        ? '...'
+                                                        : ''
+                                                }`
+                                            }
                                             highlightStyle={{
-                                                fontWeight: 700,
+                                                fontWeight: 600,
                                                 padding: 0,
                                                 background: `${themeConfig.colors.primaryColor}33`,
                                                 color:
                                                     themeConfig.colors
-                                                        .titleColor,
-                                                fontSize: '1rem',
-                                            }}
-                                            unhighlightStyle={{
-                                                fontSize: '1rem',
-                                                color:
-                                                    themeConfig.colors
-                                                        .titleColor,
+                                                        .textColor,
                                             }}
                                         />
+                                    </div>
+                                    {((variants && variants[0]) || price) && (
                                         <div
                                             style={{
-                                                fontSize: '0.8rem',
-                                                margin: '2px 0',
                                                 color:
                                                     themeConfig.colors
-                                                        .textColor,
-                                                whiteSpace: 'nowrap',
-                                                textOverflow: 'ellipsis',
-                                                overflow: 'hidden',
+                                                        .titleColor,
                                             }}
                                         >
-                                            <Highlight
-                                                searchWords={currentValue.split(
-                                                    ' ',
-                                                )}
-                                                textToHighlight={
-                                                    description &&
-                                                    `${strip(
-                                                        description.slice(
-                                                            0,
-                                                            200,
-                                                        ),
-                                                    )}${
-                                                        description.length > 200
-                                                            ? '...'
-                                                            : ''
-                                                    }`
-                                                }
-                                                highlightStyle={{
-                                                    fontWeight: 600,
-                                                    padding: 0,
-                                                    background: `${themeConfig.colors.primaryColor}33`,
-                                                    color:
-                                                        themeConfig.colors
-                                                            .textColor,
-                                                }}
-                                            />
+                                            {currency}{' '}
+                                            {variants && variants[0]
+                                                ? variants[0].price
+                                                : price}
                                         </div>
-                                        {((variants && variants[0]) ||
-                                            price) && (
-                                            <div
-                                                style={{
-                                                    color:
-                                                        themeConfig.colors
-                                                            .titleColor,
-                                                }}
-                                            >
-                                                {currency}{' '}
-                                                {variants && variants[0]
-                                                    ? variants[0].price
-                                                    : price}
-                                            </div>
-                                        )}
-                                    </div>
+                                    )}
                                 </div>
                             </div>
-                        </a>
-                    );
-                })}
+                        </div>
+                    </a>
+                );
+            })}
 
-                {popularSuggestions.length ? (
-                    <h3 css={headingStyles(themeConfig.colors)}>
-                        Popular Searches
-                    </h3>
-                ) : null}
-                {popularSuggestions.map((item) => (
-                    <div
-                        key={item.label}
-                        css={popularSearchStyles(themeConfig.colors)}
-                        {...getItemProps({
-                            item: {
-                                label: item.label,
-                                value: item.value,
-                            },
-                        })}
-                    >
-                        {item.label}
-                    </div>
-                ))}
-
-                <h3
-                    css={headingStyles(themeConfig.colors)}
-                    style={{
-                        cursor: 'pointer',
-                        fontSize: '14px',
-                        fontWeight: 600,
-                    }}
+            {popularSuggestions.length ? (
+                <h3 css={headingStyles(themeConfig.colors)}>
+                    Popular Searches
+                </h3>
+            ) : null}
+            {popularSuggestions.map((item) => (
+                <div
+                    key={item.label}
+                    css={popularSearchStyles(themeConfig.colors)}
                     {...getItemProps({
                         item: {
-                            value: currentValue,
+                            label: item.label,
+                            value: item.value,
                         },
                     })}
                 >
-                    {`Show all results for "${currentValue}"`}
-                </h3>
+                    {item.label}
+                </div>
+            ))}
 
-                {customSuggestions ? (
-                    <div
-                        dangerouslySetInnerHTML={{ __html: customSuggestions }}
-                    />
-                ) : null}
-            </div>
-        )}
+            <h3
+                css={headingStyles(themeConfig.colors)}
+                style={{
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                }}
+                {...getItemProps({
+                    item: {
+                        value: currentValue,
+                    },
+                })}
+            >
+                {`Show all results for "${currentValue}"`}
+            </h3>
+
+            {customSuggestions ? (
+                <div dangerouslySetInnerHTML={{ __html: customSuggestions }} />
+            ) : null}
+        </div>
     </div>
 );
 
