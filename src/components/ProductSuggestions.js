@@ -153,7 +153,6 @@ class ProductSuggestions extends React.Component {
             'recommendationSettings.rsConfig',
             defaultPreferences.productRecommendationSettings.rsConfig,
         );
-        this.indexName = get(preferences, 'appbaseSettings.index');
         this.resultSettings = get(preferences, 'resultSettings');
         this.ctaTitle = get(preferences, 'recommendationSettings.ctaTitle');
         this.ctaAction = get(preferences, 'recommendationSettings.ctaAction');
@@ -382,7 +381,7 @@ class ProductSuggestions extends React.Component {
                 const docIdsPayload = docIds
                     .slice(0, this.recommendation.maxProducts)
                     .map((docId) => ({
-                        _index: this.indexName,
+                        _index: this.index,
                         _id: docId,
                     }));
                 this.getProductsByDocIds(docIdsPayload);
@@ -427,7 +426,7 @@ class ProductSuggestions extends React.Component {
 
     getProductsByDocIds = (docIdsPayload = []) => {
         const { headers } = this;
-        fetch(`${this.url}/${this.indexName}/_mget`, {
+        fetch(`${this.url}/${this.index}/_mget`, {
             method: 'POST',
             headers,
             body: JSON.stringify({
