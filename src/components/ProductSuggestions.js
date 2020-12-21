@@ -611,7 +611,7 @@ class ProductSuggestions extends React.Component {
                     <Button
                         disabled={
                             currentPage * maxSize >=
-                            this.recommendation.maxProducts
+                            data.length
                         }
                         css={buttonRight}
                         onClick={this.nextPage}
