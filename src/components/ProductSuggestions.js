@@ -427,7 +427,7 @@ class ProductSuggestions extends React.Component {
 
     getProductsByDocIds = (docIdsPayload = []) => {
         const { headers } = this;
-        fetch(`${this.url}/_mget`, {
+        fetch(`${this.url}/${this.indexName}/_mget`, {
             method: 'POST',
             headers,
             body: JSON.stringify({
