@@ -73,7 +73,7 @@ const Suggestions = ({
         }}
     >
         <div>
-            {parsedSuggestions.length === 0 && (
+            {parsedSuggestions.length === 0 && currentValue && (
                 <React.Fragment>
                     <div
                         css={highlightStyle(themeConfig.colors)}
@@ -97,10 +97,7 @@ const Suggestions = ({
                 const handle = get(source, get(fields, 'handle'));
                 const title = get(source, get(fields, 'title'));
                 const image = get(source, get(fields, 'image'));
-                const description = get(
-                    source,
-                    get(fields, 'description'),
-                );
+                const description = get(source, get(fields, 'description'));
                 const price = get(source, get(fields, 'price'));
                 const variants = get(source, 'variants');
                 return (
@@ -242,21 +239,23 @@ const Suggestions = ({
                 </div>
             ))}
 
-            <h3
-                css={headingStyles(themeConfig.colors)}
-                style={{
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                }}
-                {...getItemProps({
-                    item: {
-                        value: currentValue,
-                    },
-                })}
-            >
-                {`Show all results for "${currentValue}"`}
-            </h3>
+            {currentValue && (
+                <h3
+                    css={headingStyles(themeConfig.colors)}
+                    style={{
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                    }}
+                    {...getItemProps({
+                        item: {
+                            value: currentValue,
+                        },
+                    })}
+                >
+                    {`Show all results for "${currentValue}"`}
+                </h3>
+            )}
 
             {customSuggestions ? (
                 <div dangerouslySetInnerHTML={{ __html: customSuggestions }} />
