@@ -27,24 +27,29 @@ import SuggestionCard from './SuggestionCard';
 
 const maxProductSize = 4;
 
-const buttonLeft = css({
-    [mediaMax.small]: {
-        padding: 0,
-    },
-    zIndex: 10,
-    top: 0,
-    marginTop: 100,
-    left: 0,
-});
-const buttonRight = css({
-    zIndex: 10,
-    top: 0,
-    marginTop: 100,
-    right: 0,
-    [mediaMax.small]: {
-        padding: 0,
-    },
-});
+const buttonLeft = css`
+    ${mediaMax.small} {
+        padding: 0;
+    }
+    z-index: 10;
+    top:0;
+    bottom:0;
+    left:0;
+    margin-top:auto;
+    margin-bottom:auto;
+}`;
+
+const buttonRight = css`
+    ${mediaMax.small} {
+        padding: 0;
+    }
+    z-index: 10;
+    top:0;
+    right:0;
+    bottom:0;
+    margin-top:auto;
+    margin-bottom:auto;
+}`;
 const titleCls = css({
     textAlign: 'center',
     padding: 10,
@@ -52,12 +57,12 @@ const titleCls = css({
     color: '#000',
 });
 
-const icon = css({
-    fontSize: 32,
-    [mediaMax.small]: {
-        fontSize: 25,
-    },
-});
+const icon = css`
+    font-size: 32px;
+    ${mediaMax.small} {
+        font-size: 25px;
+    }
+`;
 
 const main = css`
     position: relative;
@@ -148,7 +153,6 @@ class ProductSuggestions extends React.Component {
             'recommendationSettings.rsConfig',
             defaultPreferences.productRecommendationSettings.rsConfig,
         );
-        this.indexName = get(preferences, 'appbaseSettings.index');
         this.resultSettings = get(preferences, 'resultSettings');
         this.ctaTitle = get(preferences, 'recommendationSettings.ctaTitle');
         this.ctaAction = get(preferences, 'recommendationSettings.ctaAction');
@@ -377,7 +381,7 @@ class ProductSuggestions extends React.Component {
                 const docIdsPayload = docIds
                     .slice(0, this.recommendation.maxProducts)
                     .map((docId) => ({
-                        _index: this.indexName,
+                        _index: this.index,
                         _id: docId,
                     }));
                 this.getProductsByDocIds(docIdsPayload);
@@ -422,7 +426,7 @@ class ProductSuggestions extends React.Component {
 
     getProductsByDocIds = (docIdsPayload = []) => {
         const { headers } = this;
-        fetch(`${this.url}/_mget`, {
+        fetch(`${this.url}/${this.index}/_mget`, {
             method: 'POST',
             headers,
             body: JSON.stringify({
@@ -607,7 +611,7 @@ class ProductSuggestions extends React.Component {
                     <Button
                         disabled={
                             currentPage * maxSize >=
-                            this.recommendation.maxProducts
+                            data.length
                         }
                         css={buttonRight}
                         onClick={this.nextPage}

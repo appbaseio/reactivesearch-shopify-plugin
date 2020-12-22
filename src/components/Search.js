@@ -730,7 +730,7 @@ class Search extends Component {
                     popularSuggestions,
                     downshiftProps,
                 }) => {
-                    return downshiftProps.isOpen && Boolean(value.length) && data.length ? (
+                    return downshiftProps.isOpen && (popularSuggestions.length || data.length) ? (
                         <Suggestions
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
