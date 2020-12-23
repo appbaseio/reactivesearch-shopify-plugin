@@ -1,3 +1,7 @@
+/** @jsxRuntime classic */
+/** @jsxFrag React.Fragment */
+/** @jsx jsx */
+import { jsx } from '@emotion/core';
 import get from 'lodash.get';
 
 export const browserColors = {
@@ -196,7 +200,7 @@ export const shopifyDefaultFields = {
     image: 'image.src',
     description: 'body_html',
     handle: 'handle',
-    timestamp: 'created_at'
+    timestamp: 'created_at',
 };
 
 export const getReactDependenciesFromPreferences = (
@@ -254,7 +258,9 @@ export const getRecommendationsPreferences = () => {
     let preferences = {};
     if (window.APPBASE_RECOMMENDATIONS_PREFERENCES) {
         try {
-            preferences = JSON.parse(window.APPBASE_RECOMMENDATIONS_PREFERENCES);
+            preferences = JSON.parse(
+                window.APPBASE_RECOMMENDATIONS_PREFERENCES,
+            );
         } catch (e) {
             console.warn(
                 'Appbase: Error encountered while parsing the recommendations preferences, fall-backing to the default preferences',
@@ -265,19 +271,60 @@ export const getRecommendationsPreferences = () => {
 };
 
 export const RecommendationTypes = {
-	MOST_POPULAR_PRODUCTS: 'most_popular',
-	MOST_RECENT: 'most_recent',
-	SIMILAR_PRODUCTS: 'similar',
-	FEATURED_PRODUCTS: 'featured',
+    MOST_POPULAR_PRODUCTS: 'most_popular',
+    MOST_RECENT: 'most_recent',
+    SIMILAR_PRODUCTS: 'similar',
+    FEATURED_PRODUCTS: 'featured',
 };
 
 export const accapi = 'https://accapi.appbase.io';
 
-export const getFieldWithoutKeyword = (fieldWithKeyword = "") => {
-    return fieldWithKeyword.split(".keyword")[0]
-}
+export const getFieldWithoutKeyword = (fieldWithKeyword = '') => {
+    return fieldWithKeyword.split('.keyword')[0];
+};
 
 export const CtaActions = {
-	REDIRECT_TO_PRODUCT: 'redirect_to_product',
-	NO_BUTTON: 'no_button',
+    REDIRECT_TO_PRODUCT: 'redirect_to_product',
+    NO_BUTTON: 'no_button',
+};
+
+export const getNoRecommendationMessage = (recommendationType) => {
+    switch (recommendationType) {
+        case RecommendationTypes.SIMILAR_PRODUCTS:
+            return (
+                <p>
+                    It might be possible that there are no products present that
+                    matches with the selected product. In that case try to
+                    change the similar to dataField or test by selecting other
+                    products. If issue persist then please contact us at{' '}
+                    <a href="mailto:support@appbase.io">support@appbase.io</a>.
+                </p>
+            );
+        case RecommendationTypes.FEATURED_PRODUCTS:
+            return (
+                <p>
+                    Please make sure that you have featured products and using a credential that has the read access to analytics. If issue
+                    persist then please contact us at{' '}
+                    <a href="mailto:support@appbase.io">support@appbase.io</a>.
+                </p>
+            );
+        case RecommendationTypes.MOST_POPULAR_PRODUCTS:
+            return (
+                <p>
+                    Please make sure that you are using a credential that has the read access to analytics. If issue
+                    persist then please contact us at{' '}
+                    <a href="mailto:support@appbase.io">support@appbase.io</a>.
+                </p>
+            );
+        case RecommendationTypes.MOST_RECENT:
+            return (
+                <p>
+                    Please make sure that the selected dataField must be sortable. If issue
+                    persist then please contact us at{' '}
+                    <a href="mailto:support@appbase.io">support@appbase.io</a>.
+                </p>
+            );
+        default:
+            return null;
+    }
 };

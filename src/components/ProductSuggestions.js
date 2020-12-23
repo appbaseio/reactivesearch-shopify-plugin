@@ -21,6 +21,7 @@ import {
     RecommendationTypes,
     shopifyDefaultFields,
     getFieldWithoutKeyword,
+    getNoRecommendationMessage,
 } from '../utils';
 import { mediaMax } from '../utils/media';
 import SuggestionCard from './SuggestionCard';
@@ -38,6 +39,14 @@ const buttonLeft = css`
     margin-top:auto;
     margin-bottom:auto;
 }`;
+
+const noRecommendation = css`
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 30px;
+`;
 
 const buttonRight = css`
     ${mediaMax.small} {
@@ -515,6 +524,18 @@ class ProductSuggestions extends React.Component {
             initialSlide: 0,
         };
         if (!data.length) {
+            if (isPreview) {
+                return (
+                    <div css={noRecommendation}>
+                        <h3>No recommendations found</h3>
+                        <p>
+                            <strong>Note:</strong> This message is only visible
+                            in preview mode actual users would not see anything.
+                        </p>
+                        {getNoRecommendationMessage(this.recommendation.type)}
+                    </div>
+                );
+            }
             return null;
         }
         return (
@@ -609,10 +630,7 @@ class ProductSuggestions extends React.Component {
                         </Slider>
                     </div>
                     <Button
-                        disabled={
-                            currentPage * maxSize >=
-                            data.length
-                        }
+                        disabled={currentPage * maxSize >= data.length}
                         css={buttonRight}
                         onClick={this.nextPage}
                     >
