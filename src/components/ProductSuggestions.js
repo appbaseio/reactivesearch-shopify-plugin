@@ -139,6 +139,7 @@ class ProductSuggestions extends React.Component {
         this.state = {
             currentPage: 1,
             maxSize: undefined,
+            loading: false,
             error: null,
             products: [],
         };
@@ -272,6 +273,9 @@ class ProductSuggestions extends React.Component {
                 // Fetch value for the field defined in preferences
                 if (this.recommendation.dataField) {
                     let status;
+                    this.setState({
+                        loading: true
+                    })
                     fetch(`${this.url}/_search`, {
                         method: 'POST',
                         headers: this.headers,
@@ -298,6 +302,7 @@ class ProductSuggestions extends React.Component {
                             if (status > 300) {
                                 this.setState({
                                     error: response,
+                                    loading: false,
                                 });
                                 return;
                             }
@@ -373,6 +378,7 @@ class ProductSuggestions extends React.Component {
                                         if (status > 300) {
                                             this.setState({
                                                 error: response,
+                                                loading: false,
                                             });
                                             return;
                                         }
@@ -385,20 +391,27 @@ class ProductSuggestions extends React.Component {
                                                         _source: {},
                                                     }),
                                                 ),
+                                                loading: false,
                                             });
                                         }
                                     })
                                     .catch((e) => {
                                         this.setState({
                                             error: e,
+                                            loading: false,
                                         });
                                         console.warn(e);
                                     });
+                            } else {
+                                this.setState({
+                                    loading: false
+                                });
                             }
                         })
                         .catch((e) => {
                             this.setState({
                                 error: e,
+                                loading: false
                             });
                             console.warn(e);
                         });
@@ -419,6 +432,9 @@ class ProductSuggestions extends React.Component {
                         _index: this.index,
                         _id: docId,
                     }));
+                this.setState({
+                    loading: true
+                })
                 this.getProductsByDocIds(docIdsPayload);
             }
         }
@@ -431,6 +447,9 @@ class ProductSuggestions extends React.Component {
         ) {
             const { headers } = this;
             let status;
+            this.setState({
+                loading: true
+            })
             fetch(
                 `${this.url}/_analytics/${this.index}/popular-results?size=${this.recommendation.maxProducts}`,
                 {
@@ -445,6 +464,7 @@ class ProductSuggestions extends React.Component {
                     if (status > 300) {
                         this.setState({
                             error: response,
+                            loading: false
                         });
                         return;
                     }
@@ -460,6 +480,7 @@ class ProductSuggestions extends React.Component {
                 .catch((e) => {
                     this.setState({
                         error: e,
+                        loading: false
                     });
                     console.warn(e);
                 });
@@ -490,6 +511,7 @@ class ProductSuggestions extends React.Component {
                 if (status > 300) {
                     this.setState({
                         error: products,
+                        loading: false,
                     });
                     return;
                 }
@@ -497,6 +519,7 @@ class ProductSuggestions extends React.Component {
                     products: products.docs.map((product) => ({
                         ...product,
                         ...product._source,
+                        loading: false,
                         _source: {},
                     })),
                 });
@@ -504,6 +527,7 @@ class ProductSuggestions extends React.Component {
             .catch((e) => {
                 this.setState({
                     error: e,
+                    loading: false,
                 });
                 console.warn(e);
             });
@@ -564,7 +588,7 @@ class ProductSuggestions extends React.Component {
         return fontFamily ? { fontFamily } : {};
     };
 
-    renderResults = ({ data, error, triggerClickAnalytics }) => {
+    renderResults = ({ data, loading, error, triggerClickAnalytics }) => {
         const { maxSize, currentPage } = this.state;
         const { isPreview } = this.props;
         const settings = {
@@ -576,7 +600,7 @@ class ProductSuggestions extends React.Component {
             initialSlide: 0,
         };
         if (!data.length) {
-            if (isPreview) {
+            if (isPreview && !loading) {
                 return (
                     <div css={noRecommendation}>
                         <h3>No recommendations found</h3>
@@ -710,7 +734,7 @@ class ProductSuggestions extends React.Component {
     };
 
     render() {
-        const { maxSize, products, error } = this.state;
+        const { maxSize, products, error, loading } = this.state;
         if (!this.recommendation || !maxSize) {
             return null;
         }
@@ -763,6 +787,7 @@ class ProductSuggestions extends React.Component {
                             data: products,
                             triggerClickAnalytics: () => null,
                             error,
+                            loading,
                         })
                     ) : (
                         <React.Fragment>
@@ -789,11 +814,13 @@ class ProductSuggestions extends React.Component {
                                     data,
                                     triggerClickAnalytics,
                                     error: errorDetails,
+                                    loading: fetching
                                 }) => {
                                     return this.renderResults({
                                         data,
                                         error: errorDetails,
                                         triggerClickAnalytics,
+                                        loading: fetching
                                     });
                                 }}
                                 infiniteScroll={false}
