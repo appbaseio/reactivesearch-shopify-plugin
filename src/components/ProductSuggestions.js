@@ -192,13 +192,13 @@ class ProductSuggestions extends React.Component {
         this.index = get(preferences, 'appbaseSettings.index');
         this.credentials = get(preferences, 'appbaseSettings.credentials');
         this.url = get(preferences, 'appbaseSettings.url');
+    }
+
+   componentDidMount() {
         // fetch popular products
         this.fetchPopularProducts();
         this.fetchSimilarProducts();
         this.fetchFeaturedProducts();
-    }
-
-    async componentDidMount() {
         this.updateMaxSize();
         window.addEventListener('resize', this.updateMaxSize);
     }
@@ -276,7 +276,7 @@ class ProductSuggestions extends React.Component {
                     this.setState({
                         loading: true
                     })
-                    fetch(`${this.url}/_search`, {
+                    fetch(`${this.url}/${this.index}/_search`, {
                         method: 'POST',
                         headers: this.headers,
                         body: JSON.stringify({
