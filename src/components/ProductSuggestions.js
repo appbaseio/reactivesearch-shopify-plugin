@@ -606,7 +606,7 @@ class ProductSuggestions extends React.Component {
                         <h3>No recommendations found</h3>
                         <p>
                             <strong>Note:</strong> This message is only visible
-                            in preview mode actual users would not see anything.
+                            in preview mode.
                         </p>
                         {getNoRecommendationMessage(this.recommendation.type)}
                         {error ? (
