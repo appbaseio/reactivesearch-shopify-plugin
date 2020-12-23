@@ -4,7 +4,7 @@
 import { css, jsx, Global } from '@emotion/core';
 import React from 'react';
 import { string, bool } from 'prop-types';
-import { Button, Icon } from 'antd';
+import { Button, Icon, Popover } from 'antd';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -139,6 +139,7 @@ class ProductSuggestions extends React.Component {
         this.state = {
             currentPage: 1,
             maxSize: undefined,
+            error: null,
             products: [],
         };
         const preferences = getRecommendationsPreferences();
@@ -270,6 +271,7 @@ class ProductSuggestions extends React.Component {
             if (fieldName && fieldValue) {
                 // Fetch value for the field defined in preferences
                 if (this.recommendation.dataField) {
+                    let status;
                     fetch(`${this.url}/_search`, {
                         method: 'POST',
                         headers: this.headers,
@@ -288,8 +290,17 @@ class ProductSuggestions extends React.Component {
                             },
                         }),
                     })
-                        .then((res) => res.json())
+                        .then((res) => {
+                            ({ status } = res);
+                            return res.json();
+                        })
                         .then((response) => {
+                            if (status > 300) {
+                                this.setState({
+                                    error: response,
+                                });
+                                return;
+                            }
                             const value = get(
                                 response,
                                 `hits.hits[0]._source[${getFieldWithoutKeyword(
@@ -354,8 +365,17 @@ class ProductSuggestions extends React.Component {
                                         }),
                                     },
                                 )
-                                    .then((res) => res.json())
                                     .then((res) => {
+                                        ({ status } = res);
+                                        return res.json();
+                                    })
+                                    .then((res) => {
+                                        if (status > 300) {
+                                            this.setState({
+                                                error: response,
+                                            });
+                                            return;
+                                        }
                                         if (res && res.results) {
                                             this.setState({
                                                 products: res.results.hits.hits.map(
@@ -369,11 +389,17 @@ class ProductSuggestions extends React.Component {
                                         }
                                     })
                                     .catch((e) => {
+                                        this.setState({
+                                            error: e,
+                                        });
                                         console.warn(e);
                                     });
                             }
                         })
                         .catch((e) => {
+                            this.setState({
+                                error: e,
+                            });
                             console.warn(e);
                         });
                 }
@@ -404,14 +430,24 @@ class ProductSuggestions extends React.Component {
             RecommendationTypes.MOST_POPULAR_PRODUCTS
         ) {
             const { headers } = this;
+            let status;
             fetch(
                 `${this.url}/_analytics/${this.index}/popular-results?size=${this.recommendation.maxProducts}`,
                 {
                     headers,
                 },
             )
-                .then((res) => res.json())
+                .then((res) => {
+                    ({ status } = res);
+                    return res.json();
+                })
                 .then((response) => {
+                    if (status > 300) {
+                        this.setState({
+                            error: response,
+                        });
+                        return;
+                    }
                     if (response.popular_results) {
                         const docIds = response.popular_results.map((item) => ({
                             _index: item.index,
@@ -422,6 +458,9 @@ class ProductSuggestions extends React.Component {
                     }
                 })
                 .catch((e) => {
+                    this.setState({
+                        error: e,
+                    });
                     console.warn(e);
                 });
         }
@@ -435,6 +474,7 @@ class ProductSuggestions extends React.Component {
 
     getProductsByDocIds = (docIdsPayload = []) => {
         const { headers } = this;
+        let status;
         fetch(`${this.url}/${this.index}/_mget`, {
             method: 'POST',
             headers,
@@ -442,8 +482,17 @@ class ProductSuggestions extends React.Component {
                 docs: docIdsPayload,
             }),
         })
-            .then((res) => res.json())
+            .then((res) => {
+                ({ status } = res);
+                return res.json();
+            })
             .then((products) => {
+                if (status > 300) {
+                    this.setState({
+                        error: products,
+                    });
+                    return;
+                }
                 this.setState({
                     products: products.docs.map((product) => ({
                         ...product,
@@ -453,6 +502,9 @@ class ProductSuggestions extends React.Component {
                 });
             })
             .catch((e) => {
+                this.setState({
+                    error: e,
+                });
                 console.warn(e);
             });
     };
@@ -512,7 +564,7 @@ class ProductSuggestions extends React.Component {
         return fontFamily ? { fontFamily } : {};
     };
 
-    renderResults = ({ data, triggerClickAnalytics }) => {
+    renderResults = ({ data, error, triggerClickAnalytics }) => {
         const { maxSize, currentPage } = this.state;
         const { isPreview } = this.props;
         const settings = {
@@ -533,6 +585,22 @@ class ProductSuggestions extends React.Component {
                             in preview mode actual users would not see anything.
                         </p>
                         {getNoRecommendationMessage(this.recommendation.type)}
+                        {error ? (
+                            <Popover
+                                content={
+                                    <span
+                                        style={{
+                                            color: 'tomato',
+                                        }}
+                                    >
+                                        {JSON.stringify(error)}
+                                    </span>
+                                }
+                                title="Error Logs"
+                            >
+                                <Button type="primary">Error Logs</Button>
+                            </Popover>
+                        ) : null}
                     </div>
                 );
             }
@@ -642,7 +710,7 @@ class ProductSuggestions extends React.Component {
     };
 
     render() {
-        const { maxSize, products } = this.state;
+        const { maxSize, products, error } = this.state;
         if (!this.recommendation || !maxSize) {
             return null;
         }
@@ -694,6 +762,7 @@ class ProductSuggestions extends React.Component {
                         this.renderResults({
                             data: products,
                             triggerClickAnalytics: () => null,
+                            error,
                         })
                     ) : (
                         <React.Fragment>
@@ -716,9 +785,14 @@ class ProductSuggestions extends React.Component {
                                     this.total = numberOfResults;
                                 }}
                                 renderResultStats={() => null}
-                                render={({ data, triggerClickAnalytics }) => {
+                                render={({
+                                    data,
+                                    triggerClickAnalytics,
+                                    error: errorDetails,
+                                }) => {
                                     return this.renderResults({
                                         data,
+                                        error: errorDetails,
                                         triggerClickAnalytics,
                                     });
                                 }}
