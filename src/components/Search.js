@@ -360,7 +360,7 @@ class Search extends Component {
                         this.exportType === 'shopify'
                             ? {
                                   query: {
-                                      term: { type: 'collections' },
+                                      term: { type.keyword: ['collection'] },
                                   },
                               }
                             : null
@@ -368,7 +368,7 @@ class Search extends Component {
                 />
                 <MultiList
                     componentId="collection"
-                    dataField="collections"
+                    dataField="collection"
                     css={font}
                     defaultQuery={() => ({
                         aggs: {
