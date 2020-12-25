@@ -1,3 +1,3 @@
 # ReactiveSearch Shopify Plugin
 
-This is the based code for the site-search plugin that's used for the [UI Builder](https://appbase.io/product/ui-builder/) search. It uses [ReactiveSearch](https://github.com/appbaseio/reactivesearch) under the hood.
+This is the based code for the search and recommendations UI builder plugins that are part of [UI Builder](https://appbase.io/product/ui-builder/). It uses [ReactiveSearch](https://github.com/appbaseio/reactivesearch) under the hood.
