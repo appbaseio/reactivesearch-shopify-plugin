@@ -145,7 +145,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
 
     .ant-card-cover img {
-        object-fit: cover;
+        object-fit: contain;
         height: 100%;
         width: 100%;
     }
