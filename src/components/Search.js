@@ -360,7 +360,7 @@ class Search extends Component {
                         this.exportType === 'shopify'
                             ? {
                                   query: {
-                                      term: { type.keyword: ['collection'] },
+                                      term: { 'type.keyword': ['collection'] },
                                   },
                               }
                             : null
