@@ -303,24 +303,24 @@ export const getNoRecommendationMessage = (recommendationType) => {
         case RecommendationTypes.FEATURED_PRODUCTS:
             return (
                 <p>
-                    Please make sure that you have featured products and using a credential that has the read access to analytics. If issue
-                    persist then please contact us at{' '}
+                    Please make sure that you have featured products and using an API credential that has read access to analytics. If the issue
+                    persists, then please contact us at{' '}
                     <a href="mailto:support@appbase.io">support@appbase.io</a>.
                 </p>
             );
         case RecommendationTypes.MOST_POPULAR_PRODUCTS:
             return (
                 <p>
-                    Please make sure that you are using a credential that has the read access to analytics. If issue
-                    persist then please contact us at{' '}
+                    Please make sure that you are using an API credential that has read access to analytics. If the issue
+                    persists, then please contact us at{' '}
                     <a href="mailto:support@appbase.io">support@appbase.io</a>.
                 </p>
             );
         case RecommendationTypes.MOST_RECENT:
             return (
                 <p>
-                    Please make sure that the selected dataField must be sortable. If issue
-                    persist then please contact us at{' '}
+                    Please make sure that the selected dataField is sortable. If the issue
+                    persists, then please contact us at{' '}
                     <a href="mailto:support@appbase.io">support@appbase.io</a>.
                 </p>
             );
