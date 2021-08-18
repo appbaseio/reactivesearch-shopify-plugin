@@ -1,3 +1,10 @@
 # ReactiveSearch Shopify Plugin
 
 This is the based code for the search and recommendations UI builder plugins that are part of [UI Builder](https://appbase.io/product/ui-builder/). It uses [ReactiveSearch](https://github.com/appbaseio/reactivesearch) under the hood.
+
+### SetUp
+After cloning this repo, You can run it locally by adding the following script in `index.html`. It defines the `APPBASE_SEARCH_PREFERENCES` that configures the search.
+
+```jsx
+<script>var APPBASE_SEARCH_PREFERENCES="{\"themeSettings\":{\"type\":\"classic\",\"customCss\":\"\",\"rsConfig\":{\"colors\":{\"primaryColor\":\"#0B6AFF\",\"primaryTextColor\":\"#fff\",\"textColor\":\"#424242\",\"titleColor\":\"#424242\"},\"typography\":{\"fontFamily\":\"default\"}}},\"globalSettings\":{\"currency\":\"USD\",\"showSelectedFilters\":true},\"exportSettings\":{\"exportAs\":\"embed\",\"credentials\":\"b4fdbea71722:46ea953d-79b0-43ec-a1a7-21465f67bff3\",\"openAsPage\":false,\"type\":\"shopify\"},\"resultSettings\":{\"fields\":{\"title\":\"title\",\"description\":\"body_html\",\"price\":\"variants.price\",\"image\":\"image.src\",\"handle\":\"handle\"},\"customMessages\":{\"resultStats\":\"[count] products found in [time] ms\",\"noResults\":\"No Results Found!\"},\"rsConfig\":{\"pagination\":false,\"infiniteScroll\":true}},\"searchSettings\":{\"customMessages\":{\"noResults\":\"No suggestions found for <mark>[term]</mark>\"},\"searchButton\":{\"icon\":\"\",\"text\":\"Click here to search\"},\"fields\":{\"title\":\"title\",\"description\":\"body_html\",\"price\":\"variants.price\",\"image\":\"image.src\",\"handle\":\"handle\"},\"rsConfig\":{\"enablePopularSuggestions\":true}},\"facetSettings\":{\"staticFacets\":[],\"dynamicFacets\":[]},\"syncSettings\":{\"product_sync\":true,\"smartcollection_sync\":true,\"customcollection_sync\":true,\"collect_sync\":false,\"metafield_sync\":false,\"namedtags_sync\":false},\"appbaseSettings\":{\"index\":\"kul-shopify-ecomm\",\"credentials\":\"b4fdbea71722:46ea953d-79b0-43ec-a1a7-21465f67bff3\",\"url\":\"https://appbase-demo-ansible-abxiydt-arc.searchbase.io\"}}";</script>
+```
