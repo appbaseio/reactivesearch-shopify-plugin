@@ -219,12 +219,12 @@ const Suggestions = ({
                 );
             })}
 
-            {popularSuggestions.length ? (
+            {popularSuggestions?.length ? (
                 <h3 css={headingStyles(themeConfig.colors)}>
                     Popular Searches
                 </h3>
             ) : null}
-            {popularSuggestions.map((item) => (
+            {popularSuggestions?.map((item) => (
                 <div
                     key={item.label}
                     css={popularSearchStyles(themeConfig.colors)}
