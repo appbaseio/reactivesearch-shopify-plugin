@@ -8,9 +8,10 @@
     "url": "https://github.com/divyanshu013"
   },
   "dependencies": {
-    "@appbaseio/reactivesearch": "3.13.2",
+    "@appbaseio/reactivesearch": "3.22.0",
     "@emotion/core": "^10.0.35",
     "antd": "3.10.9",
+    "babel-eslint": "^10.1.0",
     "emotion": "10.0.27",
     "lodash.get": "4.4.2",
     "prop-types": "15.7.2",
