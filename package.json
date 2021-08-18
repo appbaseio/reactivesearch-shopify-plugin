@@ -8,14 +8,14 @@
     "url": "https://github.com/divyanshu013"
   },
   "dependencies": {
-    "@appbaseio/reactivesearch": "3.13.2",
+    "@appbaseio/reactivesearch": "3.22.0",
     "@emotion/core": "^10.0.35",
     "antd": "3.10.9",
     "emotion": "10.0.27",
     "lodash.get": "4.4.2",
     "prop-types": "15.7.2",
-    "react": "17.0.1",
-    "react-dom": "17.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "react-highlight-words": "0.16.0",
     "react-scripts": "4.0.0",
     "react-slick": "0.27.13",
