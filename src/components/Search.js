@@ -719,6 +719,7 @@ class Search extends Component {
                 URLParams
                 enableRecentSearches
                 enablePopularSuggestions
+                highlight
                 style={{
                     marginBottom: 20,
                     position: 'sticky',
