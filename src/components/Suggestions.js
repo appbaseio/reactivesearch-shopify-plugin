@@ -370,8 +370,14 @@ const Suggestions = ({
                                 Popular Searches
                             </h3>
                         ) : null}
-                        {popularSuggestions.map((item) => (
+                        {popularSuggestions.map((item,index) => (
                             <div
+                                style={{
+                                    background:
+                                        index === highlightedIndex-3
+                                            ? '#eee'
+                                            : 'transparent',
+                                }}
                                 key={item.label}
                                 css={popularSearchStyles(themeConfig.colors)}
                                 {...getItemProps({
