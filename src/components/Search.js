@@ -1,5 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+/* eslint-disable no-unused-vars */
 import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
@@ -707,6 +708,7 @@ class Search extends Component {
         return (
             <DataSearch
                 // Don't change the component id it is tied to shopify
+                dataField={['title']}
                 componentId="q"
                 filterLabel="Search"
                 className="search"
@@ -716,6 +718,7 @@ class Search extends Component {
                 icon={get(this.searchSettings, 'searchButton.icon')}
                 ref={searchRef}
                 URLParams
+                highlight
                 style={{
                     marginBottom: 20,
                     position: 'sticky',
@@ -728,9 +731,11 @@ class Search extends Component {
                     categories,
                     data,
                     popularSuggestions,
+                    recentSearches,
                     downshiftProps,
                 }) => {
-                    return downshiftProps.isOpen && (popularSuggestions.length || data.length) ? (
+                    return downshiftProps.isOpen && (popularSuggestions.length || data.length || recentSearches?.length) ? (
+
                         <Suggestions
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
@@ -756,9 +761,11 @@ class Search extends Component {
                             )}
                             isPreview={isPreview}
                             popularSuggestions={popularSuggestions}
+                            recentSearches={recentSearches}
                         />
                     ) : null
                 }}
+
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
             />
