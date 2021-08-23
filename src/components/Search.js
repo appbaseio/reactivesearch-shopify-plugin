@@ -755,7 +755,6 @@ class Search extends Component {
                 icon={get(this.searchSettings, 'searchButton.icon')}
                 ref={searchRef}
                 URLParams
-                highlight
                 style={{
                     marginBottom: 20,
                     position: 'sticky',
@@ -802,7 +801,6 @@ class Search extends Component {
                         />
                     ) : null;
                 }}
-
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
             />
