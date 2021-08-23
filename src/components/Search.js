@@ -261,6 +261,11 @@ class Search extends Component {
         this.state = {
             toggleFilters: false,
             isMobile: window.innerWidth < 768,
+            layout: get(
+                this.preferences,
+                'resultSettings.layout',
+                defaultPreferences.resultSettings.layout,
+            ),
         };
         this.preferences = getSearchPreferences();
         this.theme = get(
@@ -310,11 +315,11 @@ class Search extends Component {
             'exportSettings.type',
             defaultPreferences.exportType,
         );
-        this.layout = get(
-            this.preferences,
-            'resultSettings.layout',
-            defaultPreferences.resultSettings.layout,
-        );
+        // this.layout = get(
+        //     this.preferences,
+        //     'resultSettings.layout',
+        //     defaultPreferences.resultSettings.layout,
+        // );
         this.viewSwitcher = get(
             this.preferences,
             'resultSettings.viewSwitcher',
@@ -392,6 +397,10 @@ class Search extends Component {
         this.setState(({ toggleFilters }) => ({
             toggleFilters: !toggleFilters,
         }));
+    };
+
+    switchViewLayout = (value) => {
+        this.setState({ layout: value });
     };
 
     getFontFamily = () => {
@@ -841,6 +850,7 @@ class Search extends Component {
     render() {
         const { toggleFilters, isMobile, layout } = this.state;
         const { isPreview } = this.props;
+        console.log(layout)
         return (
             <ReactiveBase
                 app={this.index}
@@ -1248,10 +1258,10 @@ class Search extends Component {
                                 <div css={viewSwitcherStyles}>
                                     <SelectedFilters showClearAll="default" />
                                     {
-                                        true  && (
+                                        this.viewSwitcher  && (
                                             <div style={{display: 'flex',}}>
-                                                <AppstoreOutlined className="icon-styles" />
-                                                <MenuOutlined className="icon-styles" />
+                                                <AppstoreOutlined className="icon-styles" onClick={() => this.switchViewLayout('card')}/>
+                                                <MenuOutlined className="icon-styles" onClick={() => this.switchViewLayout('list')}/>
                                             </div>
                                         )
                                     }
