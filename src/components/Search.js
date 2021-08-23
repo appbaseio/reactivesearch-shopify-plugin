@@ -1,5 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+/* eslint-disable no-unused-vars */
 import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
@@ -765,10 +766,12 @@ class Search extends Component {
                     categories,
                     data,
                     popularSuggestions,
+                    recentSearches,
                     downshiftProps,
+                    loading,
                 }) => {
-                    return downshiftProps.isOpen &&
-                        (popularSuggestions.length || data.length) ? (
+                    return downshiftProps.isOpen && (popularSuggestions.length || data.length || recentSearches?.length) ? (
+
                         <Suggestions
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
@@ -794,6 +797,8 @@ class Search extends Component {
                             )}
                             isPreview={isPreview}
                             popularSuggestions={popularSuggestions}
+                            recentSearches={recentSearches}
+                            loading={loading}
                         />
                     ) : null;
                 }}
