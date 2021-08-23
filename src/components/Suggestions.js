@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 import { jsx, css } from '@emotion/core';
 import React from 'react';
-import { string, object, arrayOf, func, number } from 'prop-types';
+import { string, object, arrayOf, func, number, bool } from 'prop-types';
 import Highlight from 'react-highlight-words';
 import strip from 'striptags';
 import get from 'lodash.get';
@@ -168,6 +168,7 @@ const Suggestions = ({
     customSuggestions,
     popularSuggestions,
     recentSearches,
+    loading,
     themeType,
     isPreview,
     fields,
@@ -197,7 +198,7 @@ const Suggestions = ({
             }}
         >
             <div>
-                {parsedSuggestions.length === 0 && currentValue && (
+                {parsedSuggestions.length === 0 && currentValue && !loading && (
                     <React.Fragment>
                         <div
                             css={highlightStyle(themeConfig.colors)}
@@ -468,6 +469,7 @@ Suggestions.propTypes = {
     categories: arrayOf(object),
     popularSuggestions: arrayOf(object),
     recentSearches: arrayOf(object),
+    loading: bool,
     getItemProps: func,
     highlightedIndex: number,
     parsedSuggestions: arrayOf(object),

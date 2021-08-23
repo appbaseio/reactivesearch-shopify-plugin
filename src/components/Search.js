@@ -768,6 +768,7 @@ class Search extends Component {
                     popularSuggestions,
                     recentSearches,
                     downshiftProps,
+                    loading,
                 }) => {
                     return downshiftProps.isOpen && (popularSuggestions.length || data.length || recentSearches?.length) ? (
 
@@ -797,6 +798,7 @@ class Search extends Component {
                             isPreview={isPreview}
                             popularSuggestions={popularSuggestions}
                             recentSearches={recentSearches}
+                            loading={loading}
                         />
                     ) : null;
                 }}
