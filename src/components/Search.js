@@ -745,7 +745,6 @@ class Search extends Component {
         return (
             <DataSearch
                 // Don't change the component id it is tied to shopify
-                dataField={['title']}
                 componentId="q"
                 filterLabel="Search"
                 className="search"
