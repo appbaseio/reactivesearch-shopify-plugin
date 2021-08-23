@@ -1299,24 +1299,31 @@ class Search extends Component {
                                             numberOfResults,
                                             time,
                                         }) => (
-                                            <div
-                                                // eslint-disable-next-line
-                                                dangerouslySetInnerHTML={{
-                                                    __html: get(
-                                                        this.resultSettings,
-                                                        'customMessages.resultStats',
-                                                        '[count] products found in [time] ms',
-                                                    )
-                                                        .replace(
-                                                            '[count]',
-                                                            numberOfResults,
+                                            <div>
+                                                <div
+                                                    // eslint-disable-next-line
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: get(
+                                                            this.resultSettings,
+                                                            'customMessages.resultStats',
+                                                            '[count] products found in [time] ms',
                                                         )
-                                                        .replace(
-                                                            '[time]',
-                                                            time,
-                                                        ),
-                                                }}
-                                            />
+                                                            .replace(
+                                                                '[count]',
+                                                                numberOfResults,
+                                                            )
+                                                            .replace(
+                                                                '[time]',
+                                                                time,
+                                                            ),
+                                                    }}
+                                                />
+                                                <div>
+
+                                                    <UnorderedListOutlined />
+
+                                                </div>
+                                            </div>
                                         )}
                                         size={9}
                                         infiniteScroll
