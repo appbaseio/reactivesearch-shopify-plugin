@@ -33,7 +33,7 @@ import {
 
 const { Meta } = Card;
 const { Panel } = Collapse;
-
+const { ResultCardsWrapper } = ReactiveList;
 const resultRef = React.createRef();
 
 const minimalSearchStyles = ({ titleColor }) => css`
@@ -1237,6 +1237,90 @@ class Search extends Component {
                                                     .replace('[time]', time),
                                             }}
                                         />
+                                    )}
+                                    render={(
+                                        {data, triggerClickAnalytics}
+                                    ) => (
+                                        <ResultCardsWrapper>
+                                            {
+                                                data.map(item => (
+                                                    const handle = isPreview
+                                                        ? ''
+                                                        : get(
+                                                            rest,
+                                                            get(
+                                                                this.resultSettings,
+                                                                'fields.handle',
+                                                            ),
+                                                        );
+
+                                                    const image = get(
+                                                        rest,
+                                                        get(
+                                                            this.resultSettings,
+                                                            'fields.image',
+                                                        ),
+                                                    );
+                                                    const title = get(
+                                                        rest,
+                                                        get(
+                                                            this.resultSettings,
+                                                            'fields.title',
+                                                        ),
+                                                    );
+
+                                                    const description = get(
+                                                        rest,
+                                                        get(
+                                                            this.resultSettings,
+                                                            'fields.description',
+                                                        ),
+                                                    );
+                                                    const price = get(
+                                                        rest,
+                                                        get(
+                                                            this.resultSettings,
+                                                            'fields.price',
+                                                        ),
+                                                    );
+                                                    const redirectToProduct =
+                                                        !isPreview || handle;
+                                                    <ResultCard key={item._id}>
+                                                        <ResultCard.Image src={image} alt={title}/>
+                                                        <ResultCard.Title
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: title
+                                                            }}
+                                                        />
+                                                        <ResultCard.Description>
+                                                            { description &&
+                                                                    this.themeType ===
+                                                                    'classic' ? (
+                                                                    <Truncate
+                                                                        lines={
+                                                                            3
+                                                                        }
+                                                                        ellipsis={
+                                                                            <span>
+                                                                                ...
+                                                                            </span>
+                                                                        }
+                                                                    >
+                                                                        {strip(
+                                                                            description,
+                                                                        )}
+                                                                    </Truncate>
+                                                                ) : null }
+                                                            {
+                                                                price && (
+                                                                    <div>${price}</div>
+                                                                )
+                                                            }
+                                                        </ResultCard.Description>
+                                                    </ResultCard>
+                                                ))
+                                            }
+                                        </ResultCardsWrapper>
                                     )}
                                     renderItem={(
                                         { _id, variants, ...rest },
