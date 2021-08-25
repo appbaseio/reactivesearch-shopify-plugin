@@ -8,6 +8,9 @@ import Highlight from 'react-highlight-words';
 import strip from 'striptags';
 import get from 'lodash.get';
 import Truncate from 'react-truncate';
+import {
+    shopifyDefaultFields,
+} from '../utils';
 
 const headingStyles = ({ titleColor, primaryColor }) => css`
     margin: 8px 0;
@@ -199,7 +202,7 @@ const Suggestions = ({
             }}
         >
             <div>
-                {parsedSuggestions.length === 0 && currentValue && !loading && (
+                { parsedSuggestions.length === 0 && currentValue && !loading && (
                     <React.Fragment>
                         <div
                             css={highlightStyle(themeConfig.colors)}
@@ -220,11 +223,11 @@ const Suggestions = ({
 
                 {parsedSuggestions.slice(0, 3).map((suggestion, index) => {
                     const { source } = suggestion;
-                    const handle = get(source, get(fields, 'handle'));
-                    const title = get(source, get(fields, 'title'));
-                    const image = get(source, get(fields, 'image'));
-                    const description = get(source, get(fields, 'description'));
-                    const price = get(source, get(fields, 'price'));
+                    const handle = get(source, get(fields, 'handle', shopifyDefaultFields.handle));
+                    const title = get(source, get(fields, 'title', shopifyDefaultFields.title));
+                    const image = get(source, get(fields, 'image', shopifyDefaultFields.image));
+                    const description = get(source, get({}, 'description', shopifyDefaultFields.description));
+                    const price = get(source, get(fields, 'price', shopifyDefaultFields.price));
                     const variants = get(source, 'variants');
                     return (
                         <div

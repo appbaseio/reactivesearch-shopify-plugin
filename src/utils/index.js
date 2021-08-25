@@ -172,7 +172,8 @@ export const defaultPreferences = {
         rsConfig: {
             infiniteScroll: true,
         },
-        layout: 'card',
+        layout: 'grid',
+        viewSwitcher: true,
     },
     facetSettings: {
         globalSettings: {
