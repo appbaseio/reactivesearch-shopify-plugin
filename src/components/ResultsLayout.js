@@ -23,6 +23,12 @@ export const listLayoutStyles = css`
     }
 `;
 
+export const NoDataStyles = css`
+    .ant-list-empty-text {
+        display: none;
+    }
+`;
+
 export const listStyles = ({ titleColor, primaryColor }) => css`
     position: relative;
     overflow: hidden;
@@ -388,6 +394,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                 </div>
             ) : (
                 <List
+                    css={NoDataStyles}
                     itemLayout="vertical"
                     size="large"
                     dataSource={data}
