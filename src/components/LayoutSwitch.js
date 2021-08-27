@@ -2,6 +2,7 @@
 /** @jsx jsx */
 import { MenuOutlined, AppstoreOutlined}  from "@ant-design/icons";
 import { css, jsx } from '@emotion/core';
+import { func } from "prop-types";
 
 const viewSwitcherStyles = css`
     display: flex;
@@ -24,4 +25,8 @@ export default function LayoutSwitch({ switchViewLayout }) {
             <MenuOutlined className="icon-styles" onClick={() => switchViewLayout('list')}/>
         </div>
     )
+}
+
+LayoutSwitch.propTypes = {
+    switchViewLayout: func,
 }
