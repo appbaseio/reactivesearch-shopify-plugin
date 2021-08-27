@@ -226,7 +226,7 @@ const Suggestions = ({
                     const handle = get(source, get(fields, 'handle', shopifyDefaultFields.handle));
                     const title = get(source, get(fields, 'title', shopifyDefaultFields.title));
                     const image = get(source, get(fields, 'image', shopifyDefaultFields.image));
-                    const description = get(source, get({}, 'description', shopifyDefaultFields.description));
+                    const description = get(source, get(fields, 'description', shopifyDefaultFields.description));
                     const price = get(source, get(fields, 'price', shopifyDefaultFields.price));
                     const variants = get(source, 'variants');
                     return (
