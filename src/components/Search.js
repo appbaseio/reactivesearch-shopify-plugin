@@ -314,9 +314,7 @@ class Search extends Component {
     }
 
     async componentDidMount() {
-
         window.addEventListener('resize', this.updateDimensions);
-
         try {
             const inputRef = get(searchRef, 'current._inputRef', null);
 

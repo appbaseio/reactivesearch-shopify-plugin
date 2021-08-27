@@ -270,7 +270,6 @@ const Suggestions = ({
                                         textOverflow: 'ellipsis',
                                     }}
                                 >
-                                    {/* <Truncate lines={3} ellipsis={<span>...</span>}> */}
                                     <Highlight
                                         searchWords={currentValue.split(' ')}
                                         textToHighlight={title}
@@ -288,8 +287,6 @@ const Suggestions = ({
                                                 themeConfig.colors.titleColor,
                                         }}
                                     />
-                                    {/* </Truncate> */}
-
                                     <div
                                         style={{
                                             fontSize: '0.8rem',
