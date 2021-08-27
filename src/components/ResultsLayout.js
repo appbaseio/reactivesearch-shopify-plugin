@@ -174,9 +174,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 const { Meta } = Card;
 
 function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
-
     const [resultsLayout, setResultsLayout] = useState(layout);
-    // const [truncatedProducts, setTruncatedProducts] = useState([]);
     const preferences = getSearchPreferences();
 
     const theme = get(
@@ -213,13 +211,6 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
         }
         return fontFamily ? { fontFamily } : {};
     }
-
-    const content = (
-        <div>
-          <p>Content</p>
-          <p>Content</p>
-        </div>
-    );
 
     return (
         <div>
@@ -297,7 +288,6 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                     key={item._id}
                                     id={item._id}
                                 >
-                                    <Popover content={content} title="Control Title">
                                     <Card
                                         hoverable={false}
                                         bordered={false}
@@ -363,10 +353,6 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                                                 }
                                                             : {}
                                                     }
-                                                    // eslint-disable-next-line
-                                                    // dangerouslySetInnerHTML={{
-                                                    //     __html: title,
-                                                    // }}
                                                 >
                                                     <Truncate
                                                         lines={
@@ -377,12 +363,6 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                                                 ...
                                                             </span>
                                                         }
-                                                        onTruncate={e =>  {
-                                                            if (e) {
-
-                                                                // setTruncatedProducts([...truncatedProducts, item._id]);
-                                                            }
-                                                        }}
                                                     >
                                                         {strip(
                                                             title,
@@ -461,9 +441,8 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                             </Button>
                                         ) : null}
                                     </Card>
-                                    </Popover>
-                                </a>
 
+                                </a>
                             )
                         })
                     }
@@ -495,9 +474,6 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                         css={listStyles({
                                             ...get(theme, 'colors'),
                                         })}
-                                        // extra={
-
-                                        //  }
                                     >
                                         <List.Item.Meta
                                             avatar= {
