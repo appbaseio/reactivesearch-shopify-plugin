@@ -96,10 +96,6 @@ const SuggestionCard = ({
                                           }
                                         : {}
                                 }
-                                // eslint-disable-next-line
-                                // dangerouslySetInnerHTML={{
-                                //     __html: title,
-                                // }}
                             >
                                 <Truncate
                                     lines={

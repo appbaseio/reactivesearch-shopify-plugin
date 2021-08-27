@@ -202,7 +202,7 @@ const Suggestions = ({
             }}
         >
             <div>
-                { parsedSuggestions.length === 0 && currentValue && !loading && (
+                {parsedSuggestions.length === 0 && currentValue && !loading && (
                     <React.Fragment>
                         <div
                             css={highlightStyle(themeConfig.colors)}
@@ -226,7 +226,7 @@ const Suggestions = ({
                     const handle = get(source, get(fields, 'handle', shopifyDefaultFields.handle));
                     const title = get(source, get(fields, 'title', shopifyDefaultFields.title));
                     const image = get(source, get(fields, 'image', shopifyDefaultFields.image));
-                    const description = get(source, get({}, 'description', shopifyDefaultFields.description));
+                    const description = get(source, get(fileds, 'description', shopifyDefaultFields.description));
                     const price = get(source, get(fields, 'price', shopifyDefaultFields.price));
                     const variants = get(source, 'variants');
                     return (
@@ -270,7 +270,6 @@ const Suggestions = ({
                                         textOverflow: 'ellipsis',
                                     }}
                                 >
-                                    {/* <Truncate lines={3} ellipsis={<span>...</span>}> */}
                                     <Highlight
                                         searchWords={currentValue.split(' ')}
                                         textToHighlight={title}
@@ -288,8 +287,6 @@ const Suggestions = ({
                                                 themeConfig.colors.titleColor,
                                         }}
                                     />
-                                    {/* </Truncate> */}
-
                                     <div
                                         style={{
                                             fontSize: '0.8rem',

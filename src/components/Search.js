@@ -11,7 +11,6 @@ import {
     SelectedFilters,
     DynamicRangeSlider,
     ReactiveComponent,
-    ToggleButton,
 } from '@appbaseio/reactivesearch';
 import {
     UL,
@@ -22,7 +21,6 @@ import { string, bool } from 'prop-types';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import { Card, Collapse, Button, Icon, Affix, Tooltip, List } from 'antd';
-import { MenuOutlined, AppstoreOutlined}  from "@ant-design/icons";
 import { mediaMax } from '../utils/media';
 import Suggestions from './Suggestions';
 import LayoutSwitch from './LayoutSwitch';
@@ -39,7 +37,6 @@ const { Meta } = Card;
 const { Panel } = Collapse;
 
 const resultRef = React.createRef();
-const toggleRef = React.createRef();
 
 const minimalSearchStyles = ({ titleColor }) => css`
     input {
@@ -276,11 +273,6 @@ class Search extends Component {
         this.state = {
             toggleFilters: false,
             isMobile: window.innerWidth <= 768,
-            layout: get(
-                JSON.parse(window.APPBASE_SEARCH_PREFERENCES),
-                'resultSettings.layout',
-                defaultPreferences.resultSettings.layout,
-            ),
         };
         this.preferences = getSearchPreferences();
         this.theme = get(
@@ -329,11 +321,6 @@ class Search extends Component {
             this.preferences,
             'exportSettings.type',
             defaultPreferences.exportType,
-        );
-        this.viewSwitcher = get(
-            this.preferences,
-            'resultSettings.viewSwitcher',
-            defaultPreferences.resultSettings.viewSwitcher,
         );
     }
 
@@ -409,10 +396,6 @@ class Search extends Component {
         this.setState(({ toggleFilters }) => ({
             toggleFilters: !toggleFilters,
         }));
-    };
-
-    switchViewLayout = (value) => {
-        this.setState({ layout: value });
     };
 
     getFontFamily = () => {
@@ -783,7 +766,6 @@ class Search extends Component {
         return (
             <DataSearch
                 // Don't change the component id it is tied to shopify
-                dataField={['title']}
                 componentId="q"
                 filterLabel="Search"
                 className="search"
@@ -843,8 +825,6 @@ class Search extends Component {
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
-                enableRecentSearches={false}
-                enablePopularSuggestions={false}
 
             />
         );
@@ -866,9 +846,8 @@ class Search extends Component {
 
 
     render() {
-        const { toggleFilters, isMobile, layout } = this.state;
+        const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
-        console.log("render:",layout)
         return (
             <ReactiveBase
                 app={this.index}
