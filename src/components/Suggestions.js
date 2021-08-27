@@ -179,7 +179,6 @@ const Suggestions = ({
 
     const totalSuggestions = parsedSuggestions.slice(0, 3).length + popularSuggestions.slice(0, isMobile() ? 3 : 5).length;
 
-
     return (
         <div
             style={{
