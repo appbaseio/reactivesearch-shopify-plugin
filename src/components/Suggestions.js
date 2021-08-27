@@ -177,7 +177,12 @@ const Suggestions = ({
     fields,
 }) => {
 
-    const totalSuggestions = parsedSuggestions.slice(0, 3).length + popularSuggestions.slice(0, isMobile() ? 3 : 5).length;
+    let totalSuggestions;
+    if(currentValue) {
+        totalSuggestions = parsedSuggestions.slice(0, 3).length + popularSuggestions.slice(0, isMobile() ? 3 : 5).length;
+    } else {
+        totalSuggestions = recentSearches.slice(0,3).length + popularSuggestions.slice(0, isMobile() ? 3 : 5).length;
+    }
 
     return (
         <div
@@ -336,8 +341,15 @@ const Suggestions = ({
                                     Recent Searches
                                 </h3>
                             ) : null}
-                            {recentSearches?.map((item) => (
+                            {recentSearches?.slice(0, 3)?.map((item, index) => (
                                 <div
+                                    style={{
+                                        background:
+                                        // eslint-disable-next-line no-nested-ternary
+                                            index === highlightedIndex
+                                                ? '#eee'
+                                                : 'transparent',
+                                    }}
                                     key={item.key}
                                     css={popularSearchStyles(themeConfig.colors)}
                                     {...getItemProps({
