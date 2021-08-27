@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Card, Button, Icon, List } from 'antd';
-import { string, bool } from 'prop-types';
+import {  bool  from 'prop-types';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import { css, jsx } from '@emotion/core';
@@ -173,8 +173,14 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
 const { Meta } = Card;
 
-function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
-    const [resultsLayout, setResultsLayout] = useState(layout);
+function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
+    const [resultsLayout, setResultsLayout] = useState(
+        get(
+            getSearchPreferences(),
+            'resultSettings.layout',
+            defaultPreferences.resultSettings.layout,
+        ),
+    );
     const preferences = getSearchPreferences();
 
     const theme = get(
@@ -582,12 +588,10 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
 }
 
 ResultsLayout.propTypes ={
-    layout: string,
     isPreview: bool,
 };
 
 ResultsLayout.defaultProps = {
-    layout: JSON.parse(window.APPBASE_SEARCH_PREFERENCES),
     isPreview: false,
 };
 
