@@ -264,7 +264,7 @@ class Search extends Component {
         super();
         this.state = {
             toggleFilters: false,
-            isMobile: window.innerWidth < 768,
+            isMobile: window.innerWidth <= 768,
             layout: get(
                 JSON.parse(window.APPBASE_SEARCH_PREFERENCES),
                 'resultSettings.layout',
@@ -374,7 +374,7 @@ class Search extends Component {
 
     updateDimensions = () => {
         this.setState({
-            isMobile: window.innerWidth < 768,
+            isMobile: window.innerWidth <= 768,
             toggleFilters: false,
         });
     };
@@ -900,7 +900,7 @@ class Search extends Component {
                         ${get(this.themeSettings, 'customCss', '')}
                     `}
                 />
-                {isMobile ? (
+                {isMobile  && this.dynamicFacets.length ? (
                     <Affix
                         style={{
                             position: 'fixed',
@@ -923,7 +923,7 @@ class Search extends Component {
                     </Affix>
                 ) : null}
 
-                <div style={{ maxWidth: 1200, margin: '25px auto' }}>
+                <div style={{ maxWidth: '90%', margin: '25px auto' }}>
                     {this.themeType === 'classic' &&
                         this.renderCategorySearch()}
 
@@ -937,435 +937,440 @@ class Search extends Component {
                             gridGap: 20,
                         }}
                     >
-                        <div
-                            css={{
-                                display: 'grid',
-                                gridTemplateColumns:
-                                    'repeat(auto-fit, minmax (250px, 1fr))',
-                                gridGap: 0,
-                                alignSelf: 'start',
-                                border:
-                                    this.themeType === 'classic'
-                                        ? '1px solid #eee'
-                                        : 0,
-                                [mediaMax.medium]: {
-                                    display: toggleFilters ? 'grid' : 'none',
-                                    gridTemplateColumns: '1fr',
-                                },
-                                boxShadow:
-                                    this.themeType === 'minimal'
-                                        ? `0 0 4px ${get(
-                                              this.theme,
-                                              'colors.titleColor',
-                                          )}1a`
-                                        : 0,
-                            }}
-                        >
-                            <Collapse
-                                bordered={false}
-                                defaultActiveKey={getReactDependenciesFromPreferences(
-                                    this.preferences,
-                                )}
-                            >
-                                {this.productTypeFilter ? (
-                                    <Panel
-                                        header={
-                                            <span
-                                                style={{
-                                                    color: get(
-                                                        this.theme,
-                                                        'colors.titleColor',
-                                                    ),
-                                                    fontWeight: 'bold',
-                                                    fontSize: '15px',
-                                                }}
-                                            >
-                                                {get(
-                                                    this.productTypeFilter,
-                                                    'rsConfig.title',
-                                                    'Product Type',
-                                                )}
-                                            </span>
+                               <div
+                                    css={{
+                                        display: 'grid',
+                                        gridTemplateColumns:
+                                            'repeat(auto-fit, minmax (250px, 1fr))',
+                                        gridGap: 0,
+                                        alignSelf: 'start',
+                                        border:
+                                            this.themeType === 'classic'
+                                                ? '1px solid #eee'
+                                                : 0,
+                                        [mediaMax.medium]: {
+                                            display: toggleFilters ? 'grid' : 'none',
+                                            gridTemplateColumns: '1fr',
+                                        },
+                                        boxShadow:
+                                            this.themeType === 'minimal'
+                                                ? `0 0 4px ${get(
+                                                    this.theme,
+                                                    'colors.titleColor',
+                                                )}1a`
+                                                : 0,
+                                        [mediaMax.medium]: {
+                                            display: toggleFilters ? 'grid' : 'none',
                                         }
-                                        showArrow={this.themeType !== 'minimal'}
-                                        key="productType"
-                                        css={this.getFontFamily()}
-                                        className="filter"
-                                    >
-                                        {this.renderProductTypeFilter(
-                                            this.getFontFamily,
+                                    }}
+                                >
+                                    <Collapse
+                                        bordered={false}
+                                        defaultActiveKey={getReactDependenciesFromPreferences(
+                                            this.preferences,
                                         )}
-                                    </Panel>
-                                ) : null}
-                                {this.collectionFilter ? (
-                                    <Panel
-                                        header={
-                                            <span
-                                                style={{
-                                                    color: get(
-                                                        this.theme,
-                                                        'colors.titleColor',
-                                                    ),
-                                                    fontWeight: 'bold',
-                                                    fontSize: '15px',
-                                                }}
-                                            >
-                                                {get(
-                                                    this.collectionFilter,
-                                                    'rsConfig.title',
-                                                    'Collections',
-                                                )}
-                                            </span>
-                                        }
-                                        showArrow={this.themeType !== 'minimal'}
-                                        key="collection"
-                                        css={this.getFontFamily()}
-                                        className="filter"
                                     >
-                                        {this.renderCollectionFilter(
-                                            this.getFontFamily,
-                                        )}
-                                    </Panel>
-                                ) : null}
-                                {this.colorFilter ? (
-                                    <Panel
-                                        className="filter"
-                                        header={
-                                            <span
-                                                style={{
-                                                    color: get(
-                                                        this.theme,
-                                                        'colors.titleColor',
-                                                    ),
-                                                    fontWeight: 'bold',
-                                                    fontSize: '15px',
-                                                }}
+                                        {this.productTypeFilter ? (
+                                            <Panel
+                                                header={
+                                                    <span
+                                                        style={{
+                                                            color: get(
+                                                                this.theme,
+                                                                'colors.titleColor',
+                                                            ),
+                                                            fontWeight: 'bold',
+                                                            fontSize: '15px',
+                                                        }}
+                                                    >
+                                                        {get(
+                                                            this.productTypeFilter,
+                                                            'rsConfig.title',
+                                                            'Product Type',
+                                                        )}
+                                                    </span>
+                                                }
+                                                showArrow={this.themeType !== 'minimal'}
+                                                key="productType"
+                                                css={this.getFontFamily()}
+                                                className="filter"
                                             >
-                                                {get(
-                                                    this.colorFilter,
-                                                    'rsConfig.title',
-                                                    'Color',
+                                                {this.renderProductTypeFilter(
+                                                    this.getFontFamily,
                                                 )}
-                                            </span>
-                                        }
-                                        showArrow={this.themeType !== 'minimal'}
-                                        key="color"
-                                        css={this.getFontFamily()}
-                                    >
-                                        {this.renderColorFilter(
-                                            this.getFontFamily,
-                                        )}
-                                    </Panel>
-                                ) : null}
-                                {this.sizeFilter ? (
-                                    <Panel
-                                        className="filter"
-                                        header={
-                                            <span
-                                                style={{
-                                                    color: get(
-                                                        this.theme,
-                                                        'colors.titleColor',
-                                                    ),
-                                                    fontWeight: 'bold',
-                                                    fontSize: '15px',
-                                                }}
+                                            </Panel>
+                                        ) : null}
+                                        {this.collectionFilter ? (
+                                            <Panel
+                                                header={
+                                                    <span
+                                                        style={{
+                                                            color: get(
+                                                                this.theme,
+                                                                'colors.titleColor',
+                                                            ),
+                                                            fontWeight: 'bold',
+                                                            fontSize: '15px',
+                                                        }}
+                                                    >
+                                                        {get(
+                                                            this.collectionFilter,
+                                                            'rsConfig.title',
+                                                            'Collections',
+                                                        )}
+                                                    </span>
+                                                }
+                                                showArrow={this.themeType !== 'minimal'}
+                                                key="collection"
+                                                css={this.getFontFamily()}
+                                                className="filter"
                                             >
-                                                {get(
-                                                    this.sizeFilter,
-                                                    'rsConfig.title',
-                                                    'Size',
+                                                {this.renderCollectionFilter(
+                                                    this.getFontFamily,
                                                 )}
-                                            </span>
-                                        }
-                                        showArrow={this.themeType !== 'minimal'}
-                                        key="size"
-                                        css={this.getFontFamily()}
-                                    >
-                                        {this.renderSizeFilter(
-                                            this.getFontFamily(),
-                                        )}
-                                    </Panel>
-                                ) : null}
-                                {this.priceFilter ? (
-                                    <Panel
-                                        header={
-                                            <span
-                                                style={{
-                                                    color: get(
-                                                        this.theme,
-                                                        'colors.titleColor',
-                                                    ),
-                                                    fontWeight: 'bold',
-                                                    fontSize: '15px',
-                                                }}
+                                            </Panel>
+                                        ) : null}
+                                        {this.colorFilter ? (
+                                            <Panel
+                                                className="filter"
+                                                header={
+                                                    <span
+                                                        style={{
+                                                            color: get(
+                                                                this.theme,
+                                                                'colors.titleColor',
+                                                            ),
+                                                            fontWeight: 'bold',
+                                                            fontSize: '15px',
+                                                        }}
+                                                    >
+                                                        {get(
+                                                            this.colorFilter,
+                                                            'rsConfig.title',
+                                                            'Color',
+                                                        )}
+                                                    </span>
+                                                }
+                                                showArrow={this.themeType !== 'minimal'}
+                                                key="color"
+                                                css={this.getFontFamily()}
                                             >
-                                                {get(
-                                                    this.priceFilter,
-                                                    'rsConfig.title',
-                                                    'Price',
+                                                {this.renderColorFilter(
+                                                    this.getFontFamily,
                                                 )}
-                                            </span>
-                                        }
-                                        showArrow={this.themeType !== 'minimal'}
-                                        key="price"
-                                        css={this.getFontFamily()}
-                                        className="filter"
-                                    >
-                                        <DynamicRangeSlider
-                                            componentId="price"
-                                            dataField="variants.price"
-                                            tooltipTrigger="hover"
-                                            showHistogram={false}
-                                            css={this.getFontFamily()}
-                                            style={{
-                                                marginTop: 50,
-                                            }}
-                                            loader={
-                                                <div
-                                                    css={loaderStyle}
-                                                    // eslint-disable-next-line
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: get(
+                                            </Panel>
+                                        ) : null}
+                                        {this.sizeFilter ? (
+                                            <Panel
+                                                className="filter"
+                                                header={
+                                                    <span
+                                                        style={{
+                                                            color: get(
+                                                                this.theme,
+                                                                'colors.titleColor',
+                                                            ),
+                                                            fontWeight: 'bold',
+                                                            fontSize: '15px',
+                                                        }}
+                                                    >
+                                                        {get(
+                                                            this.sizeFilter,
+                                                            'rsConfig.title',
+                                                            'Size',
+                                                        )}
+                                                    </span>
+                                                }
+                                                showArrow={this.themeType !== 'minimal'}
+                                                key="size"
+                                                css={this.getFontFamily()}
+                                            >
+                                                {this.renderSizeFilter(
+                                                    this.getFontFamily(),
+                                                )}
+                                            </Panel>
+                                        ) : null}
+                                        {this.priceFilter ? (
+                                            <Panel
+                                                header={
+                                                    <span
+                                                        style={{
+                                                            color: get(
+                                                                this.theme,
+                                                                'colors.titleColor',
+                                                            ),
+                                                            fontWeight: 'bold',
+                                                            fontSize: '15px',
+                                                        }}
+                                                    >
+                                                        {get(
                                                             this.priceFilter,
-                                                            'customMessages.loading',
-                                                            '',
-                                                        ),
-                                                    }}
-                                                />
-                                            }
-                                            rangeLabels={(min, max) => ({
-                                                start: `${
-                                                    this.currency
-                                                } ${min.toFixed(2)}`,
-                                                end: `${
-                                                    this.currency
-                                                } ${max.toFixed(2)}`,
-                                            })}
-                                            react={{
-                                                and: getReactDependenciesFromPreferences(
-                                                    this.preferences,
-                                                    'price',
-                                                ),
-                                            }}
-                                            {...this.priceFilter.rsConfig}
-                                            title=""
-                                        />
-                                    </Panel>
-                                ) : null}
-                                {this.dynamicFacets.map((listComponent) => (
-                                    <Panel
-                                        header={
-                                            <span
-                                                style={{
-                                                    color: get(
-                                                        this.theme,
-                                                        'colors.titleColor',
-                                                    ),
-                                                    fontWeight: 'bold',
-                                                    fontSize: '15px',
-                                                }}
+                                                            'rsConfig.title',
+                                                            'Price',
+                                                        )}
+                                                    </span>
+                                                }
+                                                showArrow={this.themeType !== 'minimal'}
+                                                key="price"
+                                                css={this.getFontFamily()}
+                                                className="filter"
                                             >
-                                                {get(
+                                                <DynamicRangeSlider
+                                                    componentId="price"
+                                                    dataField="variants.price"
+                                                    tooltipTrigger="hover"
+                                                    showHistogram={false}
+                                                    css={this.getFontFamily()}
+                                                    style={{
+                                                        marginTop: 50,
+                                                    }}
+                                                    loader={
+                                                        <div
+                                                            css={loaderStyle}
+                                                            // eslint-disable-next-line
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: get(
+                                                                    this.priceFilter,
+                                                                    'customMessages.loading',
+                                                                    '',
+                                                                ),
+                                                            }}
+                                                        />
+                                                    }
+                                                    rangeLabels={(min, max) => ({
+                                                        start: `${
+                                                            this.currency
+                                                        } ${min.toFixed(2)}`,
+                                                        end: `${
+                                                            this.currency
+                                                        } ${max.toFixed(2)}`,
+                                                    })}
+                                                    react={{
+                                                        and: getReactDependenciesFromPreferences(
+                                                            this.preferences,
+                                                            'price',
+                                                        ),
+                                                    }}
+                                                    {...this.priceFilter.rsConfig}
+                                                    title=""
+                                                />
+                                            </Panel>
+                                        ) : null}
+                                        {this.dynamicFacets.map((listComponent) => (
+                                            <Panel
+                                                header={
+                                                    <span
+                                                        style={{
+                                                            color: get(
+                                                                this.theme,
+                                                                'colors.titleColor',
+                                                            ),
+                                                            fontWeight: 'bold',
+                                                            fontSize: '15px',
+                                                        }}
+                                                    >
+                                                        {get(
+                                                            listComponent,
+                                                            'rsConfig.title',
+                                                        )}
+                                                    </span>
+                                                }
+                                                showArrow={this.themeType !== 'minimal'}
+                                                key={get(
                                                     listComponent,
-                                                    'rsConfig.title',
+                                                    'rsConfig.componentId',
                                                 )}
-                                            </span>
-                                        }
-                                        showArrow={this.themeType !== 'minimal'}
-                                        key={get(
-                                            listComponent,
-                                            'rsConfig.componentId',
-                                        )}
-                                        css={{
-                                            ...this.getFontFamily(),
-                                            maxWidth: isMobile
-                                                ? 'none'
-                                                : '298px',
-                                        }}
-                                        className="filter"
-                                    >
-                                        <MultiList
-                                            key={get(
-                                                listComponent,
-                                                'rsConfig.componentId',
-                                            )}
-                                            componentId={get(
-                                                listComponent,
-                                                'rsConfig.componentId',
-                                            )}
-                                            URLParams
-                                            loader={
-                                                <div
-                                                    css={loaderStyle}
-                                                    // eslint-disable-next-line
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: get(
-                                                            listComponent,
-                                                            'customMessages.loading',
-                                                            'Loading options',
-                                                        ),
-                                                    }}
-                                                />
-                                            }
-                                            renderNoResults={() => (
-                                                <div
-                                                    // eslint-disable-next-line
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: get(
-                                                            listComponent,
-                                                            'customMessages.noResults',
-                                                            'No items Found',
-                                                        ),
-                                                    }}
-                                                />
-                                            )}
-                                            showCount={
-                                                this.themeType !== 'minimal'
-                                            }
-                                            showCheckbox={
-                                                this.themeType !== 'minimal'
-                                            }
-                                            {...listComponent.rsConfig}
-                                            dataField={get(
-                                                listComponent,
-                                                'rsConfig.dataField',
-                                            )}
-                                            css={this.getFontFamily()}
-                                            react={{
-                                                and: getReactDependenciesFromPreferences(
-                                                    this.preferences,
-                                                    get(
+                                                css={{
+                                                    ...this.getFontFamily(),
+                                                    maxWidth: isMobile
+                                                        ? 'none'
+                                                        : '298px',
+                                                }}
+                                                className="filter"
+                                            >
+                                                <MultiList
+                                                    key={get(
                                                         listComponent,
                                                         'rsConfig.componentId',
-                                                    ),
+                                                    )}
+                                                    componentId={get(
+                                                        listComponent,
+                                                        'rsConfig.componentId',
+                                                    )}
+                                                    URLParams
+                                                    loader={
+                                                        <div
+                                                            css={loaderStyle}
+                                                            // eslint-disable-next-line
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: get(
+                                                                    listComponent,
+                                                                    'customMessages.loading',
+                                                                    'Loading options',
+                                                                ),
+                                                            }}
+                                                        />
+                                                    }
+                                                    renderNoResults={() => (
+                                                        <div
+                                                            // eslint-disable-next-line
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: get(
+                                                                    listComponent,
+                                                                    'customMessages.noResults',
+                                                                    'No items Found',
+                                                                ),
+                                                            }}
+                                                        />
+                                                    )}
+                                                    showCount={
+                                                        this.themeType !== 'minimal'
+                                                    }
+                                                    showCheckbox={
+                                                        this.themeType !== 'minimal'
+                                                    }
+                                                    {...listComponent.rsConfig}
+                                                    dataField={get(
+                                                        listComponent,
+                                                        'rsConfig.dataField',
+                                                    )}
+                                                    css={this.getFontFamily()}
+                                                    react={{
+                                                        and: getReactDependenciesFromPreferences(
+                                                            this.preferences,
+                                                            get(
+                                                                listComponent,
+                                                                'rsConfig.componentId',
+                                                            ),
+                                                        ),
+                                                    }}
+                                                    title=""
+                                                />
+                                            </Panel>
+                                        ))}
+                                    </Collapse>
+
+                                </div>
+
+
+
+                            <div>
+                                {this.themeType === 'minimal' &&
+                                    this.renderCategorySearch({
+                                        css: minimalSearchStyles(
+                                            get(this.theme, 'colors', {}),
+                                        ),
+                                    })}
+
+                                {get(this.globalSettings, 'showSelectedFilters') &&
+                                !toggleFilters &&
+                                this.themeType !== 'minimal' ? (
+                                    <div css={viewSwitcherStyles} >
+                                        <SelectedFilters showClearAll="default" />
+                                    </div>
+                                ) : null}
+                                <ReactiveComponent
+                                    componentId="filter_by_product"
+                                    customQuery={() =>
+                                        this.exportType === 'shopify'
+                                            ? {
+                                                query: {
+                                                    term: {
+                                                        type: 'products',
+                                                    },
+                                                },
+                                            }
+                                            : null
+                                    }
+                                />
+                                <ReactiveList
+                                    componentId="results"
+                                    dataField="title"
+                                    ref={resultRef}
+                                    defaultQuery={() => ({
+                                        track_total_hits: true,
+                                    })}
+                                    renderNoResults={() => (
+                                        <div
+                                            style={{ textAlign: 'right' }}
+                                            // eslint-disable-next-line
+                                            dangerouslySetInnerHTML={{
+                                                __html: get(
+                                                    this.resultSettings,
+                                                    'customMessages.noResults',
+                                                    'No Results Found',
                                                 ),
                                             }}
-                                            title=""
                                         />
-                                    </Panel>
-                                ))}
-                            </Collapse>
-                        </div>
-
-                        <div>
-                            {this.themeType === 'minimal' &&
-                                this.renderCategorySearch({
-                                    css: minimalSearchStyles(
-                                        get(this.theme, 'colors', {}),
-                                    ),
-                                })}
-
-                            {get(this.globalSettings, 'showSelectedFilters') &&
-                            !toggleFilters &&
-                            this.themeType !== 'minimal' ? (
-                                <div css={viewSwitcherStyles} >
-                                    <SelectedFilters showClearAll="default" />
-                                </div>
-                            ) : null}
-                            <ReactiveComponent
-                                componentId="filter_by_product"
-                                customQuery={() =>
-                                    this.exportType === 'shopify'
-                                        ? {
-                                              query: {
-                                                  term: {
-                                                      type: 'products',
-                                                  },
-                                              },
-                                          }
-                                        : null
-                                }
-                            />
-
-                            <ReactiveList
-                                componentId="results"
-                                dataField="title"
-                                ref={resultRef}
-                                defaultQuery={() => ({
-                                    track_total_hits: true,
-                                })}
-                                renderNoResults={() => (
-                                    <div
-                                        style={{ textAlign: 'right' }}
-                                        // eslint-disable-next-line
-                                        dangerouslySetInnerHTML={{
-                                            __html: get(
-                                                this.resultSettings,
-                                                'customMessages.noResults',
-                                                'No Results Found',
-                                            ),
-                                        }}
-                                    />
-                                )}
-                                renderResultStats={({
-                                    numberOfResults,
-                                    time,
-                                }) => (
-                                    <div
-                                        // eslint-disable-next-line
-                                        dangerouslySetInnerHTML={{
-                                            __html: get(
-                                                this.resultSettings,
-                                                'customMessages.resultStats',
-                                                '[count] products found in [time] ms',
-                                            )
-                                                .replace(
-                                                    '[count]',
-                                                    numberOfResults,
+                                    )}
+                                    renderResultStats={({
+                                        numberOfResults,
+                                        time,
+                                    }) => (
+                                        <div
+                                            // eslint-disable-next-line
+                                            dangerouslySetInnerHTML={{
+                                                __html: get(
+                                                    this.resultSettings,
+                                                    'customMessages.resultStats',
+                                                    '[count] products found in [time] ms',
                                                 )
-                                                .replace(
-                                                    '[time]',
-                                                    time,
-                                                ),
-                                        }}
-                                    />
-                                )}
-                                size={9}
-                                infiniteScroll
-                                render={({
-                                    data,
-                                    triggerClickAnalytics,
-                                }) => {
-                                    return (
-                                        <ResultsLayout
-                                            data={data}
-                                            theme={this.theme}
-                                            triggerClickAnalytics={triggerClickAnalytics}
-                                            isPreview={isPreview}
-                                            getFontFamily={this.getFontFamily()}
+                                                    .replace(
+                                                        '[count]',
+                                                        numberOfResults,
+                                                    )
+                                                    .replace(
+                                                        '[time]',
+                                                        time,
+                                                    ),
+                                            }}
                                         />
-                                    );
-                                }}
-                                innerClass={{
-                                    list: 'custom-result-list',
-                                    resultsInfo: 'custom-result-info',
-                                    poweredBy: 'custom-powered-by',
-                                    noResults: 'custom-no-results',
-                                    pagination: 'custom-pagination',
-                                }}
-                                {...this.resultSettings.rsConfig}
-                                css={reactiveListCls(
-                                    toggleFilters,
-                                    this.theme,
-                                )}
-                                react={{
-                                    and: [
-                                        'filter_by_product',
-                                        ...getReactDependenciesFromPreferences(
-                                            this.preferences,
-                                            'result',
-                                        ),
-                                        'ToggleResults',
-                                        ...getReactDependenciesFromPreferences(
-                                            this.preferences,
-                                            'result',
-                                        )
-                                    ],
-                                }}
-                            />
+                                    )}
+                                    size={9}
+                                    infiniteScroll
+                                    render={({
+                                        data,
+                                        triggerClickAnalytics,
+                                    }) => {
+                                        return !toggleFilters ? (
 
-                        </div>
+                                            <ResultsLayout
+                                                data={data}
+                                                theme={this.theme}
+                                                triggerClickAnalytics={triggerClickAnalytics}
+                                                isPreview={isPreview}
+                                                getFontFamily={this.getFontFamily()}
+                                            />
+                                        ) : null;
+                                    }}
+                                    innerClass={{
+                                        list: 'custom-result-list',
+                                        resultsInfo: 'custom-result-info',
+                                        poweredBy: 'custom-powered-by',
+                                        noResults: 'custom-no-results',
+                                        pagination: 'custom-pagination',
+                                    }}
+                                    {...this.resultSettings.rsConfig}
+                                    css={reactiveListCls(
+                                        toggleFilters,
+                                        this.theme,
+                                    )}
+                                    react={{
+                                        and: [
+                                            'filter_by_product',
+                                            ...getReactDependenciesFromPreferences(
+                                                this.preferences,
+                                                'result',
+                                            ),
+                                            'ToggleResults',
+                                            ...getReactDependenciesFromPreferences(
+                                                this.preferences,
+                                                'result',
+                                            )
+                                        ],
+                                    }}
+                                />
+                            </div>
                     </div>
                 </div>
             </ReactiveBase>

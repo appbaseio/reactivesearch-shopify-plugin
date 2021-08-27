@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { useState } from 'react';
-import { Card, Button, Icon, List, Tooltip } from 'antd';
+import { Card, Button, Icon, List, Popover } from 'antd';
 import { string, bool } from 'prop-types';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
@@ -12,12 +12,31 @@ import { mediaMax } from '../utils/media';
 import LayoutSwitch from './LayoutSwitch';
 import { getSearchPreferences, defaultPreferences, } from '../utils';
 
+export const listLayoutStyles = css`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    ${mediaMax.medium} {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 50px;
+    }
+
+`;
+
 export const listStyles = ({ titleColor, primaryColor }) => css`
     position: relative;
     overflow: hidden;
     padding: 5px 20px;
     width: 100%;
     height: 100%;
+    .list-image-container {
+        width: 150px;
+        ${mediaMax.medium} {
+            width: 100px;
+            height: 100px;
+        }
+    }
     .product-button {
         top: -50%;
         position: absolute;
@@ -70,6 +89,10 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     overflow: hidden;
     max-width: 250px;
     height: 100%;
+    .card-image-container {
+        width: 250px;
+        height: 250px;
+    }
     .product-button {
         top: -50%;
         position: absolute;
@@ -120,7 +143,6 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     .ant-card-meta-title h3 {
         overflow: hidden;
         text-overflow: ellipsis;
-        height: 25px;
     }
 
     .ant-card-meta-description {
@@ -154,6 +176,7 @@ const { Meta } = Card;
 function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
 
     const [resultsLayout, setResultsLayout] = useState(layout);
+    // const [truncatedProducts, setTruncatedProducts] = useState([]);
     const preferences = getSearchPreferences();
 
     const theme = get(
@@ -191,6 +214,13 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
         return fontFamily ? { fontFamily } : {};
     }
 
+    const content = (
+        <div>
+          <p>Content</p>
+          <p>Content</p>
+        </div>
+    );
+
     return (
         <div>
             {
@@ -202,7 +232,7 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
             }
             {
             resultsLayout === 'grid' ?  (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                <div css={listLayoutStyles}>
                     {
                         data.map((item) => {
 
@@ -267,6 +297,7 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                     key={item._id}
                                     id={item._id}
                                 >
+                                    <Popover content={content} title="Control Title">
                                     <Card
                                         hoverable={false}
                                         bordered={false}
@@ -278,13 +309,14 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                             ),
                                         })}
                                         cover={
-                                            <div >
+                                            <div className="card-image-container">
                                                 {
                                                     image && (
                                                         <img
                                                             className="product-image"
                                                             src={image}
-                                                            width="100%"
+                                                            height='100%'
+                                                            width='100%'
                                                             alt={title}
                                                             onError={(event) => {
                                                                 event.target.src = "https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg"; // eslint-disable-line
@@ -336,7 +368,6 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                                     //     __html: title,
                                                     // }}
                                                 >
-                                                    <Tooltip title={title}>
                                                     <Truncate
                                                         lines={
                                                             1
@@ -346,13 +377,17 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                                                 ...
                                                             </span>
                                                         }
+                                                        onTruncate={e =>  {
+                                                            if (e) {
+
+                                                                // setTruncatedProducts([...truncatedProducts, item._id]);
+                                                            }
+                                                        }}
                                                     >
                                                         {strip(
                                                             title,
                                                         )}
                                                     </Truncate>
-                                                    </Tooltip>
-
                                                 </h3>
                                             }
                                             description={
@@ -426,6 +461,7 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                             </Button>
                                         ) : null}
                                     </Card>
+                                    </Popover>
                                 </a>
 
                             )
@@ -459,14 +495,20 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                         css={listStyles({
                                             ...get(theme, 'colors'),
                                         })}
-                                        extra={
-                                            <div style={{ height: 150}}>
+                                        // extra={
+
+                                        //  }
+                                    >
+                                        <List.Item.Meta
+                                            avatar= {
+                                                <div className="list-image-container">
                                                 {
                                                     item?.image && (
                                                         <img
                                                             className="product-image"
                                                             src={item?.image?.src}
-                                                            width={150}
+                                                            height='100%'
+                                                            width='100%'
                                                             alt={item.title}
                                                             onError={(event) => {
                                                                 event.target.src = "https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg"; // eslint-disable-line
@@ -475,11 +517,9 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                                     )
                                                 }
                                             </div>
-                                        }
-                                    >
-                                        <List.Item.Meta
+                                            }
                                             title={
-                                                <div style={{height: 25,}}>
+                                                <div>
                                                     {
                                                         item.title && (
                                                             <Truncate
@@ -493,55 +533,56 @@ function ResultsLayout({ layout, data, triggerClickAnalytics, isPreview }) {
                                                 </div>
                                             }
                                             description={
-                                                <div style={{ height: 45}}>
-                                                    {
-                                                        item.body_html &&
-                                                        themeType === 'classic' ? (
-                                                            <Truncate
-                                                                lines={2}
-                                                                ellipsis={<span>...</span>}
-                                                            >
-                                                                {strip(item.body_html)}
-                                                            </Truncate>
-                                                        ) : null
-                                                    }
+                                                <div>
+                                                    <div style={{ height: 45}}>
+                                                        {
+                                                            item.body_html &&
+                                                            themeType === 'classic' ? (
+                                                                <Truncate
+                                                                    lines={2}
+                                                                    ellipsis={<span>...</span>}
+                                                                >
+                                                                    {strip(item.body_html)}
+                                                                </Truncate>
+                                                            ) : null
+                                                        }
+                                                    </div>
+                                                    <div>
+                                                        <h3
+                                                            style={{
+                                                                height: 25,
+                                                                fontWeight: 500,
+                                                                fontSize: '1rem',
+                                                                marginTop: 6,
+                                                                color:
+                                                                    themeType === 'minimal'
+                                                                        ? get(
+                                                                            theme,
+                                                                            'colors.textColor',
+                                                                        )
+                                                                        : get(
+                                                                            theme,
+                                                                            'colors.titleColor',
+                                                                        ),
+                                                            }}
+                                                        >
+                                                            {item?.variants[0]?.price || item.price ? (
+                                                                `${currency} ${
+                                                                    item.variants
+                                                                        ? get(
+                                                                            item.variants[0],
+                                                                            'price',
+                                                                            '',
+                                                                        )
+                                                                        : item.price
+                                                                }`
+                                                            ) : null}
+                                                        </h3>
+                                                    </div>
                                                 </div>
+
                                             }
                                         />
-
-                                            <div>
-                                                <h3
-                                                    style={{
-                                                        height: 25,
-                                                        fontWeight: 500,
-                                                        fontSize: '1rem',
-                                                        marginTop: 6,
-                                                        color:
-                                                            themeType === 'minimal'
-                                                                ? get(
-                                                                    theme,
-                                                                    'colors.textColor',
-                                                                )
-                                                                : get(
-                                                                    theme,
-                                                                    'colors.titleColor',
-                                                                ),
-                                                    }}
-                                                >
-                                                    {item?.variants[0]?.price || item.price ? (
-                                                        `${currency} ${
-                                                            item.variants
-                                                                ? get(
-                                                                    item.variants[0],
-                                                                    'price',
-                                                                    '',
-                                                                )
-                                                                : item.price
-                                                        }`
-                                                    ) : null}
-                                                </h3>
-                                            </div>
-
                                         {redirectToProduct ? (
                                             <Button
                                                 type="primary"
