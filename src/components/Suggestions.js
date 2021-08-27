@@ -222,11 +222,11 @@ const Suggestions = ({
 
                 {parsedSuggestions.slice(0, 3).map((suggestion, index) => {
                     const { source } = suggestion;
-                    const handle = get(source, get(fields, 'handle', shopifyDefaultFields.handle));
-                    const title = get(source, get(fields, 'title', shopifyDefaultFields.title));
-                    const image = get(source, get(fields, 'image', shopifyDefaultFields.image));
-                    const description = get(source, get(fields, 'description', shopifyDefaultFields.description));
-                    const price = get(source, get(fields, 'price', shopifyDefaultFields.price));
+                    const handle = get(source, get(fields, 'handle'));
+                    const title = get(source, get(fields, 'title'));
+                    const image = get(source, get(fields, 'image'));
+                    const description = get(source, get(fields, 'description'));
+                    const price = get(source, get(fields, 'price'));
                     const variants = get(source, 'variants');
                     return (
                         <div
