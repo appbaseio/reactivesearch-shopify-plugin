@@ -202,7 +202,7 @@ const Suggestions = ({
             }}
         >
             <div>
-                { parsedSuggestions.length === 0 && currentValue && !loading && (
+                {parsedSuggestions.length === 0 && currentValue && !loading && (
                     <React.Fragment>
                         <div
                             css={highlightStyle(themeConfig.colors)}
