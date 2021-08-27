@@ -283,7 +283,6 @@ const Suggestions = ({
                                                 themeConfig.colors.titleColor,
                                         }}
                                     />
-
                                     <div
                                         style={{
                                             fontSize: '0.8rem',
@@ -327,7 +326,7 @@ const Suggestions = ({
                 })}
 
                 {
-                    currentValue === "" ? (
+                    currentValue === "" && (
                         <div>
                             {recentSearches?.length ? (
                                 <h3 css={headingStyles(themeConfig.colors)}>
@@ -361,48 +360,48 @@ const Suggestions = ({
                                 </div>
                             ))}
                         </div>
-                    ) : (
-
-                        <div>
-                            {popularSuggestions.length ? (
-                                <h3 css={headingStyles(themeConfig.colors)}>
-                                    Popular Searches
-                                </h3>
-                            ) : null}
-                            {popularSuggestions.slice(0, isMobile() ? 3 : 5).map((item,index) => (
-                                <div
-                                    style={{
-                                        background:
-                                        // eslint-disable-next-line no-nested-ternary
-                                            index === highlightedIndex-3
-                                                ? '#eee'
-                                                : 'transparent',
-                                    }}
-                                    key={item.label}
-                                    css={popularSearchStyles(themeConfig.colors)}
-                                    {...getItemProps({
-                                        item: {
-                                            label: item.label,
-                                            value: item.value,
-                                        },
-                                    })}
-                                >
-                                    <div css={iconStyles}>
-                                        <svg
-                                            className="icon-position"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            alt="Recent Search"
-                                            viewBox="0 0 24 24"
-                                            >
-                                            <path d="M0 0h24v24H0z" fill="none" />
-                                            <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
-                                        </svg>
-                                        {item.label}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
                     )
+                }
+                {
+                    <div>
+                        {popularSuggestions.length ? (
+                            <h3 css={headingStyles(themeConfig.colors)}>
+                                Popular Searches
+                            </h3>
+                        ) : null}
+                        {popularSuggestions.slice(0, isMobile() ? 3 : 5).map((item,index) => (
+                            <div
+                                style={{
+                                    background:
+                                    // eslint-disable-next-line no-nested-ternary
+                                        index === highlightedIndex-3
+                                            ? '#eee'
+                                            : 'transparent',
+                                }}
+                                key={item.label}
+                                css={popularSearchStyles(themeConfig.colors)}
+                                {...getItemProps({
+                                    item: {
+                                        label: item.label,
+                                        value: item.value,
+                                    },
+                                })}
+                            >
+                                <div css={iconStyles}>
+                                    <svg
+                                        className="icon-position"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        alt="Recent Search"
+                                        viewBox="0 0 24 24"
+                                        >
+                                        <path d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
+                                    </svg>
+                                    {item.label}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 }
 
                 {currentValue && (
@@ -427,39 +426,42 @@ const Suggestions = ({
                 {customSuggestions ? (
                     <div dangerouslySetInnerHTML={{ __html: customSuggestions }} />
                 ) : null}
-                <div css={footerCls}>
-                    <div className="suggestions-dropdown__footer">
-                        <div className="keyboard-shortcuts">
-                            <span className="shortcut-group">
-                                <span className="focus-shortcut">↑</span>
-                                <span className="focus-shortcut">↓ </span>
-                                <span>to navigate</span>
-                            </span>
-                            <span className="shortcut-group">
-                                <span className="focus-shortcut">esc</span>
-                                <span>to defocus</span>
-                            </span>
-                            <span className="shortcut-group">
-                                <span className="focus-shortcut" style={{ fontFamily: 'sans-serif' }}>&#x21A9;</span>
-                                <span>to select</span>
-                            </span>
+                {
+                    totalSuggestions && (
+                        <div css={footerCls}>
+                            <div className="suggestions-dropdown__footer">
+                                <div className="keyboard-shortcuts">
+                                    <span className="shortcut-group">
+                                        <span className="focus-shortcut">↑</span>
+                                        <span className="focus-shortcut">↓ </span>
+                                        <span>to navigate</span>
+                                    </span>
+                                    <span className="shortcut-group">
+                                        <span className="focus-shortcut">esc</span>
+                                        <span>to defocus</span>
+                                    </span>
+                                    <span className="shortcut-group">
+                                        <span className="focus-shortcut" style={{ fontFamily: 'sans-serif' }}>&#x21A9;</span>
+                                        <span>to select</span>
+                                    </span>
+                                </div>
+                                <div className="org-label">
+                                    <span>Search by </span>
+                                    <a
+                                        href="https://www.appbase.io/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <img
+                                        src="https://softr-prod.imgix.net/applications/d919d2ef-4bb1-4b91-aa55-6040ea8667e1/assets/f7a75f17-313d-4759-992f-e7d351a11836.svg"
+                                        alt="appbase-logo"
+                                        />
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                        <div className="org-label">
-                            <span>Search by </span>
-                            <a
-                                href="https://www.appbase.io/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <img
-                                src="https://softr-prod.imgix.net/applications/d919d2ef-4bb1-4b91-aa55-6040ea8667e1/assets/f7a75f17-313d-4759-992f-e7d351a11836.svg"
-                                alt="appbase-logo"
-                                />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
+                    )
+                }
             </div>
         </div>
 )};
