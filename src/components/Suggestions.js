@@ -8,9 +8,6 @@ import Highlight from 'react-highlight-words';
 import strip from 'striptags';
 import get from 'lodash.get';
 import Truncate from 'react-truncate';
-import {
-    shopifyDefaultFields,
-} from '../utils';
 
 const headingStyles = ({ titleColor, primaryColor }) => css`
     margin: 8px 0;
