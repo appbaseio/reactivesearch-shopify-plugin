@@ -103,8 +103,16 @@ const reactiveListCls = (toggleFilters, theme) => css`
 export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
     overflow: hidden;
-    max-width: 300px;
+    max-width: 250px;
     height: 100%;
+    .card-image-container {
+        width: 250px;
+        height: 250px;
+        ${mediaMax.medium} {
+            height: 100%;
+            width: 100%;
+        }
+    }
     .product-button {
         top: -50%;
         position: absolute;
@@ -130,6 +138,9 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
     .ant-card-cover {
         height: 250px;
+        ${mediaMax.medium} {
+            height: 200px;
+        }
     }
     .ant-card-body {
         padding: 15px 10px;

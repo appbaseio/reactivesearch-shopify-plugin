@@ -611,7 +611,7 @@ ResultsLayout.propTypes ={
 };
 
 ResultsLayout.defaultProps = {
-    layout: JSON.parse(window.APPBASE_SEARCH_PREFERENCES),
+    layout: JSON.parse(window.APPBASE_RECOMMENDATIONS_PREFERENCES),
     isPreview: false,
 };
 

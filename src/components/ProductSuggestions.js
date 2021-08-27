@@ -32,6 +32,9 @@ const buttonLeft = css`
     ${mediaMax.small} {
         padding: 0;
     }
+    padding: 0 8px;
+    margin-left: 10px;
+    margin-right: 10px;
     z-index: 10;
     top:0;
     bottom:0;
@@ -52,6 +55,9 @@ const buttonRight = css`
     ${mediaMax.small} {
         padding: 0;
     }
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 0 8px;
     z-index: 10;
     top:0;
     right:0;
@@ -595,6 +601,8 @@ class ProductSuggestions extends React.Component {
         const settings = {
             dots: false,
             infinite: false,
+            swipeToSlide: true,
+            swipe: true,
             speed: 500,
             slidesToShow: maxSize,
             slidesToScroll: maxSize,

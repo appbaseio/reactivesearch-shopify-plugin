@@ -58,7 +58,20 @@ const SuggestionCard = ({
                     })}
                     className={className || 'card'}
                     cover={
-                        image && <img src={image} width="100%" alt={title} />
+                        <div className="card-image-container">
+                            {
+                                image && (
+                                    <img
+                                        src={image}
+                                        width="100%"
+                                        alt={title}
+                                        onError={(event) => {
+                                            event.target.src = "https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg"; // eslint-disable-line
+                                        }}
+                                    />
+                                )
+                            }
+                        </div>
                     }
                     style={{
                         padding: themeType === 'minimal' ? '10px' : 0,
@@ -84,44 +97,65 @@ const SuggestionCard = ({
                                         : {}
                                 }
                                 // eslint-disable-next-line
-                                dangerouslySetInnerHTML={{
-                                    __html: title,
-                                }}
-                            />
+                                // dangerouslySetInnerHTML={{
+                                //     __html: title,
+                                // }}
+                            >
+                                <Truncate
+                                    lines={
+                                        1
+                                    }
+                                    ellipsis={
+                                        <span>
+                                            ...
+                                        </span>
+                                    }
+                                >
+                                    {strip(
+                                        title,
+                                    )}
+                                </Truncate>
+                            </h3>
                         }
                         description={
-                            body_html
-                                ? isFontLoaded && themeType === 'classic' && (
-                                      <Truncate
-                                          lines={4}
-                                          ellipsis={<span>...</span>}
-                                      >
-                                          {strip(body_html)}
-                                      </Truncate>
-                                  )
-                                : undefined
+                            <div style={{height: 45}}>
+                                {
+                                    body_html
+                                    ? isFontLoaded && themeType === 'classic' && (
+                                          <Truncate
+                                              lines={2}
+                                              ellipsis={<span>...</span>}
+                                          >
+                                              {strip(body_html)}
+                                          </Truncate>
+                                      )
+                                    : undefined
+                                }
+                            </div>
                         }
                     />
-                    {((variants && variants[0]) || price) && (
-                        <div>
-                            <h3
-                                style={{
-                                    fontWeight: 500,
-                                    fontSize: '1rem',
-                                    marginTop: 6,
-                                    color:
-                                        themeType === 'minimal'
-                                            ? theme.colors.textColor
-                                            : theme.colors.titleColor,
-                                }}
-                            >
-                                {currency}{' '}
-                                {variants && variants[0]
-                                    ? variants[0].price
-                                    : price}
-                            </h3>
-                        </div>
-                    )}
+                    <div style={{height: 25}}>
+                        {((variants && variants[0]) || price) && (
+                            <div>
+                                <h3
+                                    style={{
+                                        fontWeight: 500,
+                                        fontSize: '1rem',
+                                        marginTop: 6,
+                                        color:
+                                            themeType === 'minimal'
+                                                ? theme.colors.textColor
+                                                : theme.colors.titleColor,
+                                    }}
+                                >
+                                    {currency}{' '}
+                                    {variants && variants[0]
+                                        ? variants[0].price
+                                        : price}
+                                </h3>
+                            </div>
+                        )}
+                    </div>
                     {shouldShowCtaAction ? (
                         <Button
                             type="primary"
