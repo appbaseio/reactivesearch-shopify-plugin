@@ -2,7 +2,7 @@
 /** @jsx jsx */
 
 import { useState } from 'react';
-import { Card, Button, Icon, List, Popover } from 'antd';
+import { Card, Button, Icon, List } from 'antd';
 import { string, bool } from 'prop-types';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
