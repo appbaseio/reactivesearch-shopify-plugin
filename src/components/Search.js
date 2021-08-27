@@ -141,7 +141,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     }
 
     .ant-card-cover img {
-        object-fit: contain;
+        object-fit: cover;
         height: 100%;
         width: 100%;
     }
@@ -176,7 +176,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
     @media (max-width: 768px) {
         .ant-card-cover img {
-            object-fit: contain;
+            object-fit: cover;
         }
     }
 `;
@@ -832,6 +832,9 @@ class Search extends Component {
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
+                enableRecentSearches={false}
+                enablePopularSuggestions={false}
+
             />
         );
     };
