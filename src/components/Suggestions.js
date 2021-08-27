@@ -179,7 +179,6 @@ const Suggestions = ({
 
     const totalSuggestions = parsedSuggestions.slice(0, 3).length + popularSuggestions.slice(0, isMobile() ? 3 : 5).length;
 
-
     return (
         <div
             style={{
@@ -202,7 +201,7 @@ const Suggestions = ({
             }}
         >
             <div>
-                { parsedSuggestions.length === 0 && currentValue && !loading && (
+                {parsedSuggestions.length === 0 && currentValue && !loading && (
                     <React.Fragment>
                         <div
                             css={highlightStyle(themeConfig.colors)}
@@ -270,7 +269,6 @@ const Suggestions = ({
                                         textOverflow: 'ellipsis',
                                     }}
                                 >
-                                    {/* <Truncate lines={3} ellipsis={<span>...</span>}> */}
                                     <Highlight
                                         searchWords={currentValue.split(' ')}
                                         textToHighlight={title}
@@ -288,8 +286,6 @@ const Suggestions = ({
                                                 themeConfig.colors.titleColor,
                                         }}
                                     />
-                                    {/* </Truncate> */}
-
                                     <div
                                         style={{
                                             fontSize: '0.8rem',
