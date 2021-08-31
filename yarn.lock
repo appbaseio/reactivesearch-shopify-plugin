@@ -43,10 +43,10 @@
   resolved "https://registry.yarnpkg.com/@ant-design/icons/-/icons-1.1.16.tgz#ac6426216934e3f4bc108f2f48f92ed66789235e"
   integrity sha512-0zNVP5JYBJkfMi9HotN6QBQjF3SFmUlumJNJXZIH+pZWp/5EbrCczzlG3YTmBWoyRHAsuOGIjSFIy8v/76DTPg==
 
-"@appbaseio/reactivecore@9.12.0":
-  version "9.12.0"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.12.0.tgz#233beddfa8b6e345b610bdf13e9ff33bd4636681"
-  integrity sha512-2jqzU9mWl2QV5lL1d2mL+6VPm9KQwGKZf+iJ4pkIGXpIm4hyrvtxb932RUOq7Gsxk+swpzyWfydUG70XvON3BQ==
+"@appbaseio/reactivecore@9.12.1":
+  version "9.12.1"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.12.1.tgz#e209459dfbb48ad65987d75fc0eb61c82edf0961"
+  integrity sha512-ZLb24K8RLwry4as/rk5PwDR7VPAQYYhdP9n7sZDWLjPO1HzQXckyz7CnzYgzdxt7NbLkarhCcYFYzpEZB6i7NA==
   dependencies:
     cross-fetch "^3.0.4"
     prop-types "^15.6.0"
@@ -54,12 +54,12 @@
     redux-thunk "^2.3.0"
     xdate "^0.8.2"
 
-"@appbaseio/reactivesearch@3.23.0":
-  version "3.23.0"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.23.0.tgz#81d14fbe21a990830e483a723a2f0fd3fa0dd9e7"
-  integrity sha512-ZX4lrV/F5fZAExE13c88GJReto2Sbno3GycT69xo6AAxXINNcEMNXadbll7JlZaSJDgF1iP7+EfNLROVGucrmQ==
+"@appbaseio/reactivesearch@3.23.1":
+  version "3.23.1"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.23.1.tgz#988ff312b99826aba0602f72133f4ee4ffcc6bb4"
+  integrity sha512-QhCA1XsIkErax6R1tpjEdlablJ79TRw1MB/GaAsoyz7/UtulqNAEwv+FhbTNY2uTwygM7a1CdM4UDjNazLZZtA==
   dependencies:
-    "@appbaseio/reactivecore" "9.12.0"
+    "@appbaseio/reactivecore" "9.12.1"
     "@emotion/core" "^10.0.28"
     "@emotion/styled" "^10.0.27"
     appbase-js "^4.1.5"
@@ -1230,13 +1230,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-<<<<<<< Updated upstream
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
-  version "7.15.3"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.3.tgz#2e1c2880ca118e5b2f9988322bd8a7656a32502b"
-  integrity sha512-OvwMLqNXkCXSz1kSm58sEsNuhqOx/fKpnUnKnFB5v8uDda5bLNEHNgKPvhDN6IU0LDcnHQ90LlJ0Q6jnyBSIBA==
-=======
-"@babel/runtime@^7.12.5":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.15.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.3.tgz#2e1c2880ca118e5b2f9988322bd8a7656a32502b"
   integrity sha512-OvwMLqNXkCXSz1kSm58sEsNuhqOx/fKpnUnKnFB5v8uDda5bLNEHNgKPvhDN6IU0LDcnHQ90LlJ0Q6jnyBSIBA==
@@ -1254,7 +1248,6 @@
   version "7.11.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
   integrity sha512-TeWkU52so0mPtDcaCTxNBI/IHiz0pZgr8VEFqXFtZWpYD08ZB6FaSwVAS8MKRQAP3bYKiVjwysOJgMFY28o6Tw==
->>>>>>> Stashed changes
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -10582,7 +10575,7 @@ regenerator-runtime@^0.11.0:
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
   integrity sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==
 
-regenerator-runtime@^0.13.4, regenerator-runtime@^0.13.7:
+regenerator-runtime@^0.13.2, regenerator-runtime@^0.13.4, regenerator-runtime@^0.13.7:
   version "0.13.9"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
   integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==

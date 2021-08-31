@@ -28,6 +28,7 @@ export const NoDataStyles = css`
         display: none;
     }
 `;
+
 export const listStyles = ({ titleColor, primaryColor }) => css`
     position: relative;
     overflow: hidden;
