@@ -342,7 +342,7 @@ const Suggestions = ({
                                     Recent Searches
                                 </h3>
                             ) : null}
-                            {recentSearches?.slice(0, 3)?.map((item) => (
+                            {recentSearches?.slice(0, 3)?.map((item,index) => (
                                 <div
                                     style={{
                                         background:
