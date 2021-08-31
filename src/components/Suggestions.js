@@ -183,7 +183,10 @@ const Suggestions = ({
     } else {
         totalSuggestions = recentSearches.slice(0,3).length + popularSuggestions.slice(0, isMobile() ? 3 : 5).length;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 231c4c75a012c3bca71054f232de2126d3ce5a85
 
     return (
         <div
@@ -342,7 +345,7 @@ const Suggestions = ({
                                     Recent Searches
                                 </h3>
                             ) : null}
-                            {recentSearches?.slice(0, 3)?.map((item,index) => (
+                            {recentSearches?.slice(0, 3)?.map((item, index) => (
                                 <div
                                     style={{
                                         background:
