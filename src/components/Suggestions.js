@@ -183,10 +183,6 @@ const Suggestions = ({
     } else {
         totalSuggestions = recentSearches.slice(0,3).length + popularSuggestions.slice(0, isMobile() ? 3 : 5).length;
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 231c4c75a012c3bca71054f232de2126d3ce5a85
 
     return (
         <div
