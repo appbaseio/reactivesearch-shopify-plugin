@@ -1,5 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+/* eslint-disable no-unused-vars */
 import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
@@ -22,6 +23,8 @@ import Truncate from 'react-truncate';
 import { Card, Collapse, Button, Icon, Affix, Tooltip, List } from 'antd';
 import { mediaMax } from '../utils/media';
 import Suggestions from './Suggestions';
+import LayoutSwitch from './LayoutSwitch';
+import ResultsLayout from './ResultsLayout';
 import {
     browserColors,
     defaultPreferences,
@@ -97,8 +100,16 @@ const reactiveListCls = (toggleFilters, theme) => css`
 export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
     overflow: hidden;
-    max-width: 300px;
+    max-width: 250px;
     height: 100%;
+    .card-image-container {
+        width: 250px;
+        height: 250px;
+        ${mediaMax.medium} {
+            height: 100%;
+            width: 100%;
+        }
+    }
     .product-button {
         top: -50%;
         position: absolute;
@@ -124,6 +135,9 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
     .ant-card-cover {
         height: 250px;
+        ${mediaMax.medium} {
+            height: 200px;
+        }
     }
     .ant-card-body {
         padding: 15px 10px;
@@ -135,7 +149,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     }
 
     .ant-card-cover img {
-        object-fit: contain;
+        object-fit: cover;
         height: 100%;
         width: 100%;
     }
@@ -170,7 +184,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
     @media (max-width: 768px) {
         .ant-card-cover img {
-            object-fit: contain;
+            object-fit: cover;
         }
     }
 `;
@@ -227,7 +241,18 @@ export const cardTitleStyles = ({ titleColor, primaryColor }) => css`
         background-color: ${primaryColor}4d};
     }
 `;
-
+const viewSwitcherStyles = css`
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    .icon-styles {
+        padding: 5px;
+        &: hover {
+            cursor: pointer;
+            color: #40a9ff;
+        }
+    }
+`;
 const mobileButtonStyles = css`
     border-radius: 0;
     border: 0;
@@ -247,7 +272,7 @@ class Search extends Component {
         super();
         this.state = {
             toggleFilters: false,
-            isMobile: window.innerWidth < 768,
+            isMobile: window.innerWidth <= 768,
         };
         this.preferences = getSearchPreferences();
         this.theme = get(
@@ -297,11 +322,6 @@ class Search extends Component {
             'exportSettings.type',
             defaultPreferences.exportType,
         );
-        this.layout = get(
-            this.preferences,
-            'resultSettings.layout',
-            defaultPreferences.resultSettings.layout,
-        );
     }
 
     async componentDidMount() {
@@ -350,7 +370,7 @@ class Search extends Component {
 
     updateDimensions = () => {
         this.setState({
-            isMobile: window.innerWidth < 768,
+            isMobile: window.innerWidth <= 768,
             toggleFilters: false,
         });
     };
@@ -765,10 +785,14 @@ class Search extends Component {
                     categories,
                     data,
                     popularSuggestions,
+                    recentSearches,
                     downshiftProps,
+                    loading,
                 }) => {
                     return downshiftProps.isOpen &&
-                        (popularSuggestions.length || data.length) ? (
+                        (popularSuggestions.length ||
+                            data.length ||
+                            recentSearches?.length) ? (
                         <Suggestions
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
@@ -794,11 +818,14 @@ class Search extends Component {
                             )}
                             isPreview={isPreview}
                             popularSuggestions={popularSuggestions}
+                            recentSearches={recentSearches}
+                            loading={loading}
                         />
                     ) : null;
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
+
             />
         );
     };
@@ -865,7 +892,7 @@ class Search extends Component {
                         ${get(this.themeSettings, 'customCss', '')}
                     `}
                 />
-                {isMobile ? (
+                {isMobile && this.dynamicFacets.length ? (
                     <Affix
                         style={{
                             position: 'fixed',
@@ -888,7 +915,7 @@ class Search extends Component {
                     </Affix>
                 ) : null}
 
-                <div style={{ maxWidth: 1200, margin: '25px auto' }}>
+                <div style={{ maxWidth: '90%', margin: '25px auto' }}>
                     {this.themeType === 'classic' &&
                         this.renderCategorySearch()}
 
@@ -924,6 +951,9 @@ class Search extends Component {
                                               'colors.titleColor',
                                           )}1a`
                                         : 0,
+                                [mediaMax.medium]: {
+                                    display: toggleFilters ? 'grid' : 'none',
+                                },
                             }}
                         >
                             <Collapse
@@ -1224,7 +1254,9 @@ class Search extends Component {
                             {get(this.globalSettings, 'showSelectedFilters') &&
                             !toggleFilters &&
                             this.themeType !== 'minimal' ? (
-                                <SelectedFilters showClearAll="default" />
+                                <div css={viewSwitcherStyles}>
+                                    <SelectedFilters showClearAll="default" />
+                                </div>
                             ) : null}
                             <ReactiveComponent
                                 componentId="filter_by_product"
@@ -1240,481 +1272,85 @@ class Search extends Component {
                                         : null
                                 }
                             />
-                            {!toggleFilters &&
-                                (this.layout === 'list' ? (
-                                    <ReactiveList
-                                        componentId="results"
-                                        dataField="title"
-                                        ref={resultRef}
-                                        defaultQuery={() => ({
-                                            track_total_hits: true,
-                                        })}
-                                        renderNoResults={() => (
-                                            <div
-                                                style={{ textAlign: 'right' }}
-                                                // eslint-disable-next-line
-                                                dangerouslySetInnerHTML={{
-                                                    __html: get(
-                                                        this.resultSettings,
-                                                        'customMessages.noResults',
-                                                        'No Results Found!',
-                                                    ),
-                                                }}
-                                            />
-                                        )}
-                                        renderResultStats={({
-                                            numberOfResults,
-                                            time,
-                                        }) => (
-                                            <div
-                                                // eslint-disable-next-line
-                                                dangerouslySetInnerHTML={{
-                                                    __html: get(
-                                                        this.resultSettings,
-                                                        'customMessages.resultStats',
-                                                        '[count] products found in [time] ms',
-                                                    )
-                                                        .replace(
-                                                            '[count]',
-                                                            numberOfResults,
-                                                        )
-                                                        .replace(
-                                                            '[time]',
-                                                            time,
-                                                        ),
-                                                }}
-                                            />
-                                        )}
-                                        size={9}
-                                        infiniteScroll
-                                        render={({
-                                            data,
-                                            triggerClickAnalytics,
-                                        }) => {
-                                            return (
-                                                <List
-                                                    itemLayout="vertical"
-                                                    size="large"
-                                                    dataSource={data}
-                                                    renderItem={(item) => {
-                                                        const handle = isPreview
-                                                            ? ''
-                                                            : get(
-                                                                  item,
-                                                                  get(
-                                                                      this
-                                                                          .resultSettings,
-                                                                      'fields.handle',
-                                                                  ),
-                                                              );
-                                                        const redirectToProduct =
-                                                            !isPreview ||
-                                                            handle;
-                                                        return (
-                                                            <a
-                                                                href={
-                                                                    redirectToProduct
-                                                                        ? `/products/${handle}`
-                                                                        : undefined
-                                                                }
-                                                                target="_blank"
-                                                                rel="noreferrer noopener"
-                                                                key={item._id}
-                                                            >
-                                                                <List.Item
-                                                                    id={
-                                                                        item._id
-                                                                    }
-                                                                    onClick={
-                                                                        triggerClickAnalytics
-                                                                    }
-                                                                    css={listStyles(
-                                                                        {
-                                                                            ...get(
-                                                                                this
-                                                                                    .theme,
-                                                                                'colors',
-                                                                            ),
-                                                                        },
-                                                                    )}
-                                                                    extra={
-                                                                        <img
-                                                                            src={
-                                                                                item
-                                                                                    .image
-                                                                                    .src
-                                                                            }
-                                                                            width={
-                                                                                150
-                                                                            }
-                                                                            alt={
-                                                                                item.title
-                                                                            }
-                                                                        />
-                                                                    }
-                                                                >
-                                                                    <List.Item.Meta
-                                                                        title={
-                                                                            item.title
-                                                                        }
-                                                                        description={
-                                                                            item.body_html &&
-                                                                            this
-                                                                                .themeType ===
-                                                                                'classic' ? (
-                                                                                <Truncate
-                                                                                    lines={
-                                                                                        4
-                                                                                    }
-                                                                                    ellipsis={
-                                                                                        <span>
-                                                                                            ...
-                                                                                        </span>
-                                                                                    }
-                                                                                >
-                                                                                    {strip(
-                                                                                        item.body_html,
-                                                                                    )}
-                                                                                </Truncate>
-                                                                            ) : null
-                                                                        }
-                                                                    />
-                                                                    {item.variants ||
-                                                                    item.price ? (
-                                                                        <div>
-                                                                            <h3
-                                                                                style={{
-                                                                                    fontWeight: 500,
-                                                                                    fontSize:
-                                                                                        '1rem',
-                                                                                    marginTop: 6,
-                                                                                    color:
-                                                                                        this
-                                                                                            .themeType ===
-                                                                                        'minimal'
-                                                                                            ? get(
-                                                                                                  this
-                                                                                                      .theme,
-                                                                                                  'colors.textColor',
-                                                                                              )
-                                                                                            : get(
-                                                                                                  this
-                                                                                                      .theme,
-                                                                                                  'colors.titleColor',
-                                                                                              ),
-                                                                                }}
-                                                                            >
-                                                                                {`${
-                                                                                    this
-                                                                                        .currency
-                                                                                } ${
-                                                                                    item.variants
-                                                                                        ? get(
-                                                                                              item
-                                                                                                  .variants[0],
-                                                                                              'price',
-                                                                                              '',
-                                                                                          )
-                                                                                        : item.price
-                                                                                }`}
-                                                                            </h3>
-                                                                        </div>
-                                                                    ) : null}
-                                                                    {redirectToProduct ? (
-                                                                        <Button
-                                                                            type="primary"
-                                                                            size="large"
-                                                                            className="product-button"
-                                                                        >
-                                                                            <Icon type="eye" />
-                                                                            View
-                                                                            Product
-                                                                        </Button>
-                                                                    ) : null}
-                                                                </List.Item>
-                                                            </a>
-                                                        );
-                                                    }}
-                                                />
-                                            );
-                                        }}
-                                        react={{
-                                            and: [
-                                                'filter_by_product',
-                                                ...getReactDependenciesFromPreferences(
-                                                    this.preferences,
-                                                    'result',
-                                                ),
-                                            ],
+                            <ReactiveList
+                                componentId="results"
+                                dataField="title"
+                                ref={resultRef}
+                                defaultQuery={() => ({
+                                    track_total_hits: true,
+                                })}
+                                renderNoResults={() => (
+                                    <div
+                                        style={{ textAlign: 'right' }}
+                                        // eslint-disable-next-line
+                                        dangerouslySetInnerHTML={{
+                                            __html: get(
+                                                this.resultSettings,
+                                                'customMessages.noResults',
+                                                'No Results Found',
+                                            ),
                                         }}
                                     />
-                                ) : (
-                                    <ReactiveList
-                                        componentId="results"
-                                        dataField="title"
-                                        ref={resultRef}
-                                        defaultQuery={() => ({
-                                            track_total_hits: true,
-                                        })}
-                                        renderNoResults={() => (
-                                            <div
-                                                style={{ textAlign: 'right' }}
-                                                // eslint-disable-next-line
-                                                dangerouslySetInnerHTML={{
-                                                    __html: get(
-                                                        this.resultSettings,
-                                                        'customMessages.noResults',
-                                                        'No Results Found!',
-                                                    ),
-                                                }}
-                                            />
-                                        )}
-                                        renderResultStats={({
-                                            numberOfResults,
-                                            time,
-                                        }) => (
-                                            <div
-                                                // eslint-disable-next-line
-                                                dangerouslySetInnerHTML={{
-                                                    __html: get(
-                                                        this.resultSettings,
-                                                        'customMessages.resultStats',
-                                                        '[count] products found in [time] ms',
-                                                    )
-                                                        .replace(
-                                                            '[count]',
-                                                            numberOfResults,
-                                                        )
-                                                        .replace(
-                                                            '[time]',
-                                                            time,
-                                                        ),
-                                                }}
-                                            />
-                                        )}
-                                        renderItem={(
-                                            { _id, variants, ...rest },
-                                            triggerClickAnalytics,
-                                        ) => {
-                                            const handle = isPreview
-                                                ? ''
-                                                : get(
-                                                      rest,
-                                                      get(
-                                                          this.resultSettings,
-                                                          'fields.handle',
-                                                      ),
-                                                  );
-
-                                            const image = get(
-                                                rest,
-                                                get(
-                                                    this.resultSettings,
-                                                    'fields.image',
-                                                ),
-                                            );
-                                            const title = get(
-                                                rest,
-                                                get(
-                                                    this.resultSettings,
-                                                    'fields.title',
-                                                ),
-                                            );
-
-                                            const description = get(
-                                                rest,
-                                                get(
-                                                    this.resultSettings,
-                                                    'fields.description',
-                                                ),
-                                            );
-                                            const price = get(
-                                                rest,
-                                                get(
-                                                    this.resultSettings,
-                                                    'fields.price',
-                                                ),
-                                            );
-                                            const redirectToProduct =
-                                                !isPreview || handle;
-                                            return (
-                                                <a
-                                                    onClick={
-                                                        triggerClickAnalytics
-                                                    }
-                                                    href={
-                                                        redirectToProduct
-                                                            ? `/products/${handle}`
-                                                            : undefined
-                                                    }
-                                                    target="_blank"
-                                                    rel="noreferrer noopener"
-                                                    key={_id}
-                                                    id={_id}
-                                                >
-                                                    <Card
-                                                        hoverable={false}
-                                                        bordered={false}
-                                                        className="card"
-                                                        css={cardStyles({
-                                                            ...get(
-                                                                this.theme,
-                                                                'colors',
-                                                            ),
-                                                        })}
-                                                        cover={
-                                                            image && (
-                                                                <img
-                                                                    src={image}
-                                                                    width="100%"
-                                                                    alt={title}
-                                                                />
-                                                            )
-                                                        }
-                                                        style={{
-                                                            ...this.getFontFamily(),
-                                                            padding:
-                                                                this
-                                                                    .themeType ===
-                                                                'minimal'
-                                                                    ? '10px'
-                                                                    : 0,
-                                                        }}
-                                                        bodyStyle={
-                                                            this.themeType ===
-                                                            'minimal'
-                                                                ? {
-                                                                      padding:
-                                                                          '15px 10px 10px',
-                                                                  }
-                                                                : {}
-                                                        }
-                                                    >
-                                                        <Meta
-                                                            title={
-                                                                <h3
-                                                                    css={cardTitleStyles(
-                                                                        get(
-                                                                            this
-                                                                                .theme,
-                                                                            'colors',
-                                                                        ),
-                                                                    )}
-                                                                    style={
-                                                                        this
-                                                                            .themeType ===
-                                                                        'minimal'
-                                                                            ? {
-                                                                                  fontWeight: 600,
-                                                                              }
-                                                                            : {}
-                                                                    }
-                                                                    // eslint-disable-next-line
-                                                                    dangerouslySetInnerHTML={{
-                                                                        __html: title,
-                                                                    }}
-                                                                />
-                                                            }
-                                                            description={
-                                                                description &&
-                                                                this
-                                                                    .themeType ===
-                                                                    'classic' ? (
-                                                                    <Truncate
-                                                                        lines={
-                                                                            4
-                                                                        }
-                                                                        ellipsis={
-                                                                            <span>
-                                                                                ...
-                                                                            </span>
-                                                                        }
-                                                                    >
-                                                                        {strip(
-                                                                            description,
-                                                                        )}
-                                                                    </Truncate>
-                                                                ) : null
-                                                            }
-                                                        />
-                                                        {variants || price ? (
-                                                            <div>
-                                                                <h3
-                                                                    style={{
-                                                                        fontWeight: 500,
-                                                                        fontSize:
-                                                                            '1rem',
-                                                                        marginTop: 6,
-                                                                        color:
-                                                                            this
-                                                                                .themeType ===
-                                                                            'minimal'
-                                                                                ? get(
-                                                                                      this
-                                                                                          .theme,
-                                                                                      'colors.textColor',
-                                                                                  )
-                                                                                : get(
-                                                                                      this
-                                                                                          .theme,
-                                                                                      'colors.titleColor',
-                                                                                  ),
-                                                                    }}
-                                                                >
-                                                                    {`${
-                                                                        this
-                                                                            .currency
-                                                                    } ${
-                                                                        variants
-                                                                            ? get(
-                                                                                  variants[0],
-                                                                                  'price',
-                                                                                  '',
-                                                                              )
-                                                                            : price
-                                                                    }`}
-                                                                </h3>
-                                                            </div>
-                                                        ) : null}
-
-                                                        {redirectToProduct ? (
-                                                            <Button
-                                                                type="primary"
-                                                                size="large"
-                                                                className="product-button"
-                                                            >
-                                                                <Icon type="eye" />
-                                                                View Product
-                                                            </Button>
-                                                        ) : null}
-                                                    </Card>
-                                                </a>
-                                            );
-                                        }}
-                                        size={9}
-                                        innerClass={{
-                                            list: 'custom-result-list',
-                                            resultsInfo: 'custom-result-info',
-                                            poweredBy: 'custom-powered-by',
-                                            noResults: 'custom-no-results',
-                                            pagination: 'custom-pagination',
-                                        }}
-                                        {...this.resultSettings.rsConfig}
-                                        css={reactiveListCls(
-                                            toggleFilters,
-                                            this.theme,
-                                        )}
-                                        react={{
-                                            and: [
-                                                'filter_by_product',
-                                                ...getReactDependenciesFromPreferences(
-                                                    this.preferences,
-                                                    'result',
-                                                ),
-                                            ],
+                                )}
+                                renderResultStats={({
+                                    numberOfResults,
+                                    time,
+                                }) => (
+                                    <div
+                                        // eslint-disable-next-line
+                                        dangerouslySetInnerHTML={{
+                                            __html: get(
+                                                this.resultSettings,
+                                                'customMessages.resultStats',
+                                                '[count] products found in [time] ms',
+                                            )
+                                                .replace(
+                                                    '[count]',
+                                                    numberOfResults,
+                                                )
+                                                .replace('[time]', time),
                                         }}
                                     />
-                                ))}
+                                )}
+                                size={9}
+                                infiniteScroll
+                                render={({ data, triggerClickAnalytics }) => {
+                                    return !toggleFilters ? (
+                                        <ResultsLayout
+                                            data={data}
+                                            theme={this.theme}
+                                            triggerClickAnalytics={
+                                                triggerClickAnalytics
+                                            }
+                                            isPreview={isPreview}
+                                            getFontFamily={this.getFontFamily()}
+                                        />
+                                    ) : null;
+                                }}
+                                innerClass={{
+                                    list: 'custom-result-list',
+                                    resultsInfo: 'custom-result-info',
+                                    poweredBy: 'custom-powered-by',
+                                    noResults: 'custom-no-results',
+                                    pagination: 'custom-pagination',
+                                }}
+                                {...this.resultSettings.rsConfig}
+                                css={reactiveListCls(toggleFilters, this.theme)}
+                                react={{
+                                    and: [
+                                        'filter_by_product',
+                                        ...getReactDependenciesFromPreferences(
+                                            this.preferences,
+                                            'result',
+                                        ),
+                                        'ToggleResults',
+                                        ...getReactDependenciesFromPreferences(
+                                            this.preferences,
+                                            'result',
+                                        ),
+                                    ],
+                                }}
+                            />
                         </div>
                     </div>
                 </div>
