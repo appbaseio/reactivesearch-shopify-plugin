@@ -34,7 +34,7 @@ export const listStyles = ({ titleColor, primaryColor }) => css`
     overflow: hidden;
     padding: 5px 20px;
     width: 100%;
-    height: 100%;
+    height: auto;
     .list-image-container {
         width: 150px;
         ${mediaMax.medium} {
@@ -342,7 +342,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                         }
                                     />
                                     <div style={{ height: 25 }}>
-                                        {variants[0]?.price || price ? (
+                                        {variants?.length || price ? (
                                             <div>
                                                 <h3
                                                     style={{
@@ -489,8 +489,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                                       ),
                                                         }}
                                                     >
-                                                        {item?.variants[0]
-                                                            ?.price ||
+                                                        {item?.variants?.length ||
                                                         item.price
                                                             ? `${currency} ${
                                                                   item.variants

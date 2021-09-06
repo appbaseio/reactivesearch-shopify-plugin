@@ -820,6 +820,7 @@ class Search extends Component {
                             popularSuggestions={popularSuggestions}
                             recentSearches={recentSearches}
                             loading={loading}
+                            highlight={this.searchSettings.rsConfig.highlight}
                         />
                     ) : null;
                 }}

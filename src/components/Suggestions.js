@@ -175,6 +175,7 @@ const Suggestions = ({
     themeType,
     isPreview,
     fields,
+    highlight,
 }) => {
 
     let totalSuggestions;
@@ -274,23 +275,34 @@ const Suggestions = ({
                                         textOverflow: 'ellipsis',
                                     }}
                                 >
-                                    <Highlight
-                                        searchWords={currentValue.split(' ')}
-                                        textToHighlight={title}
-                                        highlightStyle={{
-                                            fontWeight: 700,
-                                            padding: 0,
-                                            background: `${themeConfig.colors.primaryColor}33`,
-                                            color:
-                                                themeConfig.colors.titleColor,
-                                            fontSize: '1rem',
-                                        }}
-                                        unhighlightStyle={{
-                                            fontSize: '1rem',
-                                            color:
-                                                themeConfig.colors.titleColor,
-                                        }}
-                                    />
+                                    {
+                                        highlight ? (
+                                            <Highlight
+                                                searchWords={currentValue.split(' ')}
+                                                textToHighlight={title}
+                                                highlightStyle={{
+                                                    fontWeight: 700,
+                                                    padding: 0,
+                                                    background: `${themeConfig.colors.primaryColor}33`,
+                                                    color:
+                                                        themeConfig.colors.titleColor,
+                                                    fontSize: '1rem',
+                                                }}
+                                                unhighlightStyle={{
+                                                    fontSize: '1rem',
+                                                    color:
+                                                        themeConfig.colors.titleColor,
+                                                }}
+                                            />
+                                        ) : (
+                                            <p style={{
+                                                fontSize: '1rem',
+                                                color:
+                                                    themeConfig.colors.titleColor,
+                                            }}>{title}</p>
+                                        )
+                                    }
+
                                     <div
                                         style={{
                                             fontSize: '0.8rem',
@@ -301,29 +313,36 @@ const Suggestions = ({
                                             overflow: 'hidden',
                                         }}
                                     >
-                                        <Highlight
-                                            searchWords={currentValue.split(
-                                                ' ',
-                                            )}
-                                            textToHighlight={
-                                                description &&
-                                                `${strip(
-                                                    description.slice(0, 200),
-                                                )}${
-                                                    description.length > 200
-                                                        ? '...'
-                                                        : ''
-                                                }`
-                                            }
-                                            highlightStyle={{
-                                                fontWeight: 600,
-                                                padding: 0,
-                                                background: `${themeConfig.colors.primaryColor}33`,
-                                                color:
-                                                    themeConfig.colors
-                                                        .textColor,
-                                            }}
-                                        />
+                                        {
+                                            highlight ? (
+                                                <Highlight
+                                                    searchWords={currentValue.split(
+                                                        ' ',
+                                                    )}
+                                                    textToHighlight={
+                                                        description &&
+                                                        `${strip(
+                                                            description.slice(0, 200),
+                                                        )}${
+                                                            description.length > 200
+                                                                ? '...'
+                                                                : ''
+                                                        }`
+                                                    }
+                                                    highlightStyle={{
+                                                        fontWeight: 600,
+                                                        padding: 0,
+                                                        background: `${themeConfig.colors.primaryColor}33`,
+                                                        color:
+                                                            themeConfig.colors
+                                                                .textColor,
+                                                    }}
+                                                />
+                                            ) : (
+                                                <p>{description}</p>
+                                            )
+                                        }
+
                                     </div>
 
                                 </div>
@@ -492,6 +511,11 @@ Suggestions.propTypes = {
     parsedSuggestions: arrayOf(object),
     themeConfig: object,
     currency: string,
+    highlight: bool,
+};
+
+Suggestions.defaultProps = {
+    highlight: false,
 };
 
 export default Suggestions;
