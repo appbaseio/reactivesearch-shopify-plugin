@@ -342,7 +342,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                         }
                                     />
                                     <div style={{ height: 25 }}>
-                                        {variants || price ? (
+                                        {variants?.length || price ? (
                                             <div>
                                                 <h3
                                                     style={{
@@ -489,7 +489,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                                       ),
                                                         }}
                                                     >
-                                                        {item?.variants ||
+                                                        {item?.variants?.length ||
                                                         item.price
                                                             ? `${currency} ${
                                                                   item.variants
