@@ -37,11 +37,17 @@ export const listStyles = ({ titleColor, primaryColor }) => css`
     height: auto;
     .list-image-container {
         width: 150px;
+        height: 150px;
         ${mediaMax.medium} {
             width: 100px;
             height: 100px;
         }
     }
+
+    .product-image {
+        object-fit: contain;
+    }
+
     .product-button {
         top: -50%;
         position: absolute;
@@ -402,7 +408,29 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                         const handle = isPreview
                             ? ''
                             : get(item, get(resultSettings, 'fields.handle'));
+
+                        const image = get(
+                            item,
+                            get(resultSettings, 'fields.image'),
+                        );
+                        const title = get(
+                            item,
+                            get(resultSettings, 'fields.title'),
+                        );
+
+                        const description = get(
+                            item,
+                            get(resultSettings, 'fields.description'),
+                        );
+                        const price = get(
+                            item,
+                            get(resultSettings, 'fields.price'),
+                        );
+
                         const redirectToProduct = !isPreview || handle;
+
+                        const { variants } = item;
+
                         return (
                             <a
                                 href={
@@ -424,13 +452,13 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                     <List.Item.Meta
                                         avatar={
                                             <div className="list-image-container">
-                                                {item?.image && (
+                                                {image && (
                                                     <img
                                                         className="product-image"
-                                                        src={item?.image?.src}
+                                                        src={image}
                                                         height="100%"
                                                         width="100%"
-                                                        alt={item.title}
+                                                        alt={title}
                                                         onError={(event) => {
                                                             event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
                                                         }}
@@ -440,14 +468,14 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                         }
                                         title={
                                             <div>
-                                                {item.title && (
+                                                {title && (
                                                     <Truncate
                                                         lines={1}
                                                         ellipsis={
                                                             <span>...</span>
                                                         }
                                                     >
-                                                        {strip(item.title)}
+                                                        {strip(title)}
                                                     </Truncate>
                                                 )}
                                             </div>
@@ -455,7 +483,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                         description={
                                             <div>
                                                 <div style={{ height: 45 }}>
-                                                    {item.body_html &&
+                                                    {description &&
                                                     themeType === 'classic' ? (
                                                         <Truncate
                                                             lines={2}
@@ -464,7 +492,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                             }
                                                         >
                                                             {strip(
-                                                                item.body_html,
+                                                                description,
                                                             )}
                                                         </Truncate>
                                                     ) : null}
@@ -489,17 +517,16 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                                       ),
                                                         }}
                                                     >
-                                                        {item?.variants?.length ||
-                                                        item.price
+                                                        {variants?.length ||
+                                                        price
                                                             ? `${currency} ${
-                                                                  item.variants
+                                                                  variants
                                                                       ? get(
-                                                                            item
-                                                                                .variants[0],
+                                                                            variants[0],
                                                                             'price',
                                                                             '',
                                                                         )
-                                                                      : item.price
+                                                                      : price
                                                               }`
                                                             : null}
                                                     </h3>
