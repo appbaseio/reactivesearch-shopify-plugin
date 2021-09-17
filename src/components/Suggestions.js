@@ -176,6 +176,7 @@ const Suggestions = ({
     isPreview,
     fields,
     highlight,
+    blur,
 }) => {
 
     let totalSuggestions;
@@ -185,9 +186,17 @@ const Suggestions = ({
         totalSuggestions = recentSearches.slice(0,3).length + popularSuggestions.slice(0, isMobile() ? 3 : 5).length;
     }
 
+    let popularIdx = 0;
+    if(!recentSearches.length && !parsedSuggestions.length) {
+        popularIdx = 0;
+    } else {
+        popularIdx = 3;
+    }
+
     return (
         <div
             style={{
+                display: blur? 'none' : 'block' ,
                 position: 'absolute',
                 padding: 10,
                 color: '#424242',
@@ -207,7 +216,7 @@ const Suggestions = ({
             }}
         >
             <div>
-                {parsedSuggestions.length === 0 && currentValue && !loading && (
+                {(parsedSuggestions.length === 0 && currentValue && !loading) ? (
                     <React.Fragment>
                         <div
                             css={highlightStyle(themeConfig.colors)}
@@ -221,7 +230,7 @@ const Suggestions = ({
                             }}
                         />
                     </React.Fragment>
-                )}
+                ) : null }
                 {parsedSuggestions.length > 0 ? (
                     <h3 css={headingStyles(themeConfig.colors)}>Products</h3>
                 ) : null}
@@ -264,7 +273,7 @@ const Suggestions = ({
                                         alt=" "
                                         width="70px"
                                         height="70px"
-                                        style={{ marginRight: 15, display: isMobile() ? 'none' : 'block' }}
+                                        style={{ marginRight: 15, objectFit: 'contain',  display: isMobile() ? 'none' : 'block' }}
                                     />
                                 )}
                                 <div
@@ -408,7 +417,7 @@ const Suggestions = ({
                                 style={{
                                     background:
                                     // eslint-disable-next-line no-nested-ternary
-                                        index === highlightedIndex-3
+                                        index === highlightedIndex-popularIdx
                                             ? '#eee'
                                             : 'transparent',
                                 }}
@@ -438,7 +447,7 @@ const Suggestions = ({
                     </div>
                 }
 
-                {currentValue && (
+                {(currentValue && totalSuggestions) ? (
                     <h3
                         css={[headingStyles(themeConfig.colors), highlightedStyles ]}
                         style={{
@@ -455,13 +464,13 @@ const Suggestions = ({
                     >
                         {`Show all results for "${currentValue}"`}
                     </h3>
-                )}
+                ): null }
 
                 {customSuggestions ? (
                     <div dangerouslySetInnerHTML={{ __html: customSuggestions }} />
                 ) : null}
                 {
-                    totalSuggestions && (
+                    totalSuggestions ? (
                         <div css={footerCls}>
                             <div className="suggestions-dropdown__footer">
                                 <div className="keyboard-shortcuts">
@@ -494,7 +503,7 @@ const Suggestions = ({
                                 </div>
                             </div>
                         </div>
-                    )
+                    ) : null
                 }
             </div>
         </div>
@@ -512,10 +521,12 @@ Suggestions.propTypes = {
     themeConfig: object,
     currency: string,
     highlight: bool,
+    blur: bool,
 };
 
 Suggestions.defaultProps = {
     highlight: false,
+    blur: false,
 };
 
 export default Suggestions;

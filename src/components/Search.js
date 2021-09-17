@@ -273,6 +273,7 @@ class Search extends Component {
         this.state = {
             toggleFilters: false,
             isMobile: window.innerWidth <= 768,
+            blur: false,
         };
         this.preferences = getSearchPreferences();
         this.theme = get(
@@ -759,7 +760,7 @@ class Search extends Component {
     );
 
     renderCategorySearch = (categorySearchProps) => {
-        const { toggleFilters } = this.state;
+        const { toggleFilters, blur } = this.state;
         const { isPreview } = this.props;
         return (
             <DataSearch
@@ -780,6 +781,13 @@ class Search extends Component {
                     zIndex: 4,
                     display: toggleFilters ? 'none' : 'block',
                 }}
+                onKeyDown={(e) => {
+                    if(e.keyCode === 27) {
+                        document.getElementById('q-downshift-input').blur();
+                    }
+                }}
+                onFocus={(e) => { this.setState({ blur: false })}}
+                onBlur={(e) => { this.setState({ blur: true })}}
                 render={({
                     value,
                     categories,
@@ -790,10 +798,9 @@ class Search extends Component {
                     loading,
                 }) => {
                     return downshiftProps.isOpen &&
-                        (popularSuggestions.length ||
-                            data.length ||
-                            recentSearches?.length) ? (
+                         (
                         <Suggestions
+                            blur={blur}
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
                             currentValue={value}
@@ -822,7 +829,7 @@ class Search extends Component {
                             loading={loading}
                             highlight={this.searchSettings.rsConfig.highlight}
                         />
-                    ) : null;
+                    ) ;
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
