@@ -454,7 +454,7 @@ const Suggestions = ({
                             cursor: 'pointer',
                             fontSize: '14px',
                             fontWeight: 600,
-                            // background: totalSuggestions === highlightedIndex ? '#eee' : '#0B6AFF1a',
+                            background: totalSuggestions === highlightedIndex ? '#eee' : '#0B6AFF1a',
                         }}
                         {...getItemProps({
                             item: {
