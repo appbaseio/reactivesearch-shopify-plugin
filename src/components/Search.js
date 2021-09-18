@@ -591,6 +591,9 @@ class Search extends Component {
     renderColorFilter = (font) => (
         <MultiList
             componentId="color"
+            innerClass={{
+                input: 'list-input'
+            }}
             react={{
                 and: [
                     'colorOption',
