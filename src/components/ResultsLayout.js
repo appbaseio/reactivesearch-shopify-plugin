@@ -45,7 +45,7 @@ export const listStyles = ({ titleColor, primaryColor }) => css`
     }
 
     .product-image {
-        object-fit: contain;
+        object-fit: cover;
     }
 
     .product-button {
@@ -141,7 +141,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     }
 
     .ant-card-cover img {
-        object-fit: contain;
+        object-fit: cover;
         height: 100%;
         width: 100%;
     }
@@ -177,7 +177,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
     @media (max-width: 768px) {
         .ant-card-cover img {
-            object-fit: contain;
+            object-fit: cover;
         }
     }
 `;
