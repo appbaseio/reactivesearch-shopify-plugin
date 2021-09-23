@@ -196,7 +196,7 @@ const Suggestions = ({
     return (
         <div
         style={{
-            display: (blur || !currentValue) ? 'none' : 'block' ,
+            display: (blur || !currentValue) && (!recentSearches?.length && !popularSuggestions?.length) ? 'none' : 'block' ,
             position: 'absolute',
             color: '#424242',
             fontSize: '0.9rem',
