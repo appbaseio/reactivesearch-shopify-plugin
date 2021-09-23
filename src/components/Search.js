@@ -425,9 +425,14 @@ class Search extends Component {
                     }
                 />
                 <MultiList
+                    innerClass={{
+                        input: 'list-input'
+                    }}
                     componentId="collection"
                     dataField="collection"
-                    css={font}
+                    style={{
+
+                    }}
                     defaultQuery={() => ({
                         aggs: {
                             collections: {
@@ -562,6 +567,9 @@ class Search extends Component {
             <MultiList
                 componentId="productType"
                 dataField="product_type.keyword"
+                innerClass={{
+                    input: 'list-input'
+                }}
                 css={font}
                 showCheckbox={this.themeType !== 'minimal'}
                 react={{
@@ -583,6 +591,9 @@ class Search extends Component {
     renderColorFilter = (font) => (
         <MultiList
             componentId="color"
+            innerClass={{
+                input: 'list-input'
+            }}
             react={{
                 and: [
                     'colorOption',
@@ -616,8 +627,7 @@ class Search extends Component {
                 if (error) {
                     return (
                         <div>
-                            Something went wrong! Error details{' '}
-                            {JSON.stringify(error)}
+                            No colors found!
                         </div>
                     );
                 }
@@ -711,6 +721,9 @@ class Search extends Component {
         <React.Fragment>
             <MultiList
                 componentId="size"
+                innerClass={{
+                    input: 'list-input'
+                }}
                 react={{
                     and: [
                         'sizeOption',
@@ -1193,6 +1206,9 @@ class Search extends Component {
                                                 listComponent,
                                                 'rsConfig.componentId',
                                             )}
+                                            innerClass={{
+                                                input: 'list-input'
+                                            }}
                                             componentId={get(
                                                 listComponent,
                                                 'rsConfig.componentId',

@@ -195,25 +195,28 @@ const Suggestions = ({
 
     return (
         <div
-            style={{
-                display: blur? 'none' : 'block' ,
-                position: 'absolute',
-                padding: 10,
-                color: '#424242',
-                fontSize: '0.9rem',
-                border: themeType === 'minimal' ? '0px' : '1px solid #ddd',
-                background: 'white',
-                borderRadius: 2,
-                marginTop: 0,
-                width: '100%',
-                overflowY: 'scroll',
-                zIndex: 10,
-                maxHeight: '100vh',
-                boxShadow:
-                    themeType === 'minimal'
-                        ? '0 2px 4px #e8e8e8'
-                        : '0 2px 4px #d9d9d9',
-            }}
+        style={{
+            display: (blur || !currentValue) ? 'none' : 'block' ,
+            position: 'absolute',
+            color: '#424242',
+            fontSize: '0.9rem',
+            border: themeType === 'minimal' ? '0px' : '1px solid #ddd',
+            background: 'white',
+            borderRadius: 2,
+            marginTop: 0,
+            width: '100%',
+            overflowY: 'scroll',
+            zIndex: 10,
+            maxHeight: '100vh',
+            boxShadow:
+                themeType === 'minimal'
+                    ? '0 2px 4px #e8e8e8'
+                    : '0 2px 4px #d9d9d9',
+        }}
+    >
+        <div style={{
+            padding: 10,
+        }}
         >
             <div>
                 {(parsedSuggestions.length === 0 && currentValue && !loading) ? (
@@ -507,6 +510,7 @@ const Suggestions = ({
                 }
             </div>
         </div>
+    </div>
 )};
 
 Suggestions.propTypes = {
