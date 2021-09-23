@@ -846,7 +846,7 @@ class Search extends Component {
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
-
+                showDistinctSuggestions
             />
         );
     };

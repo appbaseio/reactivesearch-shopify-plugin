@@ -258,11 +258,9 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             item,
                             get(resultSettings, 'fields.price'),
                         );
-
                         const redirectToProduct = !isPreview || handle;
 
                         const { variants } = item;
-
                         return (
                             <a
                                 onClick={triggerClickAnalytics}
@@ -392,7 +390,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                             <Icon type="eye" />
                                             View Product
                                         </Button>
-                                    ) : null}
+                                   ) : null}
                                 </Card>
                             </a>
                         );
