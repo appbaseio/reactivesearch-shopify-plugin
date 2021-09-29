@@ -1,5 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+/* eslint-disable no-unused-vars */
 import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
@@ -19,9 +20,11 @@ import get from 'lodash.get';
 import { string, bool } from 'prop-types';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
-import { Card, Collapse, Button, Icon, Affix, Tooltip } from 'antd';
+import { Card, Collapse, Button, Icon, Affix, Tooltip, List } from 'antd';
 import { mediaMax } from '../utils/media';
 import Suggestions from './Suggestions';
+import LayoutSwitch from './LayoutSwitch';
+import ResultsLayout from './ResultsLayout';
 import {
     browserColors,
     defaultPreferences,
@@ -48,14 +51,14 @@ const loaderStyle = css`
     position: relative;
 `;
 
-const reactiveListCls= (toggleFilters, theme) =>css`
+const reactiveListCls = (toggleFilters, theme) => css`
     .custom-no-results {
         display: flex;
         justify-content: center;
         padding: 25px 0;
     }
     .custom-pagination {
-        max-width:none;
+        max-width: none;
         padding-bottom: 50px;
         a {
             border-radius: 2px;
@@ -63,8 +66,8 @@ const reactiveListCls= (toggleFilters, theme) =>css`
         a.active {
             color: ${get(theme, 'colors.textColor')};
         }
-        @media(max-width: 768px){
-            display: ${toggleFilters ? 'none' : 'block'}
+        @media (max-width: 768px) {
+            display: ${toggleFilters ? 'none' : 'block'};
         }
     }
     .custom-powered-by {
@@ -76,11 +79,7 @@ const reactiveListCls= (toggleFilters, theme) =>css`
         padding: 18px;
         height: 60px;
         ${mediaMax.medium} {
-            display: ${
-                toggleFilters
-                    ? 'none'
-                    : 'grid'
-            };
+            display: ${toggleFilters ? 'none' : 'grid'};
             justify-content: center;
         }
     }
@@ -89,25 +88,28 @@ const reactiveListCls= (toggleFilters, theme) =>css`
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         grid-gap: 10px;
         ${mediaMax.medium} {
-            grid-template-columns:
-                repeat(auto-fit, minmax(200px, 1fr));
-            display: ${
-                toggleFilters
-                    ? 'none'
-                    : 'grid'
-            };
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: ${toggleFilters ? 'none' : 'grid'};
         }
         ${mediaMax.small} {
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         }
     }
-`
+`;
 
 export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
     overflow: hidden;
-    max-width: 300px;
+    max-width: 250px;
     height: 100%;
+    .card-image-container {
+        width: 250px;
+        height: 250px;
+        ${mediaMax.medium} {
+            height: 100%;
+            width: 100%;
+        }
+    }
     .product-button {
         top: -50%;
         position: absolute;
@@ -133,6 +135,9 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
     .ant-card-cover {
         height: 250px;
+        ${mediaMax.medium} {
+            height: 200px;
+        }
     }
     .ant-card-body {
         padding: 15px 10px;
@@ -142,7 +147,6 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
             padding: 10px 5px;
         }
     }
-
 
     .ant-card-cover img {
         object-fit: cover;
@@ -180,7 +184,47 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
     @media (max-width: 768px) {
         .ant-card-cover img {
-            object-fit: contain;
+            object-fit: cover;
+        }
+    }
+`;
+
+export const listStyles = ({ titleColor, primaryColor }) => css`
+    position: relative;
+    overflow: hidden;
+    padding: 5px 20px;
+    width: 100%;
+    height: 100%;
+    .product-button {
+        top: -50%;
+        position: absolute;
+        background: ${primaryColor} !important;
+        border: 0;
+        box-shadow: 0 2px 4px ${titleColor}33;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: all ease 0.2s;
+    }
+
+    ::before {
+        content: '';
+        width: 100%;
+        height: 0vh;
+        background: ${primaryColor}00 !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        transition: all ease 0.4s;
+    }
+    &:hover {
+        .product-button {
+            top: 45%;
+        }
+        ::before {
+            width: 100%;
+            height: 100%;
+            background: ${primaryColor}1a !important;
         }
     }
 `;
@@ -197,7 +241,18 @@ export const cardTitleStyles = ({ titleColor, primaryColor }) => css`
         background-color: ${primaryColor}4d};
     }
 `;
-
+const viewSwitcherStyles = css`
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    .icon-styles {
+        padding: 5px;
+        &: hover {
+            cursor: pointer;
+            color: #40a9ff;
+        }
+    }
+`;
 const mobileButtonStyles = css`
     border-radius: 0;
     border: 0;
@@ -217,7 +272,8 @@ class Search extends Component {
         super();
         this.state = {
             toggleFilters: false,
-            isMobile: window.innerWidth < 768,
+            isMobile: window.innerWidth <= 768,
+            blur: false,
         };
         this.preferences = getSearchPreferences();
         this.theme = get(
@@ -275,8 +331,10 @@ class Search extends Component {
             const inputRef = get(searchRef, 'current._inputRef', null);
 
             if (inputRef) {
-                const param = new URLSearchParams(window.location.search).get('q')
-                if(!param) {
+                const param = new URLSearchParams(window.location.search).get(
+                    'q',
+                );
+                if (!param) {
                     inputRef.focus();
                 }
             }
@@ -313,8 +371,8 @@ class Search extends Component {
 
     updateDimensions = () => {
         this.setState({
-            isMobile: window.innerWidth < 768,
-            toggleFilters: false
+            isMobile: window.innerWidth <= 768,
+            toggleFilters: false,
         });
     };
 
@@ -360,16 +418,21 @@ class Search extends Component {
                         this.exportType === 'shopify'
                             ? {
                                   query: {
-                                      term: { type: 'collections' },
+                                      term: { 'type.keyword': ['collection'] },
                                   },
                               }
                             : null
                     }
                 />
                 <MultiList
+                    innerClass={{
+                        input: 'list-input'
+                    }}
                     componentId="collection"
-                    dataField="collections"
-                    css={font}
+                    dataField="collection"
+                    style={{
+
+                    }}
                     defaultQuery={() => ({
                         aggs: {
                             collections: {
@@ -504,6 +567,9 @@ class Search extends Component {
             <MultiList
                 componentId="productType"
                 dataField="product_type.keyword"
+                innerClass={{
+                    input: 'list-input'
+                }}
                 css={font}
                 showCheckbox={this.themeType !== 'minimal'}
                 react={{
@@ -525,6 +591,9 @@ class Search extends Component {
     renderColorFilter = (font) => (
         <MultiList
             componentId="color"
+            innerClass={{
+                input: 'list-input'
+            }}
             react={{
                 and: [
                     'colorOption',
@@ -558,8 +627,7 @@ class Search extends Component {
                 if (error) {
                     return (
                         <div>
-                            Something went wrong! Error details{' '}
-                            {JSON.stringify(error)}
+                            No colors found!
                         </div>
                     );
                 }
@@ -653,6 +721,9 @@ class Search extends Component {
         <React.Fragment>
             <MultiList
                 componentId="size"
+                innerClass={{
+                    input: 'list-input'
+                }}
                 react={{
                     and: [
                         'sizeOption',
@@ -702,7 +773,7 @@ class Search extends Component {
     );
 
     renderCategorySearch = (categorySearchProps) => {
-        const { toggleFilters } = this.state;
+        const { toggleFilters, blur } = this.state;
         const { isPreview } = this.props;
         return (
             <DataSearch
@@ -723,15 +794,26 @@ class Search extends Component {
                     zIndex: 4,
                     display: toggleFilters ? 'none' : 'block',
                 }}
+                onKeyDown={(e) => {
+                    if(e.keyCode === 27) {
+                        document.getElementById('q-downshift-input').blur();
+                    }
+                }}
+                onFocus={(e) => { this.setState({ blur: false })}}
+                onBlur={(e) => { this.setState({ blur: true })}}
                 render={({
                     value,
                     categories,
                     data,
                     popularSuggestions,
+                    recentSearches,
                     downshiftProps,
+                    loading,
                 }) => {
-                    return downshiftProps.isOpen && (popularSuggestions.length || data.length) ? (
+                    return downshiftProps.isOpen &&
+                         (
                         <Suggestions
+                            blur={blur}
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
                             currentValue={value}
@@ -756,11 +838,15 @@ class Search extends Component {
                             )}
                             isPreview={isPreview}
                             popularSuggestions={popularSuggestions}
+                            recentSearches={recentSearches}
+                            loading={loading}
+                            highlight={this.searchSettings.rsConfig.highlight}
                         />
-                    ) : null
+                    ) ;
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
+                showDistinctSuggestions
             />
         );
     };
@@ -792,30 +878,42 @@ class Search extends Component {
                 appbaseConfig={{
                     recordAnalytics: true,
                 }}
-                setSearchParams={isPreview ? () => {} : (url) => {
-                    window.history.pushState({ path: url }, '', url);
-                    return url
-                }}
-                getSearchParams={isPreview ? () => {} : () => {
-                    const params = new URLSearchParams(window.location.search)
-                    const searchParam = params.get('q');
-                    if(searchParam) {
-                        try {
-                            JSON.parse(searchParam)
-                        } catch(e) {
-                            params.set('q', JSON.stringify(params.get('q')))
-                        }
-
-                    }
-                    return params.toString()
-                }}
+                setSearchParams={
+                    isPreview
+                        ? () => {}
+                        : (url) => {
+                              window.history.pushState({ path: url }, '', url);
+                              return url;
+                          }
+                }
+                getSearchParams={
+                    isPreview
+                        ? () => {}
+                        : () => {
+                              const params = new URLSearchParams(
+                                  window.location.search,
+                              );
+                              const searchParam = params.get('q');
+                              if (searchParam) {
+                                  try {
+                                      JSON.parse(searchParam);
+                                  } catch (e) {
+                                      params.set(
+                                          'q',
+                                          JSON.stringify(params.get('q')),
+                                      );
+                                  }
+                              }
+                              return params.toString();
+                          }
+                }
             >
                 <Global
                     styles={css`
                         ${get(this.themeSettings, 'customCss', '')}
                     `}
                 />
-                {isMobile ? (
+                {isMobile && this.dynamicFacets.length ? (
                     <Affix
                         style={{
                             position: 'fixed',
@@ -838,7 +936,7 @@ class Search extends Component {
                     </Affix>
                 ) : null}
 
-                <div style={{ maxWidth: 1200, margin: '25px auto' }}>
+                <div style={{ maxWidth: '90%', margin: '25px auto' }}>
                     {this.themeType === 'classic' &&
                         this.renderCategorySearch()}
 
@@ -874,6 +972,9 @@ class Search extends Component {
                                               'colors.titleColor',
                                           )}1a`
                                         : 0,
+                                [mediaMax.medium]: {
+                                    display: toggleFilters ? 'grid' : 'none',
+                                },
                             }}
                         >
                             <Collapse
@@ -1105,6 +1206,9 @@ class Search extends Component {
                                                 listComponent,
                                                 'rsConfig.componentId',
                                             )}
+                                            innerClass={{
+                                                input: 'list-input'
+                                            }}
                                             componentId={get(
                                                 listComponent,
                                                 'rsConfig.componentId',
@@ -1174,7 +1278,9 @@ class Search extends Component {
                             {get(this.globalSettings, 'showSelectedFilters') &&
                             !toggleFilters &&
                             this.themeType !== 'minimal' ? (
-                                <SelectedFilters showClearAll="default" />
+                                <div css={viewSwitcherStyles}>
+                                    <SelectedFilters showClearAll="default" />
+                                </div>
                             ) : null}
                             <ReactiveComponent
                                 componentId="filter_by_product"
@@ -1190,263 +1296,85 @@ class Search extends Component {
                                         : null
                                 }
                             />
-                            {!toggleFilters && (
-                                <ReactiveList
-                                    componentId="results"
-                                    dataField="title"
-                                    ref={resultRef}
-                                    defaultQuery={() => ({
-                                        track_total_hits: true,
-                                    })}
-                                    renderNoResults={() => (
-                                        <div
-                                            style={{ textAlign: 'right' }}
-                                            // eslint-disable-next-line
-                                            dangerouslySetInnerHTML={{
-                                                __html: get(
-                                                    this.resultSettings,
-                                                    'customMessages.noResults',
-                                                    'No Results Found!',
-                                                ),
-                                            }}
-                                        />
-                                    )}
-                                    renderResultStats={({
-                                        numberOfResults,
-                                        time,
-                                    }) => (
-                                        <div
-                                            // eslint-disable-next-line
-                                            dangerouslySetInnerHTML={{
-                                                __html: get(
-                                                    this.resultSettings,
-                                                    'customMessages.resultStats',
-                                                    '[count] products found in [time] ms',
+                            <ReactiveList
+                                componentId="results"
+                                dataField="title"
+                                ref={resultRef}
+                                defaultQuery={() => ({
+                                    track_total_hits: true,
+                                })}
+                                renderNoResults={() => (
+                                    <div
+                                        style={{ textAlign: 'right' }}
+                                        // eslint-disable-next-line
+                                        dangerouslySetInnerHTML={{
+                                            __html: get(
+                                                this.resultSettings,
+                                                'customMessages.noResults',
+                                                'No Results Found',
+                                            ),
+                                        }}
+                                    />
+                                )}
+                                renderResultStats={({
+                                    numberOfResults,
+                                    time,
+                                }) => (
+                                    <div
+                                        // eslint-disable-next-line
+                                        dangerouslySetInnerHTML={{
+                                            __html: get(
+                                                this.resultSettings,
+                                                'customMessages.resultStats',
+                                                '[count] products found in [time] ms',
+                                            )
+                                                .replace(
+                                                    '[count]',
+                                                    numberOfResults,
                                                 )
-                                                    .replace(
-                                                        '[count]',
-                                                        numberOfResults,
-                                                    )
-                                                    .replace('[time]', time),
-                                            }}
+                                                .replace('[time]', time),
+                                        }}
+                                    />
+                                )}
+                                size={9}
+                                infiniteScroll
+                                render={({ data, triggerClickAnalytics }) => {
+                                    return !toggleFilters ? (
+                                        <ResultsLayout
+                                            data={data}
+                                            theme={this.theme}
+                                            triggerClickAnalytics={
+                                                triggerClickAnalytics
+                                            }
+                                            isPreview={isPreview}
+                                            getFontFamily={this.getFontFamily()}
                                         />
-                                    )}
-                                    renderItem={(
-                                        { _id, variants, ...rest },
-                                        triggerClickAnalytics,
-                                    ) => {
-                                        const handle = isPreview
-                                            ? ''
-                                            : get(
-                                                  rest,
-                                                  get(
-                                                      this.resultSettings,
-                                                      'fields.handle',
-                                                  ),
-                                              );
-
-                                        const image = get(
-                                            rest,
-                                            get(
-                                                this.resultSettings,
-                                                'fields.image',
-                                            ),
-                                        );
-                                        const title = get(
-                                            rest,
-                                            get(
-                                                this.resultSettings,
-                                                'fields.title',
-                                            ),
-                                        );
-
-                                        const description = get(
-                                            rest,
-                                            get(
-                                                this.resultSettings,
-                                                'fields.description',
-                                            ),
-                                        );
-                                        const price = get(
-                                            rest,
-                                            get(
-                                                this.resultSettings,
-                                                'fields.price',
-                                            ),
-                                        );
-                                        const redirectToProduct =
-                                            !isPreview || handle;
-                                        return (
-                                            <a
-                                                onClick={triggerClickAnalytics}
-                                                href={
-                                                    redirectToProduct
-                                                        ? `/products/${handle}`
-                                                        : undefined
-                                                }
-                                                target="_blank"
-                                                rel="noreferrer noopener"
-                                                key={_id}
-                                                id={_id}
-                                            >
-                                                <Card
-                                                    hoverable={false}
-                                                    bordered={false}
-                                                    className="card"
-                                                    css={cardStyles({
-                                                        ...get(
-                                                            this.theme,
-                                                            'colors',
-                                                        ),
-                                                    })}
-                                                    cover={
-                                                        image && (
-                                                            <img
-                                                                src={image}
-                                                                width="100%"
-                                                                alt={title}
-                                                            />
-                                                        )
-                                                    }
-                                                    style={{
-                                                        ...this.getFontFamily(),
-                                                        padding:
-                                                            this.themeType ===
-                                                            'minimal'
-                                                                ? '10px'
-                                                                : 0,
-                                                    }}
-                                                    bodyStyle={
-                                                        this.themeType ===
-                                                        'minimal'
-                                                            ? {
-                                                                  padding:
-                                                                      '15px 10px 10px',
-                                                              }
-                                                            : {}
-                                                    }
-                                                >
-                                                    <Meta
-                                                        title={
-                                                            <h3
-                                                                css={cardTitleStyles(
-                                                                    get(
-                                                                        this
-                                                                            .theme,
-                                                                        'colors',
-                                                                    ),
-                                                                )}
-                                                                style={
-                                                                    this
-                                                                        .themeType ===
-                                                                    'minimal'
-                                                                        ? {
-                                                                              fontWeight: 600,
-                                                                          }
-                                                                        : {}
-                                                                }
-                                                                // eslint-disable-next-line
-                                                                dangerouslySetInnerHTML={{
-                                                                    __html: title,
-                                                                }}
-                                                            />
-                                                        }
-                                                        description={
-                                                            description &&
-                                                                this.themeType ===
-                                                                'classic' ? (
-                                                                <Truncate
-                                                                    lines={
-                                                                        4
-                                                                    }
-                                                                    ellipsis={
-                                                                        <span>
-                                                                            ...
-                                                                        </span>
-                                                                    }
-                                                                >
-                                                                    {strip(
-                                                                        description,
-                                                                    )}
-                                                                </Truncate>
-                                                            ) : null
-                                                        }
-                                                    />
-                                                    {variants || price ? (
-                                                        <div>
-                                                            <h3
-                                                                style={{
-                                                                    fontWeight: 500,
-                                                                    fontSize:
-                                                                        '1rem',
-                                                                    marginTop: 6,
-                                                                    color:
-                                                                        this
-                                                                            .themeType ===
-                                                                        'minimal'
-                                                                            ? get(
-                                                                                  this
-                                                                                      .theme,
-                                                                                  'colors.textColor',
-                                                                              )
-                                                                            : get(
-                                                                                  this
-                                                                                      .theme,
-                                                                                  'colors.titleColor',
-                                                                              ),
-                                                                }}
-                                                            >
-                                                                {`${
-                                                                    this
-                                                                        .currency
-                                                                } ${
-                                                                    variants
-                                                                        ? get(
-                                                                              variants[0],
-                                                                              'price',
-                                                                              '',
-                                                                          )
-                                                                        : price
-                                                                }`}
-                                                            </h3>
-                                                        </div>
-                                                    ) : null}
-
-                                                    {redirectToProduct ? (
-                                                        <Button
-                                                            type="primary"
-                                                            size="large"
-                                                            className="product-button"
-                                                        >
-                                                            <Icon type="eye" />
-                                                            View Product
-                                                        </Button>
-                                                    ) : null}
-                                                </Card>
-                                            </a>
-                                        );
-                                    }}
-                                    size={9}
-                                    innerClass={{
-                                        list: 'custom-result-list',
-                                        resultsInfo: 'custom-result-info',
-                                        poweredBy: 'custom-powered-by',
-                                        noResults: 'custom-no-results',
-                                        pagination: 'custom-pagination',
-                                    }}
-                                    {...this.resultSettings.rsConfig}
-                                    css={reactiveListCls(toggleFilters, this.theme)}
-                                    react={{
-                                        and: [
-                                            'filter_by_product',
-                                            ...getReactDependenciesFromPreferences(
-                                                this.preferences,
-                                                'result',
-                                            ),
-                                        ],
-                                    }}
-                                />
-                            )}
+                                    ) : null;
+                                }}
+                                innerClass={{
+                                    list: 'custom-result-list',
+                                    resultsInfo: 'custom-result-info',
+                                    poweredBy: 'custom-powered-by',
+                                    noResults: 'custom-no-results',
+                                    pagination: 'custom-pagination',
+                                }}
+                                {...this.resultSettings.rsConfig}
+                                css={reactiveListCls(toggleFilters, this.theme)}
+                                react={{
+                                    and: [
+                                        'filter_by_product',
+                                        ...getReactDependenciesFromPreferences(
+                                            this.preferences,
+                                            'result',
+                                        ),
+                                        'ToggleResults',
+                                        ...getReactDependenciesFromPreferences(
+                                            this.preferences,
+                                            'result',
+                                        ),
+                                    ],
+                                }}
+                            />
                         </div>
                     </div>
                 </div>

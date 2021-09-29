@@ -4,7 +4,7 @@
 import { css, jsx, Global } from '@emotion/core';
 import React from 'react';
 import { string, bool } from 'prop-types';
-import { Button, Icon } from 'antd';
+import { Button, Icon, Popover } from 'antd';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -21,6 +21,7 @@ import {
     RecommendationTypes,
     shopifyDefaultFields,
     getFieldWithoutKeyword,
+    getNoRecommendationMessage,
 } from '../utils';
 import { mediaMax } from '../utils/media';
 import SuggestionCard from './SuggestionCard';
@@ -31,6 +32,9 @@ const buttonLeft = css`
     ${mediaMax.small} {
         padding: 0;
     }
+    padding: 0 8px;
+    margin-left: 10px;
+    margin-right: 10px;
     z-index: 10;
     top:0;
     bottom:0;
@@ -39,10 +43,21 @@ const buttonLeft = css`
     margin-bottom:auto;
 }`;
 
+const noRecommendation = css`
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 30px;
+`;
+
 const buttonRight = css`
     ${mediaMax.small} {
         padding: 0;
     }
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 0 8px;
     z-index: 10;
     top:0;
     right:0;
@@ -68,8 +83,8 @@ const main = css`
     position: relative;
     .ant-btn {
         border: none !important;
-        box-shadow: none;
-        background: transparent !important;
+        box-shadow: 1px 1px 5px 0px rgb(0 0 0 / 35%);
+        background: #e9e9e9 !important;
         position: absolute;
     }
 `;
@@ -107,6 +122,7 @@ const resultListCls = css`
     .slick-track {
         display: flex;
         align-items: stretch;
+        gap: 15px;
     }
     .slick-slide {
         display: flex !important;
@@ -130,6 +146,8 @@ class ProductSuggestions extends React.Component {
         this.state = {
             currentPage: 1,
             maxSize: undefined,
+            loading: false,
+            error: null,
             products: [],
         };
         const preferences = getRecommendationsPreferences();
@@ -181,13 +199,13 @@ class ProductSuggestions extends React.Component {
         this.index = get(preferences, 'appbaseSettings.index');
         this.credentials = get(preferences, 'appbaseSettings.credentials');
         this.url = get(preferences, 'appbaseSettings.url');
+    }
+
+   componentDidMount() {
         // fetch popular products
         this.fetchPopularProducts();
         this.fetchSimilarProducts();
         this.fetchFeaturedProducts();
-    }
-
-    async componentDidMount() {
         this.updateMaxSize();
         window.addEventListener('resize', this.updateMaxSize);
     }
@@ -261,7 +279,11 @@ class ProductSuggestions extends React.Component {
             if (fieldName && fieldValue) {
                 // Fetch value for the field defined in preferences
                 if (this.recommendation.dataField) {
-                    fetch(`${this.url}/_search`, {
+                    let status;
+                    this.setState({
+                        loading: true
+                    })
+                    fetch(`${this.url}/${this.index}/_search`, {
                         method: 'POST',
                         headers: this.headers,
                         body: JSON.stringify({
@@ -279,8 +301,18 @@ class ProductSuggestions extends React.Component {
                             },
                         }),
                     })
-                        .then((res) => res.json())
+                        .then((res) => {
+                            ({ status } = res);
+                            return res.json();
+                        })
                         .then((response) => {
+                            if (status > 300) {
+                                this.setState({
+                                    error: response,
+                                    loading: false,
+                                });
+                                return;
+                            }
                             const value = get(
                                 response,
                                 `hits.hits[0]._source[${getFieldWithoutKeyword(
@@ -345,8 +377,18 @@ class ProductSuggestions extends React.Component {
                                         }),
                                     },
                                 )
-                                    .then((res) => res.json())
                                     .then((res) => {
+                                        ({ status } = res);
+                                        return res.json();
+                                    })
+                                    .then((res) => {
+                                        if (status > 300) {
+                                            this.setState({
+                                                error: response,
+                                                loading: false,
+                                            });
+                                            return;
+                                        }
                                         if (res && res.results) {
                                             this.setState({
                                                 products: res.results.hits.hits.map(
@@ -356,15 +398,28 @@ class ProductSuggestions extends React.Component {
                                                         _source: {},
                                                     }),
                                                 ),
+                                                loading: false,
                                             });
                                         }
                                     })
                                     .catch((e) => {
+                                        this.setState({
+                                            error: e,
+                                            loading: false,
+                                        });
                                         console.warn(e);
                                     });
+                            } else {
+                                this.setState({
+                                    loading: false
+                                });
                             }
                         })
                         .catch((e) => {
+                            this.setState({
+                                error: e,
+                                loading: false
+                            });
                             console.warn(e);
                         });
                 }
@@ -384,6 +439,9 @@ class ProductSuggestions extends React.Component {
                         _index: this.index,
                         _id: docId,
                     }));
+                this.setState({
+                    loading: true
+                })
                 this.getProductsByDocIds(docIdsPayload);
             }
         }
@@ -395,14 +453,28 @@ class ProductSuggestions extends React.Component {
             RecommendationTypes.MOST_POPULAR_PRODUCTS
         ) {
             const { headers } = this;
+            let status;
+            this.setState({
+                loading: true
+            })
             fetch(
                 `${this.url}/_analytics/${this.index}/popular-results?size=${this.recommendation.maxProducts}`,
                 {
                     headers,
                 },
             )
-                .then((res) => res.json())
+                .then((res) => {
+                    ({ status } = res);
+                    return res.json();
+                })
                 .then((response) => {
+                    if (status > 300) {
+                        this.setState({
+                            error: response,
+                            loading: false
+                        });
+                        return;
+                    }
                     if (response.popular_results) {
                         const docIds = response.popular_results.map((item) => ({
                             _index: item.index,
@@ -413,6 +485,10 @@ class ProductSuggestions extends React.Component {
                     }
                 })
                 .catch((e) => {
+                    this.setState({
+                        error: e,
+                        loading: false
+                    });
                     console.warn(e);
                 });
         }
@@ -426,6 +502,7 @@ class ProductSuggestions extends React.Component {
 
     getProductsByDocIds = (docIdsPayload = []) => {
         const { headers } = this;
+        let status;
         fetch(`${this.url}/${this.index}/_mget`, {
             method: 'POST',
             headers,
@@ -433,17 +510,32 @@ class ProductSuggestions extends React.Component {
                 docs: docIdsPayload,
             }),
         })
-            .then((res) => res.json())
+            .then((res) => {
+                ({ status } = res);
+                return res.json();
+            })
             .then((products) => {
+                if (status > 300) {
+                    this.setState({
+                        error: products,
+                        loading: false,
+                    });
+                    return;
+                }
                 this.setState({
                     products: products.docs.map((product) => ({
                         ...product,
                         ...product._source,
+                        loading: false,
                         _source: {},
                     })),
                 });
             })
             .catch((e) => {
+                this.setState({
+                    error: e,
+                    loading: false,
+                });
                 console.warn(e);
             });
     };
@@ -503,18 +595,48 @@ class ProductSuggestions extends React.Component {
         return fontFamily ? { fontFamily } : {};
     };
 
-    renderResults = ({ data, triggerClickAnalytics }) => {
+    renderResults = ({ data, loading, error, triggerClickAnalytics }) => {
         const { maxSize, currentPage } = this.state;
         const { isPreview } = this.props;
         const settings = {
             dots: false,
             infinite: false,
+            swipeToSlide: true,
+            swipe: true,
             speed: 500,
             slidesToShow: maxSize,
             slidesToScroll: maxSize,
             initialSlide: 0,
         };
         if (!data.length) {
+            if (isPreview && !loading) {
+                return (
+                    <div css={noRecommendation}>
+                        <h3>No recommendations found</h3>
+                        <p>
+                            <strong>Note:</strong> This message is only visible
+                            in preview mode.
+                        </p>
+                        {getNoRecommendationMessage(this.recommendation.type)}
+                        {error ? (
+                            <Popover
+                                content={
+                                    <span
+                                        style={{
+                                            color: 'tomato',
+                                        }}
+                                    >
+                                        {JSON.stringify(error)}
+                                    </span>
+                                }
+                                title="Error Logs"
+                            >
+                                <Button type="primary">Error Logs</Button>
+                            </Popover>
+                        ) : null}
+                    </div>
+                );
+            }
             return null;
         }
         return (
@@ -609,10 +731,7 @@ class ProductSuggestions extends React.Component {
                         </Slider>
                     </div>
                     <Button
-                        disabled={
-                            currentPage * maxSize >=
-                            data.length
-                        }
+                        disabled={currentPage * maxSize >= data.length}
                         css={buttonRight}
                         onClick={this.nextPage}
                     >
@@ -624,7 +743,7 @@ class ProductSuggestions extends React.Component {
     };
 
     render() {
-        const { maxSize, products } = this.state;
+        const { maxSize, products, error, loading } = this.state;
         if (!this.recommendation || !maxSize) {
             return null;
         }
@@ -676,6 +795,8 @@ class ProductSuggestions extends React.Component {
                         this.renderResults({
                             data: products,
                             triggerClickAnalytics: () => null,
+                            error,
+                            loading,
                         })
                     ) : (
                         <React.Fragment>
@@ -698,10 +819,17 @@ class ProductSuggestions extends React.Component {
                                     this.total = numberOfResults;
                                 }}
                                 renderResultStats={() => null}
-                                render={({ data, triggerClickAnalytics }) => {
+                                render={({
+                                    data,
+                                    triggerClickAnalytics,
+                                    error: errorDetails,
+                                    loading: fetching
+                                }) => {
                                     return this.renderResults({
                                         data,
+                                        error: errorDetails,
                                         triggerClickAnalytics,
+                                        loading: fetching
                                     });
                                 }}
                                 infiniteScroll={false}
