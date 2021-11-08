@@ -1221,10 +1221,6 @@ class Search extends Component {
                                                             listComponent,
                                                             'rsConfig.dataField',
                                                         )}
-                                                        title={get(
-                                                            listComponent,
-                                                            'rsConfig.title',
-                                                        )}
                                                         range={{
                                                             start: parseInt(get(
                                                                 listComponent,
@@ -1245,14 +1241,10 @@ class Search extends Component {
                                                                 'rsConfig.endLabel',
                                                             ),
                                                         }}
-                                                        // interval={parseInt(get(
-                                                        //     listComponent,
-                                                        //     'rsConfig.interval',
-                                                        // ), 10)}
                                                         showHistogram={get(
                                                             listComponent,
                                                             'rsConfig.showHistogram',
-                                                        )}
+                                                        ) || false}
                                                         URLParams
                                                         css={this.getFontFamily()}
                                                         filterLabel={get(
@@ -1278,18 +1270,10 @@ class Search extends Component {
                                                             listComponent,
                                                             'rsConfig.dataField',
                                                         )}
-                                                        title={get(
-                                                            listComponent,
-                                                            'rsConfig.title',
-                                                        )}
-                                                        // interval={parseInt(get(
-                                                        //     listComponent,
-                                                        //     'rsConfig.interval',
-                                                        // ), 10)}
                                                         showHistogram={get(
                                                             listComponent,
                                                             'rsConfig.showHistogram',
-                                                        )}
+                                                        ) || false}
                                                         URLParams
                                                         css={this.getFontFamily()}
                                                         filterLabel={get(
@@ -1363,10 +1347,7 @@ class Search extends Component {
                                                             ),
                                                         ),
                                                     }}
-                                                    title={get(
-                                                        listComponent,
-                                                        'rsConfig.title',
-                                                    )}
+                                                    title=""
                                                 />
                                             )
                                         }
