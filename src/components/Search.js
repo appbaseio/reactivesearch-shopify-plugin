@@ -1170,9 +1170,7 @@ class Search extends Component {
                                         />
                                     </Panel>
                                 ) : null}
-                                {this.dynamicFacets.map((listComponent) => {
-                                    console.log(JSON.stringify(listComponent));
-                                    return (
+                                {this.dynamicFacets.map((listComponent) => (
                                     <Panel
                                         header={
                                             <span
@@ -1353,7 +1351,7 @@ class Search extends Component {
                                         }
 
                                     </Panel>
-                                )})}
+                                ))}
                             </Collapse>
                         </div>
 
