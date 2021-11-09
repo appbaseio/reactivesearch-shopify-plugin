@@ -1210,47 +1210,57 @@ class Search extends Component {
                                                         key={get(
                                                             listComponent,
                                                             'rsConfig.componentId',
+                                                            ''
                                                         )}
                                                         componentId={get(
                                                             listComponent,
                                                             'rsConfig.componentId',
+                                                            ''
                                                         )}
                                                         dataField={get(
                                                             listComponent,
                                                             'rsConfig.dataField',
+                                                            ''
                                                         )}
                                                         range={{
                                                             start: parseInt(get(
                                                                 listComponent,
                                                                 'rsConfig.startValue',
+                                                                ''
                                                             ), 10),
                                                             end: parseInt(get(
                                                                 listComponent,
                                                                 'rsConfig.endValue',
+                                                                ''
                                                             ), 10),
                                                         }}
                                                         rangeLabels={{
                                                             start: get(
                                                                 listComponent,
                                                                 'rsConfig.startLabel',
+                                                                ''
                                                             ),
                                                             end: get(
                                                                 listComponent,
                                                                 'rsConfig.endLabel',
+                                                                ''
                                                             ),
                                                         }}
                                                         showHistogram={get(
                                                             listComponent,
                                                             'rsConfig.showHistogram',
-                                                        ) || false}
+                                                            false
+                                                        )}
                                                         URLParams
                                                         css={this.getFontFamily()}
                                                         filterLabel={get(
                                                                 listComponent,
                                                                 'rsConfig.filterLabel',
+                                                                ''
                                                             ) || get(
                                                                 listComponent,
                                                                 'rsConfig.title',
+                                                                ''
                                                             )
                                                         }
                                                     />
@@ -1259,27 +1269,33 @@ class Search extends Component {
                                                         key={get(
                                                             listComponent,
                                                             'rsConfig.componentId',
+                                                            ''
                                                         )}
                                                         componentId={get(
                                                             listComponent,
                                                             'rsConfig.componentId',
+                                                            ''
                                                         )}
                                                         dataField={get(
                                                             listComponent,
                                                             'rsConfig.dataField',
+                                                            ''
                                                         )}
                                                         showHistogram={get(
                                                             listComponent,
                                                             'rsConfig.showHistogram',
-                                                        ) || false}
+                                                            false
+                                                        )}
                                                         URLParams
                                                         css={this.getFontFamily()}
                                                         filterLabel={get(
                                                             listComponent,
                                                             'rsConfig.filterLabel',
+                                                            ''
                                                             ) || get(
                                                                 listComponent,
                                                                 'rsConfig.title',
+                                                                ''
                                                             )
                                                         }
                                                     />
