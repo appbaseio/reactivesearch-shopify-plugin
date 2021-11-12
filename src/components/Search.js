@@ -364,7 +364,7 @@ class Search extends Component {
                         this.exportType === 'shopify'
                             ? {
                                   query: {
-                                      term: { 'type.keyword': ['collection'] },
+                                    term: { type: 'collections' },
                                   },
                               }
                             : null
@@ -375,7 +375,7 @@ class Search extends Component {
                         input: 'list-input'
                     }}
                     componentId="collection"
-                    dataField="collection"
+                    dataField="collections"
                     css={font}
                     defaultQuery={() => ({
                         aggs: {
