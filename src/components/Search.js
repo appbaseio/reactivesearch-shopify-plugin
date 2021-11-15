@@ -1050,6 +1050,97 @@ class Search extends Component {
 
     }
 
+    renderPriceFilter = (font) => {
+        if( get(this.priceFilter, 'rsConfig.startValue', '') && get(this.priceFilter, 'rsConfig.endValue', '')) {
+            return (
+                <RangeInput
+                    componentId="price"
+                    dataField={get(
+                        this.priceFilter,
+                        'rsConfig.dataField',
+                        'variants.price',
+                    )}
+                    range={{
+                        start: parseInt(get(
+                            this.priceFilter,
+                            'rsConfig.startValue',
+                            ''
+                        ), 10),
+                        end: parseInt(get(
+                            this.priceFilter,
+                            'rsConfig.endValue',
+                            ''
+                        ), 10),
+                    }}
+                    rangeLabels={{
+                        start: get(
+                            this.priceFilter,
+                            'rsConfig.startLabel',
+                            ''
+                        ),
+                        end: get(
+                            this.priceFilter,
+                            'rsConfig.endLabel',
+                            ''
+                        ),
+                    }}
+                    showHistogram={get(
+                        this.priceFilter,
+                        'rsConfig.showHistogram',
+                        false
+                    )}
+                    URLParams
+                    css={font}
+                    filterLabel={get(this.priceFilter, 'rsConfig.title', 'size')}
+                />
+            )
+        }
+
+        return (
+            <DynamicRangeSlider
+                componentId="price"
+                dataField={get(
+                    this.priceFilter,
+                    'rsConfig.dataField',
+                    'variants.price',
+                )}
+                showHistogram={get(
+                    this.priceFilter,
+                    'rsConfig.showHistogram',
+                    false
+                )}
+                URLParams
+                css={font}
+                style={{
+                    marginTop: 50,
+                }}
+                loader={
+                    <div
+                        css={loaderStyle}
+                        // eslint-disable-next-line
+                        dangerouslySetInnerHTML={{
+                            __html: get(
+                                this.priceFilter,
+                                'customMessages.loading',
+                                '',
+                            ),
+                        }}
+                    />
+                }
+                rangeLabels={(min, max) => ({
+                    start: `${
+                        this.currency
+                    } ${min.toFixed(2)}`,
+                    end: `${
+                        this.currency
+                    } ${max.toFixed(2)}`,
+                })}
+                {...this.priceFilter.rsConfig}
+                title=""
+            />
+        )
+    }
+
     renderCategorySearch = (categorySearchProps) => {
         const { toggleFilters, blur } = this.state;
         const { isPreview } = this.props;
@@ -1406,10 +1497,12 @@ class Search extends Component {
                                         css={this.getFontFamily()}
                                         className="filter"
                                     >
-                                        <DynamicRangeSlider
+                                        {this.renderPriceFilter(
+                                            this.getFontFamily(),
+                                        )}
+                                        {/* <DynamicRangeSlider
                                             componentId="price"
-                                            dataField="variants.price"
-                                            tooltipTrigger="hover"
+                                            dataField="retail_price"
                                             showHistogram={false}
                                             css={this.getFontFamily()}
                                             style={{
@@ -1436,15 +1529,15 @@ class Search extends Component {
                                                     this.currency
                                                 } ${max.toFixed(2)}`,
                                             })}
-                                            react={{
-                                                and: getReactDependenciesFromPreferences(
-                                                    this.preferences,
-                                                    'price',
-                                                ),
-                                            }}
+                                            // react={{
+                                            //     and: getReactDependenciesFromPreferences(
+                                            //         this.preferences,
+                                            //         'price',
+                                            //     ),
+                                            // }}
                                             {...this.priceFilter.rsConfig}
                                             title=""
-                                        />
+                                        /> */}
                                     </Panel>
                                 ) : null}
                                 {this.dynamicFacets.map((listComponent) => (
