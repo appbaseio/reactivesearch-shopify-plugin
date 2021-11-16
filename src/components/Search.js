@@ -745,6 +745,9 @@ class Search extends Component {
                     showSearch={false}
                     css={font}
                     showCheckbox={this.themeType !== 'minimal'}
+                    showCount={
+                        this.themeType !== 'minimal'
+                    }
                     render={({ loading, error, data, handleChange, value }) => {
                         const values = [...new Set(Object.keys(value))];
                         const browserStringColors = Object.keys(browserColors);
