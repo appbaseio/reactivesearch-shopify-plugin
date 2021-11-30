@@ -212,6 +212,7 @@ const colorContainer = css`
 
 const searchRef = React.createRef();
 
+let userIdObj = {};
 class Search extends Component {
     constructor() {
         super();
@@ -243,7 +244,7 @@ class Search extends Component {
         this.index = get(this.preferences, 'appbaseSettings.index');
         this.credentials = get(this.preferences, 'appbaseSettings.credentials');
         this.url = get(this.preferences, 'appbaseSettings.url');
-
+        this.userId = get(this.preferences, 'appbaseSettings.userId', '');
         this.resultSettings = get(this.preferences, 'resultSettings');
         this.searchSettings = get(this.preferences, 'searchSettings');
         this.globalSettings = get(this.preferences, 'globalSettings', {});
@@ -274,6 +275,11 @@ class Search extends Component {
         try {
             const inputRef = get(searchRef, 'current._inputRef', null);
 
+            if(this.userId) {
+                userIdObj = {
+                    userId: this.userId
+                }
+            }
             if (inputRef) {
                 const param = new URLSearchParams(window.location.search).get('q')
                 if(!param) {
@@ -791,6 +797,7 @@ class Search extends Component {
                 enableAppbase
                 appbaseConfig={{
                     recordAnalytics: true,
+                    ...userIdObj
                 }}
                 setSearchParams={isPreview ? () => {} : (url) => {
                     window.history.pushState({ path: url }, '', url);
