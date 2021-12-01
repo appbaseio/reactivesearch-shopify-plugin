@@ -9,7 +9,6 @@ import {
     MultiList,
     ReactiveList,
     SelectedFilters,
-    RangeInput,
     DynamicRangeSlider,
     ReactiveComponent,
 } from '@appbaseio/reactivesearch';
@@ -268,6 +267,8 @@ const colorContainer = css`
 
 const searchRef = React.createRef();
 
+let userIdObj = {};
+
 class Search extends Component {
     constructor() {
         super();
@@ -300,7 +301,7 @@ class Search extends Component {
         this.index = get(this.preferences, 'appbaseSettings.index');
         this.credentials = get(this.preferences, 'appbaseSettings.credentials');
         this.url = get(this.preferences, 'appbaseSettings.url');
-
+        this.userId = get(this.preferences, 'appbaseSettings.userId', '');
         this.resultSettings = get(this.preferences, 'resultSettings');
         this.searchSettings = get(this.preferences, 'searchSettings');
         this.globalSettings = get(this.preferences, 'globalSettings', {});
@@ -331,6 +332,11 @@ class Search extends Component {
         try {
             const inputRef = get(searchRef, 'current._inputRef', null);
 
+            if(this.userId) {
+                userIdObj = {
+                    userId: this.userId
+                }
+            }
             if (inputRef) {
                 const param = new URLSearchParams(window.location.search).get(
                     'q',
@@ -467,7 +473,6 @@ class Search extends Component {
                     })}
                     size={50}
                     showCheckbox={this.themeType !== 'minimal'}
-                    showCount={this.themeType !== 'minimal'}
                     react={{
                         and: [
                             'filter_by_collection',
@@ -574,7 +579,6 @@ class Search extends Component {
                 }}
                 css={font}
                 showCheckbox={this.themeType !== 'minimal'}
-                showCount={this.themeType !== 'minimal'}
                 react={{
                     and: [
                         ...getReactDependenciesFromPreferences(
@@ -609,7 +613,6 @@ class Search extends Component {
             showSearch={false}
             css={font}
             showCheckbox={this.themeType !== 'minimal'}
-            showCount={this.themeType !== 'minimal'}
             render={({ loading, error, data, handleChange, value }) => {
                 const values = [...new Set(Object.keys(value))];
                 const browserStringColors = Object.keys(browserColors);
@@ -721,223 +724,60 @@ class Search extends Component {
         />
     );
 
-    renderSizeFilter = (font) => {
-        const type = get(this.sizeFilter, 'rsConfig.filterType', '');
-        if(type === 'list') {
-            return (
-                <React.Fragment>
-                    <MultiList
-                        componentId="size"
-                        innerClass={{
-                            input: 'list-input'
-                        }}
-                        react={{
-                            and: [
-                                'sizeOption',
-                                ...getReactDependenciesFromPreferences(
-                                    this.preferences,
-                                    'size',
-                                ),
-                            ],
-                        }}
-                        css={font}
-                        loader={
-                            <div
-                                css={loaderStyle}
-                                // eslint-disable-next-line
-                                dangerouslySetInnerHTML={{
-                                    __html: get(
-                                        this.sizeFilter,
-                                        'customMessages.loading',
-                                        'Loading sizes',
-                                    ),
-                                }}
-                            />
-                        }
-                        renderNoResults={() => (
-                            <div
-                                // eslint-disable-next-line
-                                dangerouslySetInnerHTML={{
-                                    __html: get(
-                                        this.sizeFilter,
-                                        'customMessages.noResults',
-                                        'No sizes Found',
-                                    ),
-                                }}
-                            />
-                        )}
-                        showCheckbox={this.themeType !== 'minimal'}
-                        showCount={this.themeType !== 'minimal'}
-                        URLParams
-                        {...get(this.sizeFilter, 'rsConfig')}
-                        dataField={get(
-                            this.sizeFilter,
-                            'rsConfig.dataField',
-                            shopifyDefaultFields.size,
-                        )}
-                        title=""
-                    />
-                </React.Fragment>
-            );
-        }
-
-        if( get(this.sizeFilter, 'rsConfig.startValue', '') && get(this.sizeFilter, 'rsConfig.endValue', '')) {
-            return (
-                <RangeInput
-                    key="size"
-                    componentId="size"
-                    dataField={get(
-                        this.sizeFilter,
-                        'rsConfig.dataField',
-                        shopifyDefaultFields.size,
-                    )}
-                    range={{
-                        start: parseInt(get(
-                            this.sizeFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            this.sizeFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
-                    }}
-                    rangeLabels={{
-                        start: get(
-                            this.sizeFilter,
-                            'rsConfig.startLabel',
-                            ''
-                        ),
-                        end: get(
-                            this.sizeFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
-                    }}
-                    showHistogram={get(
-                        this.sizeFilter,
-                        'rsConfig.showHistogram',
-                        false
-                    )}
-                    URLParams
-                    css={font}
-                    filterLabel={get(this.sizeFilter, 'rsConfig.title', 'size')}
-                />
-            );
-        }
-        return (
-            <DynamicRangeSlider
-                key="size"
+    renderSizeFilter = (font) => (
+        <React.Fragment>
+            <MultiList
                 componentId="size"
-                dataField={get(
-                    this.sizeFilter,
-                    'rsConfig.dataField',
-                    shopifyDefaultFields.size,
-                )}
-                showHistogram={get(
-                    this.sizeFilter,
-                    'rsConfig.showHistogram',
-                    false
-                )}
-                URLParams
-                css={font}
-                filterLabel={get(this.sizeFilter, 'rsConfig.title', 'size')}
-            />
-        )
-
-    }
-
-    renderPriceFilter = (font) => {
-        if( get(this.priceFilter, 'rsConfig.startValue', '') && get(this.priceFilter, 'rsConfig.endValue', '')) {
-            return (
-                <RangeInput
-                    componentId="price"
-                    dataField={get(
-                        this.priceFilter,
-                        'rsConfig.dataField',
-                        'variants.price',
-                    )}
-                    range={{
-                        start: parseInt(get(
-                            this.priceFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            this.priceFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
-                    }}
-                    rangeLabels={{
-                        start: get(
-                            this.priceFilter,
-                            'rsConfig.startLabel',
-                            ''
-                        ),
-                        end: get(
-                            this.priceFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
-                    }}
-                    showHistogram={get(
-                        this.priceFilter,
-                        'rsConfig.showHistogram',
-                        false
-                    )}
-                    URLParams
-                    css={font}
-                    filterLabel={get(this.priceFilter, 'rsConfig.title', 'size')}
-                />
-            )
-        }
-
-        return (
-            <DynamicRangeSlider
-                componentId="price"
-                dataField={get(
-                    this.priceFilter,
-                    'rsConfig.dataField',
-                    'variants.price',
-                )}
-                showHistogram={get(
-                    this.priceFilter,
-                    'rsConfig.showHistogram',
-                    false
-                )}
-                URLParams
-                css={font}
-                style={{
-                    marginTop: 50,
+                innerClass={{
+                    input: 'list-input'
                 }}
+                react={{
+                    and: [
+                        'sizeOption',
+                        ...getReactDependenciesFromPreferences(
+                            this.preferences,
+                            'size',
+                        ),
+                    ],
+                }}
+                css={font}
                 loader={
                     <div
                         css={loaderStyle}
                         // eslint-disable-next-line
                         dangerouslySetInnerHTML={{
                             __html: get(
-                                this.priceFilter,
+                                this.sizeFilter,
                                 'customMessages.loading',
-                                '',
+                                'Loading sizes',
                             ),
                         }}
                     />
                 }
-                rangeLabels={(min, max) => ({
-                    start: `${
-                        this.currency
-                    } ${min.toFixed(2)}`,
-                    end: `${
-                        this.currency
-                    } ${max.toFixed(2)}`,
-                })}
-                {...this.priceFilter.rsConfig}
+                renderNoResults={() => (
+                    <div
+                        // eslint-disable-next-line
+                        dangerouslySetInnerHTML={{
+                            __html: get(
+                                this.sizeFilter,
+                                'customMessages.noResults',
+                                'No sizes Found',
+                            ),
+                        }}
+                    />
+                )}
+                showCheckbox={this.themeType !== 'minimal'}
+                URLParams
+                {...get(this.sizeFilter, 'rsConfig')}
+                dataField={get(
+                    this.sizeFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
+                )}
                 title=""
             />
-        )
-    }
+        </React.Fragment>
+    );
 
     renderCategorySearch = (categorySearchProps) => {
         const { toggleFilters, blur } = this.state;
@@ -1044,6 +884,7 @@ class Search extends Component {
                 enableAppbase
                 appbaseConfig={{
                     recordAnalytics: true,
+                    ...userIdObj
                 }}
                 setSearchParams={
                     isPreview
@@ -1295,9 +1136,45 @@ class Search extends Component {
                                         css={this.getFontFamily()}
                                         className="filter"
                                     >
-                                        {this.renderPriceFilter(
-                                            this.getFontFamily(),
-                                        )}
+                                        <DynamicRangeSlider
+                                            componentId="price"
+                                            dataField="variants.price"
+                                            tooltipTrigger="hover"
+                                            showHistogram={false}
+                                            css={this.getFontFamily()}
+                                            style={{
+                                                marginTop: 50,
+                                            }}
+                                            loader={
+                                                <div
+                                                    css={loaderStyle}
+                                                    // eslint-disable-next-line
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: get(
+                                                            this.priceFilter,
+                                                            'customMessages.loading',
+                                                            '',
+                                                        ),
+                                                    }}
+                                                />
+                                            }
+                                            rangeLabels={(min, max) => ({
+                                                start: `${
+                                                    this.currency
+                                                } ${min.toFixed(2)}`,
+                                                end: `${
+                                                    this.currency
+                                                } ${max.toFixed(2)}`,
+                                            })}
+                                            react={{
+                                                and: getReactDependenciesFromPreferences(
+                                                    this.preferences,
+                                                    'price',
+                                                ),
+                                            }}
+                                            {...this.priceFilter.rsConfig}
+                                            title=""
+                                        />
                                     </Panel>
                                 ) : null}
                                 {this.dynamicFacets.map((listComponent) => (
@@ -1332,179 +1209,67 @@ class Search extends Component {
                                         }}
                                         className="filter"
                                     >
-                                        {
-                                            // eslint-disable-next-line no-nested-ternary
-                                            listComponent?.rsConfig?.filterType === 'range' ? (
-                                                (listComponent?.rsConfig?.startValue && listComponent?.rsConfig?.endValue) ? (
-                                                    <RangeInput
-                                                        key={get(
+                                        <MultiList
+                                            key={get(
+                                                listComponent,
+                                                'rsConfig.componentId',
+                                            )}
+                                            innerClass={{
+                                                input: 'list-input'
+                                            }}
+                                            componentId={get(
+                                                listComponent,
+                                                'rsConfig.componentId',
+                                            )}
+                                            URLParams
+                                            loader={
+                                                <div
+                                                    css={loaderStyle}
+                                                    // eslint-disable-next-line
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: get(
                                                             listComponent,
-                                                            'rsConfig.componentId',
-                                                            ''
-                                                        )}
-                                                        componentId={get(
-                                                            listComponent,
-                                                            'rsConfig.componentId',
-                                                            ''
-                                                        )}
-                                                        dataField={get(
-                                                            listComponent,
-                                                            'rsConfig.dataField',
-                                                            ''
-                                                        )}
-                                                        range={{
-                                                            start: parseInt(get(
-                                                                listComponent,
-                                                                'rsConfig.startValue',
-                                                                ''
-                                                            ), 10),
-                                                            end: parseInt(get(
-                                                                listComponent,
-                                                                'rsConfig.endValue',
-                                                                ''
-                                                            ), 10),
-                                                        }}
-                                                        rangeLabels={{
-                                                            start: get(
-                                                                listComponent,
-                                                                'rsConfig.startLabel',
-                                                                ''
-                                                            ),
-                                                            end: get(
-                                                                listComponent,
-                                                                'rsConfig.endLabel',
-                                                                ''
-                                                            ),
-                                                        }}
-                                                        showHistogram={get(
-                                                            listComponent,
-                                                            'rsConfig.showHistogram',
-                                                            false
-                                                        )}
-                                                        URLParams
-                                                        css={this.getFontFamily()}
-                                                        filterLabel={get(
-                                                                listComponent,
-                                                                'rsConfig.filterLabel',
-                                                                ''
-                                                            ) || get(
-                                                                listComponent,
-                                                                'rsConfig.title',
-                                                                ''
-                                                            )
-                                                        }
-                                                    />
-                                                ) : (
-                                                    <DynamicRangeSlider
-                                                        key={get(
-                                                            listComponent,
-                                                            'rsConfig.componentId',
-                                                            ''
-                                                        )}
-                                                        componentId={get(
-                                                            listComponent,
-                                                            'rsConfig.componentId',
-                                                            ''
-                                                        )}
-                                                        dataField={get(
-                                                            listComponent,
-                                                            'rsConfig.dataField',
-                                                            ''
-                                                        )}
-                                                        showHistogram={get(
-                                                            listComponent,
-                                                            'rsConfig.showHistogram',
-                                                            false
-                                                        )}
-                                                        URLParams
-                                                        css={this.getFontFamily()}
-                                                        filterLabel={get(
-                                                            listComponent,
-                                                            'rsConfig.filterLabel',
-                                                            ''
-                                                            ) || get(
-                                                                listComponent,
-                                                                'rsConfig.title',
-                                                                ''
-                                                            )
-                                                        }
-                                                    />
-                                                )
-
-                                            ) : (
-                                                <MultiList
-                                                    key={get(
-                                                        listComponent,
-                                                        'rsConfig.componentId',
-                                                    )}
-                                                    innerClass={{
-                                                        input: 'list-input'
-                                                    }}
-                                                    componentId={get(
-                                                        listComponent,
-                                                        'rsConfig.componentId',
-                                                    )}
-                                                    URLParams
-                                                    loader={
-                                                        <div
-                                                            css={loaderStyle}
-                                                            // eslint-disable-next-line
-                                                            dangerouslySetInnerHTML={{
-                                                                __html: get(
-                                                                    listComponent,
-                                                                    'customMessages.loading',
-                                                                    'Loading options',
-                                                                ),
-                                                            }}
-                                                        />
-                                                    }
-                                                    renderNoResults={() => (
-                                                        <div
-                                                            // eslint-disable-next-line
-                                                            dangerouslySetInnerHTML={{
-                                                                __html: get(
-                                                                    listComponent,
-                                                                    'customMessages.noResults',
-                                                                    'No items Found',
-                                                                ),
-                                                            }}
-                                                        />
-                                                    )}
-                                                    showCount={
-                                                        this.themeType !== 'minimal'
-                                                    }
-                                                    showCheckbox={
-                                                        this.themeType !== 'minimal'
-                                                    }
-                                                    {...listComponent.rsConfig}
-                                                    dataField={get(
-                                                        listComponent,
-                                                        'rsConfig.dataField',
-                                                    )}
-                                                    css={this.getFontFamily()}
-                                                    react={{
-                                                        and: getReactDependenciesFromPreferences(
-                                                            this.preferences,
-                                                            get(
-                                                                listComponent,
-                                                                'rsConfig.componentId',
-                                                            ),
+                                                            'customMessages.loading',
+                                                            'Loading options',
                                                         ),
                                                     }}
-                                                    filterLabel={get(
-                                                        listComponent,
-                                                        'rsConfig.filterLabel',
-                                                        ''
-                                                        ) || get(
-                                                            listComponent,
-                                                            'rsConfig.title',
-                                                            ''
-                                                        )
-                                                    }
-                                                    title=""
                                                 />
-                                            )
-                                        }
+                                            }
+                                            renderNoResults={() => (
+                                                <div
+                                                    // eslint-disable-next-line
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: get(
+                                                            listComponent,
+                                                            'customMessages.noResults',
+                                                            'No items Found',
+                                                        ),
+                                                    }}
+                                                />
+                                            )}
+                                            showCount={
+                                                this.themeType !== 'minimal'
+                                            }
+                                            showCheckbox={
+                                                this.themeType !== 'minimal'
+                                            }
+                                            {...listComponent.rsConfig}
+                                            dataField={get(
+                                                listComponent,
+                                                'rsConfig.dataField',
+                                            )}
+                                            css={this.getFontFamily()}
+                                            react={{
+                                                and: getReactDependenciesFromPreferences(
+                                                    this.preferences,
+                                                    get(
+                                                        listComponent,
+                                                        'rsConfig.componentId',
+                                                    ),
+                                                ),
+                                            }}
+                                            title=""
+                                        />
                                     </Panel>
                                 ))}
                             </Collapse>

@@ -140,6 +140,7 @@ const defaultRecommendationSettings = {
     maxProducts: 15,
 };
 
+let userIdObj = {};
 class ProductSuggestions extends React.Component {
     constructor(props) {
         super(props);
@@ -199,9 +200,15 @@ class ProductSuggestions extends React.Component {
         this.index = get(preferences, 'appbaseSettings.index');
         this.credentials = get(preferences, 'appbaseSettings.credentials');
         this.url = get(preferences, 'appbaseSettings.url');
+        this.userId = get(this.preferences, 'appbaseSettings.userId', '');
     }
 
    componentDidMount() {
+        if(this.userId) {
+            userIdObj = {
+                userId: this.userId
+            }
+        }
         // fetch popular products
         this.fetchPopularProducts();
         this.fetchSimilarProducts();
@@ -784,6 +791,7 @@ class ProductSuggestions extends React.Component {
                     enableAppbase
                     appbaseConfig={{
                         recordAnalytics: true,
+                        ...userIdObj
                     }}
                 >
                     <Global
