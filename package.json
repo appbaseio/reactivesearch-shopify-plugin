@@ -8,7 +8,6 @@
     "url": "https://github.com/divyanshu013"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.6.3",
     "@appbaseio/reactivesearch": "3.24.1",
     "@emotion/core": "^10.0.35",
     "antd": "3.10.9",
