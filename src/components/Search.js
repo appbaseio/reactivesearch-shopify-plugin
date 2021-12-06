@@ -1828,6 +1828,9 @@ class Search extends Component {
                                 )}
                                 size={9}
                                 infiniteScroll
+                                sortOptions={
+                                    get(this.resultSettings, 'sortOptionSelector', [])
+                                }
                                 render={({ data, triggerClickAnalytics }) => {
                                     return !toggleFilters ? (
                                         <ResultsLayout
