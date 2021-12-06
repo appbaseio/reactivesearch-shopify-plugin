@@ -1243,6 +1243,12 @@ class Search extends Component {
     render() {
         const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
+        let newProps = {};
+        if(get(this.resultSettings, 'sortOptionSelector', []).length) {
+            newProps = {
+                sortOptions: get(this.resultSettings, 'sortOptionSelector')
+            }
+        }
         return (
             <ReactiveBase
                 app={this.index}
@@ -1828,9 +1834,6 @@ class Search extends Component {
                                 )}
                                 size={9}
                                 infiniteScroll
-                                sortOptions={
-                                    get(this.resultSettings, 'sortOptionSelector', [])
-                                }
                                 render={({ data, triggerClickAnalytics }) => {
                                     return !toggleFilters ? (
                                         <ResultsLayout
@@ -1867,6 +1870,7 @@ class Search extends Component {
                                         ),
                                     ],
                                 }}
+                                {...newProps}
                             />
                         </div>
                     </div>
