@@ -1243,6 +1243,7 @@ class Search extends Component {
     render() {
         const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
+        const logoSettings = get(this.globalSettings, 'meta.branding', {});
         return (
             <ReactiveBase
                 app={this.index}
@@ -1312,7 +1313,22 @@ class Search extends Component {
                     </Affix>
                 ) : null}
 
+                {Object.keys(logoSettings).length ? (
+                    <div>
+                        <img
+                            src={logoSettings.logoUrl}
+                            alt="logo-url"
+                            style={{
+                                width: `${logoSettings.logoWidth}px`,
+                                height: `${logoSettings.logoWidth}px`,
+                                float: `${logoSettings.logoAlignment}`,
+                                margin: '0px 0px 10px 10px',
+                            }}
+                        />
+                    </div>
+                ): null}
                 <div style={{ maxWidth: '90%', margin: '25px auto' }}>
+
                     {this.themeType === 'classic' &&
                         this.renderCategorySearch()}
 
