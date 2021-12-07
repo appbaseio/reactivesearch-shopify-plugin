@@ -1249,6 +1249,7 @@ class Search extends Component {
                 sortOptions: get(this.resultSettings, 'sortOptionSelector')
             }
         }
+
         return (
             <ReactiveBase
                 app={this.index}
