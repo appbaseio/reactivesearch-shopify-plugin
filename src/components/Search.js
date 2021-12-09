@@ -1313,20 +1313,22 @@ class Search extends Component {
                     </Affix>
                 ) : null}
 
+                <div style={{ maxWidth: '90%', margin: '25px auto' }}>
+
                 {Object.keys(logoSettings).length ? (
                     <div>
                         <img
-                            src={logoSettings.logoUrl}
+                            src={`${logoSettings.logoUrl}/tr:w-${logoSettings.logoWidth*2}`}
                             alt="logo-url"
                             style={{
                                 width: `${logoSettings.logoWidth}px`,
+                                height: `50px`,
                                 float: `${logoSettings.logoAlignment}`,
-                                margin: '0px 0px 10px 10px',
+                                margin: '10px 0px',
                             }}
                         />
                     </div>
                 ): null}
-                <div style={{ maxWidth: '90%', margin: '25px auto' }}>
 
                     {this.themeType === 'classic' &&
                         this.renderCategorySearch()}
