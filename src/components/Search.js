@@ -1243,6 +1243,13 @@ class Search extends Component {
     render() {
         const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
+        let newProps = {};
+        if(get(this.resultSettings, 'sortOptionSelector', []).length) {
+            newProps = {
+                sortOptions: get(this.resultSettings, 'sortOptionSelector')
+            }
+        }
+
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
         return (
             <ReactiveBase
@@ -1881,6 +1888,7 @@ class Search extends Component {
                                         ),
                                     ],
                                 }}
+                                {...newProps}
                             />
                         </div>
                     </div>

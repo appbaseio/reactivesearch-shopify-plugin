@@ -340,7 +340,13 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                     lines={2}
                                                     ellipsis={<span>...</span>}
                                                 >
-                                                    {strip(description)}
+                                                    {get(resultSettings, 'resultHighlights', false) ? (
+                                                        <p
+                                                            dangerouslySetInnerHTML={{ __html: description }}
+                                                        />
+                                                    ) : (
+                                                        strip(description)
+                                                    )}
                                                 </Truncate>
                                             ) : null
                                         }
@@ -489,8 +495,12 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                                 <span>...</span>
                                                             }
                                                         >
-                                                            {strip(
-                                                                description,
+                                                            {get(resultSettings, 'resultHighlights', false) ? (
+                                                                <p
+                                                                    dangerouslySetInnerHTML={{ __html: description }}
+                                                                />
+                                                            ) : (
+                                                                strip(description)
                                                             )}
                                                         </Truncate>
                                                     ) : null}
