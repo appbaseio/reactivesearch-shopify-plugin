@@ -1320,7 +1320,6 @@ class Search extends Component {
                             alt="logo-url"
                             style={{
                                 width: `${logoSettings.logoWidth}px`,
-                                height: `${logoSettings.logoWidth}px`,
                                 float: `${logoSettings.logoAlignment}`,
                                 margin: '0px 0px 10px 10px',
                             }}
