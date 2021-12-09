@@ -1250,6 +1250,7 @@ class Search extends Component {
             }
         }
 
+        const logoSettings = get(this.globalSettings, 'meta.branding', {});
         return (
             <ReactiveBase
                 app={this.index}
@@ -1320,6 +1321,22 @@ class Search extends Component {
                 ) : null}
 
                 <div style={{ maxWidth: '90%', margin: '25px auto' }}>
+
+                {Object.keys(logoSettings).length ? (
+                    <div>
+                        <img
+                            src={`${logoSettings.logoUrl}/tr:w-${logoSettings.logoWidth*2}`}
+                            alt="logo-url"
+                            style={{
+                                width: `${logoSettings.logoWidth}px`,
+                                height: `50px`,
+                                float: `${logoSettings.logoAlignment}`,
+                                margin: '10px 0px',
+                            }}
+                        />
+                    </div>
+                ): null}
+
                     {this.themeType === 'classic' &&
                         this.renderCategorySearch()}
 
