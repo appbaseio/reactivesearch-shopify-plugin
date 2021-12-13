@@ -78,7 +78,7 @@ const reactiveListCls = (toggleFilters, theme) => css`
     }
     .custom-result-info {
         gap: 15px;
-        padding: 0px;
+        padding: 18px 0px;
         height: 60px;
     }
     .custom-result-info > div {
