@@ -77,11 +77,13 @@ const reactiveListCls = (toggleFilters, theme) => css`
         visibility: hidden;
     }
     .custom-result-info {
-        padding: 18px;
+        gap: 15px;
+        padding: 18px 0px;
         height: 60px;
-        ${mediaMax.medium} {
-            display: ${toggleFilters ? 'none' : 'grid'};
-            justify-content: center;
+    }
+    .custom-result-info > div {
+        @media (max-width: 768px) {
+            display: none;
         }
     }
     .custom-result-list {
