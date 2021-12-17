@@ -1352,7 +1352,7 @@ class Search extends Component {
                     </div>
                 ): null}
 
-                    {this.themeType === 'classic' &&
+                    {(this.themeType === 'classic' || this.themeType === 'geo') &&
                         this.renderCategorySearch()}
 
                     <div
@@ -1826,7 +1826,7 @@ class Search extends Component {
                                 }
                             />
                             {this.themeType === 'geo' ? (
-                                <GeoResultsLayout />
+                                <GeoResultsLayout isPreview={isPreview}/>
 
                             ) : (
                                 <ReactiveList

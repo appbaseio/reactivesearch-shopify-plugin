@@ -10,9 +10,10 @@ import Truncate from 'react-truncate';
 import { ReactiveGoogleMap, ReactiveOpenStreetMap } from '@appbaseio/reactivemaps';
 import { mediaMax } from '../../utils/media';
 import LayoutSwitch from "./LayoutSwitch";
+import ListLayout from "./ListLayout";
 import { getSearchPreferences, defaultPreferences, getReactDependenciesFromPreferences } from '../../utils';
 
-function GeoResultsLayout() {
+function GeoResultsLayout({isPreview}) {
     const [resultsLayout, setResultsLayout] = useState(
         get(
             getSearchPreferences(),
@@ -80,7 +81,7 @@ function GeoResultsLayout() {
                             window.scrollTo(0, 0);
                         }}
                         style={{
-                            width: "calc(100% - 280px)",
+                            width: "100%",
                             height: "calc(100vh - 52px)"
                         }}
                         showMarkerClusters={false}
@@ -99,8 +100,14 @@ function GeoResultsLayout() {
                                         {meta?.resultStats?.numberOfResults} results found in{' '}
                                         {meta?.resultStats?.time}ms
                                     </div>
-                                    {/* list */}
-                                    {renderMap()}
+
+                                    {resultsLayout !== 'map' ? (
+                                        <ListLayout
+                                            data={hits}
+                                            isPreview={isPreview}
+                                            triggerClickAnalytics={triggerClickAnalytics}
+                                        />
+                                    ): renderMap()}
                                 </>
                             );
                         }}
@@ -157,7 +164,13 @@ function GeoResultsLayout() {
                                         {meta?.resultStats?.time}ms
                                     </div>
                                     {/* list */}
-                                    {renderMap()}
+                                    {resultsLayout !== 'map' ? (
+                                        <ListLayout
+                                            data={hits}
+                                            isPreview={isPreview}
+                                            triggerClickAnalytics={triggerClickAnalytics}
+                                        />
+                                    ): renderMap()}
                                 </>
                             );
                         }}
