@@ -175,7 +175,11 @@ export const defaultPreferences = {
         layout: 'grid',
         viewSwitcher: true,
         mapLayout: 'map',
-        mapComponent: 'googleMap'
+        mapComponent: 'googleMap',
+        defaultZoom: 13,
+        showSearchAsMove: true,
+        showMarkerClusters: true,
+        mapsApiKey: 'AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU',
     },
     facetSettings: {
         globalSettings: {

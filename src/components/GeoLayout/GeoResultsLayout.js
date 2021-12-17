@@ -42,6 +42,22 @@ function GeoResultsLayout({isPreview}) {
         defaultPreferences.resultSettings.mapComponent,
     );
 
+    const defaultZoom = get(
+        preferences,
+        'resultSettings.defaultZoom',
+        defaultPreferences.resultSettings.defaultZoom,
+    );
+    const showSearchAsMove = get(
+        preferences,
+        'resultSettings.showSearchAsMove',
+        defaultPreferences.resultSettings.showSearchAsMove,
+    );
+    const showMarkerClusters = get(
+        preferences,
+        'resultSettings.showMarkerClusters',
+        defaultPreferences.resultSettings.showMarkerClusters,
+    );
+
     const resultSettings = get(preferences, 'resultSettings');
 
     function getFontFamily() {
@@ -61,7 +77,7 @@ function GeoResultsLayout({isPreview}) {
                         componentId="map"
                         dataField="location"
                         title="Maps Ui"
-                        defaultZoom={13}
+                        defaultZoom={defaultZoom}
                         pagination
                         onPageChange={() => {
                             window.scrollTo(0, 0);
@@ -70,8 +86,8 @@ function GeoResultsLayout({isPreview}) {
                             width: "100%",
                             height: "calc(100vh - 52px)"
                         }}
-                        showMarkerClusters={false}
-                        showSearchAsMove={false}
+                        showMarkerClusters={showMarkerClusters}
+                        showSearchAsMove={showSearchAsMove}
                         onPopoverClick={(item) => {
                             console.log(item);
                             return (
@@ -152,7 +168,7 @@ function GeoResultsLayout({isPreview}) {
                         componentId="map"
                         dataField="location"
                         title="Maps Ui"
-                        defaultZoom={13}
+                        defaultZoom={defaultZoom}
                         pagination
                         onPageChange={() => {
                             window.scrollTo(0, 0);
@@ -161,8 +177,8 @@ function GeoResultsLayout({isPreview}) {
                             width: "calc(100% - 280px)",
                             height: "calc(100vh - 52px)"
                         }}
-                        showMarkerClusters={false}
-                        showSearchAsMove={false}
+                        showMarkerClusters={showMarkerClusters}
+                        showSearchAsMove={showSearchAsMove}
                         renderAllData={(
                             hits,
                             loadMore,
