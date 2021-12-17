@@ -9,18 +9,12 @@ import strip from 'striptags';
 import Truncate from 'react-truncate';
 import { ReactiveGoogleMap, ReactiveOpenStreetMap } from '@appbaseio/reactivemaps';
 import { mediaMax } from '../../utils/media';
-import LayoutSwitch from "./LayoutSwitch";
 import ListLayout from "./ListLayout";
+import ResultsLayout from './ResultsLayout';
 import { getSearchPreferences, defaultPreferences, getReactDependenciesFromPreferences } from '../../utils';
 
 function GeoResultsLayout({isPreview}) {
-    const [resultsLayout, setResultsLayout] = useState(
-        get(
-            getSearchPreferences(),
-            'resultSettings.mapLayout',
-            defaultPreferences.resultSettings.mapLayout,
-        ),
-    );
+
     const preferences = getSearchPreferences();
 
     const theme = get(
@@ -41,11 +35,6 @@ function GeoResultsLayout({isPreview}) {
         defaultPreferences.globalSettings.currency,
     );
 
-    const viewSwitcher = get(
-        preferences,
-        'resultSettings.viewSwitcher',
-        defaultPreferences.resultSettings.viewSwitcher,
-    );
 
     const mapComponent = get(
         preferences,
@@ -66,9 +55,6 @@ function GeoResultsLayout({isPreview}) {
 
     return (
         <div>
-            {viewSwitcher && (
-                <LayoutSwitch switchViewLayout={setResultsLayout} resultsLayout={resultsLayout}/>
-            )}
             {
                 mapComponent === 'googleMap' ? (
                     <ReactiveGoogleMap
@@ -86,6 +72,41 @@ function GeoResultsLayout({isPreview}) {
                         }}
                         showMarkerClusters={false}
                         showSearchAsMove={false}
+                        onPopoverClick={(item) => {
+                            console.log(item);
+                            return (
+                                <div>hello</div>
+                            // <div
+                            //     style={{
+                            //         display: 'flex',
+                            //         flexDirection: 'column',
+                            //         justifyContent: 'flex-start',
+                            //         alignItems: 'flex-start',
+                            //     }}
+                            // >
+                            //     <div style={{ margin: '3px 0', height: '100px', width: '100%' }}>
+                            //         <img
+                            //             style={{ margin: '3px 0', height: '100%', width: '100%' }}
+                            //             src={item.images.picture_url}
+                            //             alt={item.name}
+                            //         />
+                            //     </div>
+                            //     <div style={{ margin: '3px 0' }}>
+                            //         <b>Name: </b>
+                            //         {item.name}
+                            //     </div>
+                            //     <div style={{ margin: '3px 0' }}>
+                            //         <b>Room Type: </b>
+                            //         {item.room_type}
+                            //     </div>
+                            //     <div style={{ margin: '3px 0' }}>
+                            //         <b>Property Type: </b>
+                            //         {item.property_type}
+                            //     </div>
+                            // </div>
+
+                            )
+                        }}
                         renderAllData={(
                             hits,
                             loadMore,
@@ -95,20 +116,13 @@ function GeoResultsLayout({isPreview}) {
                             meta,
                         ) => {
                             return (
-                                <>
-                                    <div >
-                                        {meta?.resultStats?.numberOfResults} results found in{' '}
-                                        {meta?.resultStats?.time}ms
-                                    </div>
-
-                                    {resultsLayout !== 'map' ? (
-                                        <ListLayout
-                                            data={hits}
-                                            isPreview={isPreview}
-                                            triggerClickAnalytics={triggerClickAnalytics}
-                                        />
-                                    ): renderMap()}
-                                </>
+                                <ResultsLayout
+                                    data={hits}
+                                    meta={meta}
+                                    isPreview={isPreview}
+                                    triggerClickAnalytics={triggerClickAnalytics}
+                                    renderMap={renderMap}
+                                />
                             );
                         }}
                         renderData={(data) => ({
@@ -159,18 +173,7 @@ function GeoResultsLayout({isPreview}) {
                         ) => {
                             return (
                                 <>
-                                    <div >
-                                        {meta?.resultStats?.numberOfResults} results found in{' '}
-                                        {meta?.resultStats?.time}ms
-                                    </div>
-                                    {/* list */}
-                                    {resultsLayout !== 'map' ? (
-                                        <ListLayout
-                                            data={hits}
-                                            isPreview={isPreview}
-                                            triggerClickAnalytics={triggerClickAnalytics}
-                                        />
-                                    ): renderMap()}
+                                    list
                                 </>
                             );
                         }}

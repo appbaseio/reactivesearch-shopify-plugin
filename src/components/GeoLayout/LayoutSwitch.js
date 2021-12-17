@@ -17,7 +17,7 @@ const viewSwitcherStyles = css`
         }
     }
 `;
-export default function LayoutSwitch({ switchViewLayout, resultsLayout }) {
+export default function LayoutSwitch({ switchViewLayout }) {
 
     return (
         <div css={viewSwitcherStyles}>
@@ -25,7 +25,7 @@ export default function LayoutSwitch({ switchViewLayout, resultsLayout }) {
                 type="global"
                 className="icon-styles"
                 style={{
-                    color: resultsLayout === 'map' ? '#1990ff' : 'none'
+                    // color: resultsLayout === 'map' ? '#1990ff' : 'none'
                 }}
                 onClick={() => switchViewLayout('map')}
             />
@@ -33,7 +33,7 @@ export default function LayoutSwitch({ switchViewLayout, resultsLayout }) {
                 type="menu"
                 className="icon-styles"
                 style={{
-                    color: resultsLayout === 'list' ? '#1990ff' : 'none'
+                    // color: resultsLayout === 'list' ? '#1990ff' : 'none'
                 }}
                 onClick={() => switchViewLayout('list')}
             />
