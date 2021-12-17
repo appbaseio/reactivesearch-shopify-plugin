@@ -174,6 +174,8 @@ export const defaultPreferences = {
         },
         layout: 'grid',
         viewSwitcher: true,
+        mapLayout: 'map',
+        mapComponent: 'googleMap'
     },
     facetSettings: {
         globalSettings: {
