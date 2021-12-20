@@ -1826,7 +1826,9 @@ class Search extends Component {
                                 }
                             />
                             {this.themeType === 'geo' ? (
-                                <GeoResultsLayout isPreview={isPreview}/>
+                                <GeoResultsLayout
+                                    isPreview={isPreview}
+                                />
 
                             ) : (
                                 <ReactiveList

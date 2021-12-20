@@ -35,7 +35,6 @@ function GeoResultsLayout({isPreview}) {
         defaultPreferences.globalSettings.currency,
     );
 
-
     const mapComponent = get(
         preferences,
         'resultSettings.mapComponent',
@@ -90,37 +89,99 @@ function GeoResultsLayout({isPreview}) {
                         showSearchAsMove={showSearchAsMove}
                         onPopoverClick={(item) => {
                             console.log(item);
-                            return (
-                                <div>hello</div>
-                            // <div
-                            //     style={{
-                            //         display: 'flex',
-                            //         flexDirection: 'column',
-                            //         justifyContent: 'flex-start',
-                            //         alignItems: 'flex-start',
-                            //     }}
-                            // >
-                            //     <div style={{ margin: '3px 0', height: '100px', width: '100%' }}>
-                            //         <img
-                            //             style={{ margin: '3px 0', height: '100%', width: '100%' }}
-                            //             src={item.images.picture_url}
-                            //             alt={item.name}
-                            //         />
-                            //     </div>
-                            //     <div style={{ margin: '3px 0' }}>
-                            //         <b>Name: </b>
-                            //         {item.name}
-                            //     </div>
-                            //     <div style={{ margin: '3px 0' }}>
-                            //         <b>Room Type: </b>
-                            //         {item.room_type}
-                            //     </div>
-                            //     <div style={{ margin: '3px 0' }}>
-                            //         <b>Property Type: </b>
-                            //         {item.property_type}
-                            //     </div>
-                            // </div>
+                            const handle = isPreview
+                                ? ''
+                                : get(item, get(resultSettings, 'fields.handle'));
 
+                            console.log(get(resultSettings, 'fields.image'));
+                            const image = get(
+                                item,
+                                get(resultSettings, 'fields.image'),
+                            );
+                            const title = get(
+                                item,
+                                get(resultSettings, 'fields.title'),
+                            );
+
+                            const description = get(
+                                item,
+                                get(resultSettings, 'fields.description'),
+                            );
+                            const price = get(
+                                item,
+                                get(resultSettings, 'fields.price'),
+                            );
+
+                            const redirectToProduct = !isPreview || handle;
+
+                            return (
+                                <a
+                                    href={
+                                        redirectToProduct
+                                            ? `/products/${handle}`
+                                            : undefined
+                                    }
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                    key={item._id}
+                                    id={item._id}
+                                >
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'flex-start',
+                                            alignItems: 'flex-start',
+                                        }}
+                                    >
+                                        <div style={{ margin: '3px 0', height: '100px', width: '100%' }}>
+                                            <img
+                                                style={{ margin: '3px 0', height: '100%', width: '100%' }}
+                                                src={image}
+                                                alt={title}
+                                                // onError={(event) => {
+                                                //     event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                // }}
+                                            />
+                                        </div>
+                                        <div style={{ margin: '3px 0' }}>
+                                            <Truncate
+                                                lines={1}
+                                                ellipsis={<span>...</span>}
+                                            >
+                                                {strip(title)}
+                                            </Truncate>
+                                        </div>
+                                        <div style={{ margin: '3px 0' }}>
+                                            <Truncate
+                                                lines={2}
+                                                ellipsis={<span>...</span>}
+                                            >
+                                                {get(resultSettings, 'resultHighlights', false) ? (
+                                                    <p
+                                                        dangerouslySetInnerHTML={{ __html: description }}
+                                                    />
+                                                ) : (
+                                                    strip(description)
+                                                )}
+                                            </Truncate>
+                                        </div>
+                                        <div style={{ margin: '3px 0' }}>
+                                            {price}
+                                        </div>
+
+                                        {redirectToProduct ? (
+                                            <Button
+                                                type="primary"
+                                                size="large"
+                                                className="product-button"
+                                            >
+                                                <Icon type="eye" />
+                                                View Product
+                                            </Button>
+                                        ) : null}
+                                    </div>
+                                </a>
                             )
                         }}
                         renderAllData={(
@@ -132,13 +193,14 @@ function GeoResultsLayout({isPreview}) {
                             meta,
                         ) => {
                             return (
-                                <ResultsLayout
-                                    data={hits}
-                                    meta={meta}
-                                    isPreview={isPreview}
-                                    triggerClickAnalytics={triggerClickAnalytics}
-                                    renderMap={renderMap}
-                                />
+                                renderMap()
+                                // <ResultsLayout
+                                //     data={hits}
+                                //     meta={meta}
+                                //     isPreview={isPreview}
+                                //     triggerClickAnalytics={triggerClickAnalytics}
+                                //     renderMap={renderMap}
+                                // />
                             );
                         }}
                         renderData={(data) => ({
@@ -188,9 +250,13 @@ function GeoResultsLayout({isPreview}) {
                             meta,
                         ) => {
                             return (
-                                <>
-                                    list
-                                </>
+                                <ResultsLayout
+                                    data={hits}
+                                    meta={meta}
+                                    isPreview={isPreview}
+                                    triggerClickAnalytics={triggerClickAnalytics}
+                                    renderMap={renderMap}
+                                />
                             );
                         }}
                         renderData={(data) => ({
