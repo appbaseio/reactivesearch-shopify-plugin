@@ -87,6 +87,8 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
 
     const resultSettings = get(preferences, 'resultSettings');
 
+    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText.text', 'View Product');
+
     return (
         <List
             css={NoDataStyles}

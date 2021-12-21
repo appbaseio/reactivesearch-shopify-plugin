@@ -59,6 +59,8 @@ function GeoResultsLayout({isPreview}) {
 
     const resultSettings = get(preferences, 'resultSettings');
 
+    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText.text', 'View Product');
+
     function getFontFamily() {
         const receivedFont = get(theme, 'typography.fontFamily', '');
         let fontFamily = '';
@@ -193,14 +195,14 @@ function GeoResultsLayout({isPreview}) {
                             meta,
                         ) => {
                             return (
-                                renderMap()
-                                // <ResultsLayout
-                                //     data={hits}
-                                //     meta={meta}
-                                //     isPreview={isPreview}
-                                //     triggerClickAnalytics={triggerClickAnalytics}
-                                //     renderMap={renderMap}
-                                // />
+                                // renderMap()
+                                <ResultsLayout
+                                    data={hits}
+                                    meta={meta}
+                                    isPreview={isPreview}
+                                    triggerClickAnalytics={triggerClickAnalytics}
+                                    renderMap={renderMap()}
+                                />
                             );
                         }}
                         renderData={(data) => ({
