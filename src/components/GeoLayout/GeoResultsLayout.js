@@ -13,6 +13,72 @@ import ListLayout from "./ListLayout";
 import ResultsLayout from './ResultsLayout';
 import { getSearchPreferences, defaultPreferences, getReactDependenciesFromPreferences } from '../../utils';
 
+export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    position: relative;
+    overflow: hidden;
+    max-width: 200px;
+    height: 100%;
+    .image-container {
+        margin: 3px 0px;
+        height: 100px;
+        width: 190px;
+    }
+    .title-container {
+        margin: 3px 0px;
+        color: black;
+        width: 190px;
+        font-weight: 400px;
+    }
+    .description-container {
+        margin: 3px 0px;
+        color: black;
+        width: 190px;
+    }
+    .overflow-text {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .product-button {
+        top: -50%;
+        position: absolute;
+        background: ${primaryColor} !important;
+        border: 0;
+        box-shadow: 0 2px 4px ${titleColor}33;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: all ease 0.2s;
+    }
+
+    ::before {
+        content: '';
+        width: 100%;
+        height: 0vh;
+        background: ${primaryColor}00 !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        transition: all ease 0.4s;
+    }
+
+
+    &:hover {
+        .product-button {
+            top: 50%;
+        }
+        ::before {
+            width: 100%;
+            height: 100%;
+            background: ${primaryColor}1a !important;
+        }
+    }
+`;
+
 function GeoResultsLayout({isPreview}) {
 
     const preferences = getSearchPreferences();
@@ -95,7 +161,6 @@ function GeoResultsLayout({isPreview}) {
                                 ? ''
                                 : get(item, get(resultSettings, 'fields.handle'));
 
-                            console.log(get(resultSettings, 'fields.image'));
                             const image = get(
                                 item,
                                 get(resultSettings, 'fields.image'),
@@ -104,7 +169,6 @@ function GeoResultsLayout({isPreview}) {
                                 item,
                                 get(resultSettings, 'fields.title'),
                             );
-
                             const description = get(
                                 item,
                                 get(resultSettings, 'fields.description'),
@@ -129,44 +193,30 @@ function GeoResultsLayout({isPreview}) {
                                     id={item._id}
                                 >
                                     <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'flex-start',
-                                            alignItems: 'flex-start',
-                                        }}
+                                        css={cardStyles({
+                                            ...get(theme, 'colors'),
+                                        })}
+
                                     >
-                                        <div style={{ margin: '3px 0', height: '100px', width: '100%' }}>
+                                        { image ? (
                                             <img
-                                                style={{ margin: '3px 0', height: '100%', width: '100%' }}
+                                                className="image-container"
                                                 src={image}
                                                 alt={title}
-                                                // onError={(event) => {
-                                                //     event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
-                                                // }}
+                                                onError={(event) => {
+                                                    event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                }}
                                             />
+                                        ): null }
+                                        <div className="title-container">
+                                            <p className="overflow-text">
+                                               {title}
+                                            </p>
                                         </div>
-                                        <div style={{ margin: '3px 0' }}>
-                                            <Truncate
-                                                lines={1}
-                                                ellipsis={<span>...</span>}
-                                            >
-                                                {strip(title)}
-                                            </Truncate>
-                                        </div>
-                                        <div style={{ margin: '3px 0' }}>
-                                            <Truncate
-                                                lines={2}
-                                                ellipsis={<span>...</span>}
-                                            >
-                                                {get(resultSettings, 'resultHighlights', false) ? (
-                                                    <p
-                                                        dangerouslySetInnerHTML={{ __html: description }}
-                                                    />
-                                                ) : (
-                                                    strip(description)
-                                                )}
-                                            </Truncate>
+                                        <div className="description-container">
+                                            <p className="overflow-text">
+                                               {description}
+                                            </p>
                                         </div>
                                         <div style={{ margin: '3px 0' }}>
                                             {price}
@@ -195,13 +245,12 @@ function GeoResultsLayout({isPreview}) {
                             meta,
                         ) => {
                             return (
-                                // renderMap()
                                 <ResultsLayout
                                     data={hits}
                                     meta={meta}
                                     isPreview={isPreview}
                                     triggerClickAnalytics={triggerClickAnalytics}
-                                    renderMap={renderMap()}
+                                    renderMap={renderMap}
                                 />
                             );
                         }}
@@ -243,6 +292,87 @@ function GeoResultsLayout({isPreview}) {
                         }}
                         showMarkerClusters={showMarkerClusters}
                         showSearchAsMove={showSearchAsMove}
+                        onPopoverClick={(item) => {
+                            console.log(item);
+                            const handle = isPreview
+                                ? ''
+                                : get(item, get(resultSettings, 'fields.handle'));
+
+                            const image = get(
+                                item,
+                                get(resultSettings, 'fields.image'),
+                            );
+                            const title = get(
+                                item,
+                                get(resultSettings, 'fields.title'),
+                            );
+                            const description = get(
+                                item,
+                                get(resultSettings, 'fields.description'),
+                            );
+                            const price = get(
+                                item,
+                                get(resultSettings, 'fields.price'),
+                            );
+
+                            const redirectToProduct = !isPreview || handle;
+
+                            return (
+                                <a
+                                    href={
+                                        redirectToProduct
+                                            ? `/products/${handle}`
+                                            : undefined
+                                    }
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                    key={item._id}
+                                    id={item._id}
+                                >
+                                    <div
+                                        css={cardStyles({
+                                            ...get(theme, 'colors'),
+                                        })}
+
+                                    >
+                                        { image ? (
+                                            <img
+                                                className="image-container"
+                                                src={image}
+                                                alt={title}
+                                                onError={(event) => {
+                                                    event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                }}
+                                            />
+                                        ): null }
+                                        <div className="title-container">
+                                            <p className="overflow-text">
+                                               {title}
+                                            </p>
+                                        </div>
+                                        <div className="description-container">
+                                            <p className="overflow-text">
+                                               {description}
+                                            </p>
+                                        </div>
+                                        <div style={{ margin: '3px 0' }}>
+                                            {price}
+                                        </div>
+
+                                        {redirectToProduct ? (
+                                            <Button
+                                                type="primary"
+                                                size="large"
+                                                className="product-button"
+                                            >
+                                                <Icon type="eye" />
+                                                {redirectUrlText}
+                                            </Button>
+                                        ) : null}
+                                    </div>
+                                </a>
+                            )
+                        }}
                         renderAllData={(
                             hits,
                             loadMore,

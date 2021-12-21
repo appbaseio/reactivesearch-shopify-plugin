@@ -37,13 +37,17 @@ function ResultsLayout({meta, data, isPreview, triggerClickAnalytics, renderMap}
                 <LayoutSwitch switchViewLayout={setResultsLayout} resultsLayout={resultsLayout}/>
             )}
 
-            {resultsLayout === 'map' ? (
+            {resultsLayout !== 'map' ? (
                 <ListLayout
                     data={data}
                     isPreview={isPreview}
                     triggerClickAnalytics={triggerClickAnalytics}
                 />
-            ): renderMap()}
+            ): (
+                <div style={{height: '90vh'}}>
+                    {renderMap()}
+                </div>
+            )}
         </div>
     )
 }
