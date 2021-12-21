@@ -29,13 +29,13 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     }
     .title-container {
         margin: 3px 0px;
-        color: black;
+
         width: 190px;
         font-weight: 400px;
     }
     .description-container {
         margin: 3px 0px;
-        color: black;
+
         width: 190px;
     }
     .overflow-text {
@@ -287,7 +287,7 @@ function GeoResultsLayout({isPreview}) {
                             window.scrollTo(0, 0);
                         }}
                         style={{
-                            width: "calc(100% - 280px)",
+                            width: "100%",
                             height: "calc(100vh - 52px)"
                         }}
                         showMarkerClusters={showMarkerClusters}
@@ -314,6 +314,8 @@ function GeoResultsLayout({isPreview}) {
                                 item,
                                 get(resultSettings, 'fields.price'),
                             );
+
+                            const { variants } = item;
 
                             const redirectToProduct = !isPreview || handle;
 
@@ -356,7 +358,18 @@ function GeoResultsLayout({isPreview}) {
                                             </p>
                                         </div>
                                         <div style={{ margin: '3px 0' }}>
-                                            {price}
+                                            {variants?.length ||
+                                                price
+                                                    ? `${currency} ${
+                                                            variants
+                                                                ? get(
+                                                                    variants[0],
+                                                                    'price',
+                                                                    '',
+                                                                )
+                                                                : price
+                                                        }`
+                                                    : null}
                                         </div>
 
                                         {redirectToProduct ? (
