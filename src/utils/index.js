@@ -167,6 +167,9 @@ export const defaultPreferences = {
             text: 'Click here to Search',
         },
         rsConfig: null,
+        redirectUrlText: {
+            text: 'View Product',
+        }
     },
     resultSettings: {
         rsConfig: {

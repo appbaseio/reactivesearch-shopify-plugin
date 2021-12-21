@@ -177,7 +177,7 @@ function GeoResultsLayout({isPreview}) {
                                                 className="product-button"
                                             >
                                                 <Icon type="eye" />
-                                                View Product
+                                                {redirectUrlText}
                                             </Button>
                                         ) : null}
                                     </div>

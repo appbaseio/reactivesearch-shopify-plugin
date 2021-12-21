@@ -159,7 +159,7 @@ const SuggestionCard = ({
                             className="product-button"
                         >
                             <Icon type="eye" />
-                            {ctaTitle || 'View Product'}
+                            {redirectUrlText || ctaTitle}
                         </Button>
                     ) : null}
                 </Card>

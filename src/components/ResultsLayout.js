@@ -218,6 +218,8 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
         defaultPreferences.resultSettings.viewSwitcher,
     );
 
+    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText.text', 'View Product');
+
     const resultSettings = get(preferences, 'resultSettings');
 
     function getFontFamily() {
@@ -394,7 +396,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                             className="product-button"
                                         >
                                             <Icon type="eye" />
-                                            View Product
+                                            {redirectUrlText}
                                         </Button>
                                    ) : null}
                                 </Card>
@@ -549,7 +551,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                             className="product-button"
                                         >
                                             <Icon type="eye" />
-                                            View Product
+                                            {redirectUrlText}
                                         </Button>
                                     ) : null}
                                 </List.Item>

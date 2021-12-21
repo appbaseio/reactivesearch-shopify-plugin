@@ -229,7 +229,7 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
                                     className="product-button"
                                 >
                                     <Icon type="eye" />
-                                    View Product
+                                    {redirectUrlText}
                                 </Button>
                             ) : null}
                         </List.Item>
