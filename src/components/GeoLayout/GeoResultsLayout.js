@@ -178,6 +178,8 @@ function GeoResultsLayout({isPreview}) {
                                 get(resultSettings, 'fields.price'),
                             );
 
+                            const { variants } = item;
+
                             const redirectToProduct = !isPreview || handle;
 
                             return (
@@ -219,7 +221,18 @@ function GeoResultsLayout({isPreview}) {
                                             </p>
                                         </div>
                                         <div style={{ margin: '3px 0' }}>
-                                            {price}
+                                            {variants?.length ||
+                                                price
+                                                    ? `${currency} ${
+                                                            variants
+                                                                ? get(
+                                                                    variants[0],
+                                                                    'price',
+                                                                    '',
+                                                                )
+                                                                : price
+                                                        }`
+                                                    : null}
                                         </div>
 
                                         {redirectToProduct ? (
