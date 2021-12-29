@@ -1224,6 +1224,7 @@ class Search extends Component {
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
                 showDistinctSuggestions
+                highlight={get(this.resultSettings, 'resultHighlights', false)}
             />
         );
     };
