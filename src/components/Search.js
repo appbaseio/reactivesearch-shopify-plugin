@@ -1325,7 +1325,7 @@ class Search extends Component {
 
                 <div style={{ maxWidth: '90%', margin: '25px auto' }}>
 
-                {Object.keys(logoSettings).length ? (
+                {Object.keys(logoSettings).length && logoSettings.logoUrl ? (
                     <div>
                         <img
                             src={`${logoSettings.logoUrl}/tr:w-${logoSettings.logoWidth*2}`}

@@ -4,8 +4,6 @@
 import { useState } from 'react';
 import { Card, Button, Icon, List } from 'antd';
 import { bool } from 'prop-types';
-import strip from 'striptags';
-import Truncate from 'react-truncate';
 import { css, jsx } from '@emotion/core';
 import get from 'lodash.get';
 import { mediaMax } from '../utils/media';
