@@ -76,11 +76,13 @@ const reactiveListCls = (toggleFilters, theme) => css`
         visibility: hidden;
     }
     .custom-result-info {
-        padding: 18px;
+        gap: 15px;
+        padding: 18px 0px;
         height: 60px;
-        ${mediaMax.medium} {
-            display: ${toggleFilters ? 'none' : 'grid'};
-            justify-content: center;
+    }
+    .custom-result-info > div {
+        @media (max-width: 768px) {
+            display: none;
         }
     }
     .custom-result-list {
@@ -875,6 +877,14 @@ class Search extends Component {
     render() {
         const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
+        let newProps = {};
+        if(get(this.resultSettings, 'sortOptionSelector', []).length) {
+            newProps = {
+                sortOptions: get(this.resultSettings, 'sortOptionSelector')
+            }
+        }
+
+        const logoSettings = get(this.globalSettings, 'meta.branding', {});
         return (
             <ReactiveBase
                 app={this.index}
@@ -943,6 +953,20 @@ class Search extends Component {
                         </Button>
                     </Affix>
                 ) : null}
+
+                {Object.keys(logoSettings).length ? (
+                    <div>
+                        <img
+                            src={logoSettings.logoUrl}
+                            alt="logo-url"
+                            style={{
+                                width: `${logoSettings.logoWidth}px`,
+                                float: `${logoSettings.logoAlignment}`,
+                                margin: '0px 0px 10px 10px',
+                            }}
+                        />
+                    </div>
+                ): null}
 
                 <div style={{ maxWidth: '90%', margin: '25px auto' }}>
                     {this.themeType === 'classic' &&
@@ -1382,6 +1406,7 @@ class Search extends Component {
                                         ),
                                     ],
                                 }}
+                                {...newProps}
                             />
                         </div>
                     </div>
