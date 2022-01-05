@@ -1176,11 +1176,11 @@ class Search extends Component {
                     zIndex: 4,
                     display: toggleFilters ? 'none' : 'block',
                 }}
-                onKeyDown={(e) => {
-                    if(e.keyCode === 27) {
-                        document.getElementById('q-downshift-input').blur();
-                    }
-                }}
+                // onKeyDown={(e) => {
+                //     if(e.keyCode === 27) {
+                //         document.getElementById('q-downshift-input').blur();
+                //     }
+                // }}
                 enableRecentSuggestions
                 enablePopularSuggestions
                 popularSuggestionsConfig={{
@@ -1196,47 +1196,51 @@ class Search extends Component {
                     value,
                     categories,
                     data,
-                    popularSuggestions,
-                    recentSearches,
+                    // popularSuggestions,
+                    // recentSearches,
                     downshiftProps,
                     loading,
                 }) => {
-                    console.log(data);
                     return downshiftProps.isOpen &&
                          (
-                             data.map((suggestion) => (
-                                 <div>{suggestion.value}</div>
-                             ))
-                        // <Suggestions
-                        //     blur={blur}
-                        //     themeType={this.themeType}
-                        //     fields={get(this.searchSettings, 'fields', {})}
-                        //     currentValue={value}
-                        //     categories={categories}
-                        //     customMessage={get(
-                        //         this.searchSettings,
-                        //         'customMessages',
-                        //         {},
-                        //     )}
-                        //     getItemProps={downshiftProps.getItemProps}
-                        //     highlightedIndex={downshiftProps.highlightedIndex}
-                        //     parsedSuggestions={data.filter(
-                        //         (suggestion) =>
-                        //             get(suggestion, 'source.type') !==
-                        //             'collections',
-                        //     )}
-                        //     themeConfig={this.theme}
-                        //     currency={this.currency}
-                        //     customSuggestions={get(
-                        //         this.searchSettings,
-                        //         'customSuggestions',
-                        //     )}
-                        //     isPreview={isPreview}
-                        //     popularSuggestions={popularSuggestions}
-                        //     recentSearches={recentSearches}
-                        //     loading={loading}
-                        //     highlight={this.searchSettings.rsConfig.highlight}
-                        // />
+                        <Suggestions
+                            blur={blur}
+                            themeType={this.themeType}
+                            fields={get(this.searchSettings, 'fields', {})}
+                            currentValue={value}
+                            customMessage={get(
+                                this.searchSettings,
+                                'customMessages',
+                                {},
+                            )}
+                            getItemProps={downshiftProps.getItemProps}
+                            highlightedIndex={downshiftProps.highlightedIndex}
+                            themeConfig={this.theme}
+                            currency={this.currency}
+                            customSuggestions={get(
+                                this.searchSettings,
+                                'customSuggestions',
+                            )}
+                            isPreview={isPreview}
+                            suggestions={data}
+                            popularSuggestions={data.filter(
+                                (suggestion) =>
+                                    get(suggestion, '_suggestion_type') ===
+                                    'popular',
+                            )}
+                            recentSearches={data.filter(
+                                (suggestion) =>
+                                    get(suggestion, '_suggestion_type') ===
+                                    'recent',
+                            )}
+                            parsedSuggestions={data.filter(
+                                (suggestion) =>
+                                    get(suggestion, '_suggestion_type') ===
+                                    'index',
+                            )}
+                            loading={loading}
+                            highlight={this.searchSettings.rsConfig.highlight}
+                        />
                     ) ;
                 }}
                 {...this.searchSettings.rsConfig}

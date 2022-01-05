@@ -164,13 +164,14 @@ const Suggestions = ({
     currentValue,
     getItemProps,
     highlightedIndex,
-    parsedSuggestions,
     themeConfig,
     currency,
     customMessage,
     customSuggestions,
     popularSuggestions,
     recentSearches,
+    parsedSuggestions,
+    suggestions,
     loading,
     themeType,
     isPreview,
@@ -178,14 +179,6 @@ const Suggestions = ({
     highlight,
     blur,
 }) => {
-
-    let totalSuggestions;
-    if(currentValue) {
-        totalSuggestions = parsedSuggestions.slice(0, 3).length + popularSuggestions.slice(0, isMobile() ? 3 : 5).length;
-    } else {
-        totalSuggestions = recentSearches.slice(0,3).length + popularSuggestions.slice(0, isMobile() ? 3 : 5).length;
-    }
-
     let popularIdx = 0;
     if(!recentSearches.length && !parsedSuggestions.length) {
         popularIdx = 0;
@@ -196,7 +189,7 @@ const Suggestions = ({
     return (
         <div
         style={{
-            display: (blur || !currentValue) && (!recentSearches?.length && !popularSuggestions?.length) ? 'none' : 'block' ,
+            display: (blur || !currentValue) && (!suggestions.length) ? 'none' : 'block' ,
             position: 'absolute',
             color: '#424242',
             fontSize: '0.9rem',
@@ -239,24 +232,25 @@ const Suggestions = ({
                 ) : null}
 
                 {parsedSuggestions.slice(0, 3).map((suggestion, index) => {
-                    const { source } = suggestion;
-                    const handle = get(source, get(fields, 'handle', shopifyDefaultFields.handle));
-                    const title = get(source, get(fields, 'title', shopifyDefaultFields.title));
-                    const image = get(source, get(fields, 'image', shopifyDefaultFields.image));
-                    const description = get(source, get(fields, 'description', shopifyDefaultFields.description));
-                    const price = get(source, get(fields, 'price', shopifyDefaultFields.price));
-                    const variants = get(source, 'variants');
+                    const { _source } = suggestion;
+                    const handle = get(_source, get(fields, 'handle', shopifyDefaultFields.handle));
+                    const title = get(_source, get(fields, 'title', shopifyDefaultFields.title));
+                    const image = get(_source, get(fields, 'image', shopifyDefaultFields.image));
+                    const description = get(_source, get(fields, 'description', shopifyDefaultFields.description));
+                    const price = get(_source, get(fields, 'price', shopifyDefaultFields.price));
+                    const variants = get(_source, 'variants');
                     return (
                         <div
                             style={{
                                 padding: 10,
+                                cursor: 'pointer',
                                 background:
                                     index === highlightedIndex
                                         ? '#eee'
                                         : 'transparent',
                             }}
                             className="suggestion"
-                            key={suggestion.value}
+                            key={suggestion._id || suggestion.value}
                             {...getItemProps({
                                 item: {
                                     value: title || suggestion.value,
@@ -372,7 +366,7 @@ const Suggestions = ({
                                     Recent Searches
                                 </h3>
                             ) : null}
-                            {recentSearches?.slice(0, 3)?.map((item, index) => (
+                            {recentSearches?.map((item, index) => (
                                 <div
                                     style={{
                                         background:
@@ -381,27 +375,27 @@ const Suggestions = ({
                                                 ? '#eee'
                                                 : 'transparent',
                                     }}
-                                    key={item.key}
+                                    key={item._id || item.value}
                                     css={popularSearchStyles(themeConfig.colors)}
                                     {...getItemProps({
                                         item: {
-                                            label: item.key,
-                                            value: item.key,
+                                            label: item.label,
+                                            value: item.value,
                                         },
                                     })}
                                 >
                                         <div css={iconStyles}>
 
-                                    <svg
-                                        className="icon-position"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        alt="Recent Search"
-                                        viewBox="0 0 24 24"
-                                        >
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />
-                                    </svg>
-                                    {item.key}
+                                        <svg
+                                            className="icon-position"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            alt="Recent Search"
+                                            viewBox="0 0 24 24"
+                                            >
+                                            <path d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" />
+                                        </svg>
+                                        {item.label}
                                     </div>
                                 </div>
                             ))}
@@ -417,14 +411,14 @@ const Suggestions = ({
                         ) : null}
                         {popularSuggestions.slice(0, isMobile() ? 3 : 5).map((item,index) => (
                             <div
-                                style={{
-                                    background:
-                                    // eslint-disable-next-line no-nested-ternary
-                                        index === highlightedIndex-popularIdx
-                                            ? '#eee'
-                                            : 'transparent',
-                                }}
-                                key={item.label}
+                                // style={{
+                                //     background:
+                                //     // eslint-disable-next-line no-nested-ternary
+                                //         index === highlightedIndex-popularIdx
+                                //             ? '#eee'
+                                //             : 'transparent',
+                                // }}
+                                key={item._id || item.value}
                                 css={popularSearchStyles(themeConfig.colors)}
                                 {...getItemProps({
                                     item: {
@@ -450,14 +444,14 @@ const Suggestions = ({
                     </div>
                 }
 
-                {(currentValue && totalSuggestions) ? (
+                {(currentValue && suggestions.length) ? (
                     <h3
                         css={[headingStyles(themeConfig.colors), highlightedStyles ]}
                         style={{
                             cursor: 'pointer',
                             fontSize: '14px',
                             fontWeight: 600,
-                            background: totalSuggestions === highlightedIndex ? '#eee' : '#0B6AFF1a',
+                            background: suggestions.length === highlightedIndex ? '#eee' : '#0B6AFF1a',
                         }}
                         {...getItemProps({
                             item: {
@@ -473,7 +467,7 @@ const Suggestions = ({
                     <div dangerouslySetInnerHTML={{ __html: customSuggestions }} />
                 ) : null}
                 {
-                    totalSuggestions ? (
+                    suggestions.length ? (
                         <div css={footerCls}>
                             <div className="suggestions-dropdown__footer">
                                 <div className="keyboard-shortcuts">
@@ -515,7 +509,6 @@ const Suggestions = ({
 
 Suggestions.propTypes = {
     currentValue: string,
-    categories: arrayOf(object),
     popularSuggestions: arrayOf(object),
     recentSearches: arrayOf(object),
     loading: bool,
