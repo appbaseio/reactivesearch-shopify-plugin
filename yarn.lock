@@ -43,10 +43,10 @@
   resolved "https://registry.yarnpkg.com/@ant-design/icons/-/icons-1.1.16.tgz#ac6426216934e3f4bc108f2f48f92ed66789235e"
   integrity sha512-0zNVP5JYBJkfMi9HotN6QBQjF3SFmUlumJNJXZIH+pZWp/5EbrCczzlG3YTmBWoyRHAsuOGIjSFIy8v/76DTPg==
 
-"@appbaseio/reactivecore@9.12.3":
-  version "9.12.3"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.12.3.tgz#24db61fce0ce61223fe6f52e3a904701d017700e"
-  integrity sha512-HFTc/aweQF3jffotKNDBylzoih7K0qE9WLZVLEuIWQlxIG4daYitLIhpOhYijkyPGoWjhcCIda7DRyku1jHNWQ==
+"@appbaseio/reactivecore@9.13.1":
+  version "9.13.1"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.13.1.tgz#8a07d25f4cc8ebdad65f5a90e224592cd5767c89"
+  integrity sha512-oTnD9OvrCXaRN629RClxsephXAProyNsDuMz8+BlcR+a7r9U9m5c3/rMV0IGIOpJgjfj7JjLeHUQhcdr1Zt7vg==
   dependencies:
     cross-fetch "^3.0.4"
     prop-types "^15.6.0"
@@ -54,15 +54,15 @@
     redux-thunk "^2.3.0"
     xdate "^0.8.2"
 
-"@appbaseio/reactivesearch@3.24.1":
-  version "3.24.1"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.24.1.tgz#41fc5260e6edd247dae041daf4bd9b874a4abc17"
-  integrity sha512-tTsyhovmykQ4L7NEQ40sz24FXGnWGcOn4TovmdxcBQzKN5bjP1ak7+sBAPBG1Lp0/PzMjj4Rntx1c4PbaMUyAw==
+"@appbaseio/reactivesearch@3.27.0":
+  version "3.27.0"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.27.0.tgz#6d5f963b298c4111098f564d38a12597789dbcd5"
+  integrity sha512-HW35F4DMJTEXos/b1Q2SobRja6EW7Cpq12SZ2jp3txnL6gnpDC7W95Hc6kDivoWh1h39y4B2oquJOzPOcelavw==
   dependencies:
-    "@appbaseio/reactivecore" "9.12.3"
+    "@appbaseio/reactivecore" "9.13.1"
     "@emotion/core" "^10.0.28"
     "@emotion/styled" "^10.0.27"
-    appbase-js "^4.1.5"
+    appbase-js "4.5.1"
     cross-env "^5.2.0"
     downshift "^1.31.2"
     emotion-theming "^10.0.27"
@@ -3340,17 +3340,14 @@ anymatch@^3.0.0, anymatch@^3.0.3, anymatch@~3.1.2:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-appbase-js@^4.1.5:
-  version "4.1.5"
-  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-4.1.5.tgz#d5ff9389762d07ed598a5ebcedff63de0fbb8d23"
-  integrity sha512-j1F/IEKGdX6XDZOuCQrS+KnHmbG5VRd7Ja4TuClaWNdRhTr4mwz044bVYG0pmkV5A+yR1XV8slhlUM1S2N09gg==
+appbase-js@4.5.1:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-4.5.1.tgz#0b9eb0bcb6fdb8655b38066d3f21ef24427e3b9f"
+  integrity sha512-IYShIL3J9PlyMcTEm35iPFSeQZBUW6pCJEwXKvUVjx89p/npA4UVlmYfEfRWweAJEaercbq3zhRskouEJLw2BA==
   dependencies:
     cross-fetch "^2.2.2"
-    json-stable-stringify "^1.0.1"
     querystring "^0.2.0"
-    stream "^0.0.2"
     url-parser-lite "^0.1.0"
-    ws "^6.1.2"
 
 aproba@^1.1.1:
   version "1.2.0"
@@ -5521,11 +5518,6 @@ elliptic@^6.5.3:
     inherits "^2.0.4"
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
-
-emitter-component@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/emitter-component/-/emitter-component-1.1.1.tgz#065e2dbed6959bf470679edabeaf7981d1003ab6"
-  integrity sha1-Bl4tvtaVm/RwZ57avq95gdEAOrY=
 
 emittery@^0.7.1:
   version "0.7.2"
@@ -8271,13 +8263,6 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   integrity sha1-nbe1lJatPzz+8wp1FC0tkwrXJlE=
 
-json-stable-stringify@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/json-stable-stringify/-/json-stable-stringify-1.0.1.tgz#9a759d39c5f2ff503fd5300646ed445f88c4f9af"
-  integrity sha1-mnWdOcXy/1A/1TAGRu1EX4jE+a8=
-  dependencies:
-    jsonify "~0.0.0"
-
 json2mq@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/json2mq/-/json2mq-0.2.0.tgz#b637bd3ba9eabe122c83e9720483aeb10d2c904a"
@@ -8319,11 +8304,6 @@ jsonfile@^6.0.1:
     universalify "^2.0.0"
   optionalDependencies:
     graceful-fs "^4.1.6"
-
-jsonify@~0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
-  integrity sha1-LHS27kHZPKUbe1qu6PUDYx0lKnM=
 
 "jsx-ast-utils@^2.4.1 || ^3.0.0", jsx-ast-utils@^3.0.0, jsx-ast-utils@^3.1.0:
   version "3.2.0"
@@ -12321,13 +12301,6 @@ stream-shift@^1.0.0:
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.1.tgz#d7088281559ab2778424279b0877da3c392d5a3d"
   integrity sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==
 
-stream@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/stream/-/stream-0.0.2.tgz#7f5363f057f6592c5595f00bc80a27f5cec1f0ef"
-  integrity sha1-f1Nj8Ff2WSxVlfALyAon9c7B8O8=
-  dependencies:
-    emitter-component "^1.1.1"
-
 strict-uri-encode@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/strict-uri-encode/-/strict-uri-encode-1.1.0.tgz#279b225df1d582b1f54e65addd4352e18faa0713"
@@ -13624,7 +13597,7 @@ write@1.0.3:
   dependencies:
     mkdirp "^0.5.1"
 
-ws@^6.1.2, ws@^6.2.1:
+ws@^6.2.1:
   version "6.2.2"
   resolved "https://registry.yarnpkg.com/ws/-/ws-6.2.2.tgz#dd5cdbd57a9979916097652d78f1cc5faea0c32e"
   integrity sha512-zmhltoSR8u1cnDsD43TX59mzoMZsLKqUweyYBAIvTngR3shc0W6aOZylZmq/7hqyVxPdi+5Ud2QInblgyE72fw==

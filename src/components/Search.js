@@ -5,7 +5,7 @@ import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
     ReactiveBase,
-    DataSearch,
+    SearchBox,
     MultiList,
     ReactiveList,
     SelectedFilters,
@@ -1149,11 +1149,16 @@ class Search extends Component {
         )
     }
 
+    isMobile = () => {
+        return window.innerWidth <= 768 ;
+    }
+
+
     renderCategorySearch = (categorySearchProps) => {
         const { toggleFilters, blur } = this.state;
         const { isPreview } = this.props;
         return (
-            <DataSearch
+            <SearchBox
                 // Don't change the component id it is tied to shopify
                 componentId="q"
                 filterLabel="Search"
@@ -1176,6 +1181,15 @@ class Search extends Component {
                         document.getElementById('q-downshift-input').blur();
                     }
                 }}
+                enableRecentSuggestions
+                enablePopularSuggestions
+                popularSuggestionsConfig={{
+                    size: 3,
+                }}
+                recentSuggestionsConfig={{
+                    size: 3,
+                }}
+                size={10}
                 onFocus={(e) => { this.setState({ blur: false })}}
                 onBlur={(e) => { this.setState({ blur: true })}}
                 render={({
@@ -1187,44 +1201,49 @@ class Search extends Component {
                     downshiftProps,
                     loading,
                 }) => {
+                    console.log(data);
                     return downshiftProps.isOpen &&
                          (
-                        <Suggestions
-                            blur={blur}
-                            themeType={this.themeType}
-                            fields={get(this.searchSettings, 'fields', {})}
-                            currentValue={value}
-                            categories={categories}
-                            customMessage={get(
-                                this.searchSettings,
-                                'customMessages',
-                                {},
-                            )}
-                            getItemProps={downshiftProps.getItemProps}
-                            highlightedIndex={downshiftProps.highlightedIndex}
-                            parsedSuggestions={data.filter(
-                                (suggestion) =>
-                                    get(suggestion, 'source.type') !==
-                                    'collections',
-                            )}
-                            themeConfig={this.theme}
-                            currency={this.currency}
-                            customSuggestions={get(
-                                this.searchSettings,
-                                'customSuggestions',
-                            )}
-                            isPreview={isPreview}
-                            popularSuggestions={popularSuggestions}
-                            recentSearches={recentSearches}
-                            loading={loading}
-                            highlight={this.searchSettings.rsConfig.highlight}
-                        />
+                             data.map((suggestion) => (
+                                 <div>{suggestion.value}</div>
+                             ))
+                        // <Suggestions
+                        //     blur={blur}
+                        //     themeType={this.themeType}
+                        //     fields={get(this.searchSettings, 'fields', {})}
+                        //     currentValue={value}
+                        //     categories={categories}
+                        //     customMessage={get(
+                        //         this.searchSettings,
+                        //         'customMessages',
+                        //         {},
+                        //     )}
+                        //     getItemProps={downshiftProps.getItemProps}
+                        //     highlightedIndex={downshiftProps.highlightedIndex}
+                        //     parsedSuggestions={data.filter(
+                        //         (suggestion) =>
+                        //             get(suggestion, 'source.type') !==
+                        //             'collections',
+                        //     )}
+                        //     themeConfig={this.theme}
+                        //     currency={this.currency}
+                        //     customSuggestions={get(
+                        //         this.searchSettings,
+                        //         'customSuggestions',
+                        //     )}
+                        //     isPreview={isPreview}
+                        //     popularSuggestions={popularSuggestions}
+                        //     recentSearches={recentSearches}
+                        //     loading={loading}
+                        //     highlight={this.searchSettings.rsConfig.highlight}
+                        // />
                     ) ;
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
                 showDistinctSuggestions
                 highlight={get(this.resultSettings, 'resultHighlights', false)}
+                autosuggest
             />
         );
     };
