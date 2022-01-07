@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.3",
+    "@appbaseio/reactivemaps": "^3.0.0-beta.17",
     "@appbaseio/reactivesearch": "3.24.1",
     "@emotion/core": "^10.0.35",
     "antd": "3.10.9",
@@ -42,7 +43,7 @@
     "react-app-rewired": "^2.1.6"
   },
   "scripts": {
-    "start": "PORT=1358 react-app-rewired start",
+    "start": "PORT=3000 react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
