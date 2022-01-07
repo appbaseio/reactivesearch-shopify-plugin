@@ -1181,8 +1181,6 @@ class Search extends Component {
                 //         document.getElementById('q-downshift-input').blur();
                 //     }
                 // }}
-                enableRecentSuggestions
-                enablePopularSuggestions
                 popularSuggestionsConfig={{
                     size: 3,
                 }}
