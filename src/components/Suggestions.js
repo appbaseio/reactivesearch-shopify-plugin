@@ -180,10 +180,10 @@ const Suggestions = ({
     blur,
 }) => {
     let popularIdx = 0;
-    if(!recentSearches.length && !parsedSuggestions.length) {
-        popularIdx = 0;
+    if(!currentValue) {
+        popularIdx = recentSearches.length;
     } else {
-        popularIdx = 3;
+        popularIdx = parsedSuggestions.slice(0, 3).length;
     }
 
     return (
@@ -411,13 +411,13 @@ const Suggestions = ({
                         ) : null}
                         {popularSuggestions.slice(0, isMobile() ? 3 : 5).map((item,index) => (
                             <div
-                                // style={{
-                                //     background:
-                                //     // eslint-disable-next-line no-nested-ternary
-                                //         index === highlightedIndex-popularIdx
-                                //             ? '#eee'
-                                //             : 'transparent',
-                                // }}
+                                style={{
+                                    background:
+                                    // eslint-disable-next-line no-nested-ternary
+                                        index === highlightedIndex-popularIdx
+                                            ? '#eee'
+                                            : 'transparent',
+                                }}
                                 key={item._id || item.value}
                                 css={popularSearchStyles(themeConfig.colors)}
                                 {...getItemProps({
