@@ -14,10 +14,6 @@ import ResultsLayout from './ResultsLayout';
 import { getSearchPreferences, defaultPreferences, getReactDependenciesFromPreferences } from '../../utils';
 
 export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
     position: relative;
     overflow: hidden;
     max-width: 200px;
