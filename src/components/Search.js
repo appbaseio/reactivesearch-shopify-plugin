@@ -1196,8 +1196,6 @@ class Search extends Component {
                     value,
                     categories,
                     data,
-                    // popularSuggestions,
-                    // recentSearches,
                     downshiftProps,
                     loading,
                 }) => {
@@ -1247,7 +1245,6 @@ class Search extends Component {
                 {...categorySearchProps}
                 showDistinctSuggestions
                 highlight={get(this.resultSettings, 'resultHighlights', false)}
-                autosuggest
             />
         );
     };
