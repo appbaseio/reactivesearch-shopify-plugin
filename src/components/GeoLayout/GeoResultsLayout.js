@@ -40,7 +40,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
         overflow: hidden;
     }
     .product-button {
-        top: -50%;
+        top: -58%;
         position: absolute;
         background: ${primaryColor} !important;
         border: 0;
@@ -65,7 +65,7 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
 
     &:hover {
         .product-button {
-            top: 50%;
+            top: 35%;
         }
         ::before {
             width: 100%;
