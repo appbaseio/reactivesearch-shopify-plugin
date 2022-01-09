@@ -167,6 +167,9 @@ export const defaultPreferences = {
             text: 'Click here to Search',
         },
         rsConfig: null,
+        redirectUrlText: {
+            text: 'View Product',
+        }
     },
     resultSettings: {
         rsConfig: {
@@ -174,6 +177,12 @@ export const defaultPreferences = {
         },
         layout: 'grid',
         viewSwitcher: true,
+        mapLayout: 'map',
+        mapComponent: 'googleMap',
+        defaultZoom: 13,
+        showSearchAsMove: true,
+        showMarkerClusters: true,
+        mapsApiKey: 'AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU',
     },
     facetSettings: {
         globalSettings: {
