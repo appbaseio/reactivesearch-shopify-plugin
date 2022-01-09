@@ -856,6 +856,7 @@ class Search extends Component {
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
                 showDistinctSuggestions
+                highlight={get(this.resultSettings, 'resultHighlights', false)}
             />
         );
     };
@@ -954,7 +955,7 @@ class Search extends Component {
                     </Affix>
                 ) : null}
 
-                {Object.keys(logoSettings).length ? (
+                {Object.keys(logoSettings).length && logoSettings.logoUrl ? (
                     <div>
                         <img
                             src={logoSettings.logoUrl}
