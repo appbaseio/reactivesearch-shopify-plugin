@@ -182,7 +182,8 @@ export const defaultPreferences = {
         defaultZoom: 13,
         showSearchAsMove: true,
         showMarkerClusters: true,
-        mapsApiKey: 'AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU',
+        mapsAPIkey: 'AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU',
+        resultHighlight: false,
     },
     facetSettings: {
         globalSettings: {
