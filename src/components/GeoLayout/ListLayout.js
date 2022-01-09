@@ -183,7 +183,7 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
                                                         <span>...</span>
                                                     }
                                                 >
-                                                    {get(resultSettings, 'resultHighlights', false) ? (
+                                                    {get(resultSettings, 'resultHighlight', false) ? (
                                                         <p
                                                             dangerouslySetInnerHTML={{ __html: description }}
                                                         />
