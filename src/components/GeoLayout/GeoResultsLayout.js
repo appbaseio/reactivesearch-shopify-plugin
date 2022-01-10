@@ -138,7 +138,7 @@ function GeoResultsLayout({isPreview}) {
                 mapComponent === 'googleMap' ? (
                     <ReactiveGoogleMap
                         componentId="map"
-                        dataField="location"
+                        dataField={get('locationDatafield', resultSettings, 'location')}
                         title="Maps Ui"
                         defaultZoom={defaultZoom}
                         pagination
@@ -289,7 +289,7 @@ function GeoResultsLayout({isPreview}) {
                 ) : (
                     <ReactiveOpenStreetMap
                         componentId="map"
-                        dataField="location"
+                        dataField={get('locationDatafield', resultSettings, 'location')}
                         title="Maps Ui"
                         defaultZoom={defaultZoom}
                         pagination
