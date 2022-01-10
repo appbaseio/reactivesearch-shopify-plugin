@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { List, Button, Icon } from 'antd';
 import { css, jsx } from '@emotion/core';
-import { func, object } from "prop-types";
+import { func, array } from "prop-types";
 import get from 'lodash.get';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
@@ -168,7 +168,7 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
                                                     <span>...</span>
                                                 }
                                             >
-                                                {strip(title)}
+                                                {strip(title.toString())}
                                             </Truncate>
                                         )}
                                     </div>
@@ -188,7 +188,7 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
                                                             dangerouslySetInnerHTML={{ __html: description }}
                                                         />
                                                     ) : (
-                                                        strip(description)
+                                                        strip(description.toString())
                                                     )}
                                                 </Truncate>
                                             }
@@ -243,6 +243,6 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
 }
 
 ListLayout.propTypes = {
-    data: object,
+    data: array,
     triggerClickAnalytics: func,
 }
