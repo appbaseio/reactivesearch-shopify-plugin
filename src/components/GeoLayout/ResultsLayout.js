@@ -9,7 +9,7 @@ import ListLayout from "./ListLayout";
 import { getSearchPreferences, defaultPreferences } from '../../utils';
 
 
-function ResultsLayout({meta, data, isPreview, triggerClickAnalytics, renderMap}) {
+function ResultsLayout({meta, data, isPreview, triggerClickAnalytics, renderMap, renderPagination}) {
 
     const [resultsLayout, setResultsLayout] = useState(
         get(
@@ -42,6 +42,7 @@ function ResultsLayout({meta, data, isPreview, triggerClickAnalytics, renderMap}
                     data={data}
                     isPreview={isPreview}
                     triggerClickAnalytics={triggerClickAnalytics}
+                    renderPagination={renderPagination}
                 />
             ): (
                 <div style={{height: '90vh'}}>

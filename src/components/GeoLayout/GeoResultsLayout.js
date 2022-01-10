@@ -260,6 +260,7 @@ function GeoResultsLayout({isPreview}) {
                                     isPreview={isPreview}
                                     triggerClickAnalytics={triggerClickAnalytics}
                                     renderMap={renderMap}
+                                    renderPagination={renderPagination}
                                 />
                             );
                         }}
@@ -409,6 +410,7 @@ function GeoResultsLayout({isPreview}) {
                                     isPreview={isPreview}
                                     triggerClickAnalytics={triggerClickAnalytics}
                                     renderMap={renderMap}
+                                    renderPagination={renderPagination}
                                 />
                             );
                         }}
