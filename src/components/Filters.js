@@ -562,15 +562,7 @@ const Filters = ({
 
     const renderSizeFilter = (font) => {
         const type = get(sizeFilter, 'rsConfig.filterType', '');
-        console.log(parseInt(get(
-            sizeFilter,
-            'rsConfig.startValue',
-            ''
-        ), 10), "=====startValue=====", get(
-            sizeFilter,
-            'rsConfig.startValue',
-            ''
-        ));
+
         if(type === 'list') {
             return (
                 <React.Fragment>
@@ -644,16 +636,28 @@ const Filters = ({
                         shopifyDefaultFields.size,
                     )}
                     range={{
-                        start: parseInt(get(
-                            sizeFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            sizeFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
+                        start: type === 'date' ?
+                            new Date(get(
+                                sizeFilter,
+                                'rsConfig.startValue',
+                                ''
+                            )) :
+                            parseInt(get(
+                                sizeFilter,
+                                'rsConfig.startValue',
+                                ''
+                            ), 10),
+                        end: type === 'date' ?
+                            new Date(get(
+                                sizeFilter,
+                                'rsConfig.endValue',
+                                ''
+                            )) :
+                            parseInt(get(
+                                sizeFilter,
+                                'rsConfig.endValue',
+                                ''
+                            ), 10),
                     }}
                     rangeLabels={{
                         start: get(
@@ -675,6 +679,7 @@ const Filters = ({
                     URLParams
                     css={font}
                     filterLabel={get(sizeFilter, 'rsConfig.title', 'size')}
+                    {...dateProps}
                 />
             );
         }
