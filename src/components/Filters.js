@@ -796,6 +796,49 @@ const Filters = ({
         )
     }
 
+    const queryFormatMillisecondsMap = {
+        // the below are arranged in asscending order
+        // please maintain the order if adding/ removing property(s)
+        minute: 60000,
+        hour: 3600000,
+        day: 86400000,
+        week: 604800000,
+        month: 2629746000,
+        quarter: 7889238000,
+        year: 31556952000,
+    }
+
+    const getCalendarIntervalErrorMessage = (totalRange, calendarInterval = 'minute') => {
+        const queryFormatMillisecondsMapKeys = Object.keys(queryFormatMillisecondsMap);
+        const indexOfCurrentCalendarInterval = queryFormatMillisecondsMapKeys.indexOf(calendarInterval);
+        if (indexOfCurrentCalendarInterval === -1) {
+            console.error('Invalid calendarInterval Passed');
+        }
+
+        if (calendarInterval === 'year') {
+            return 'Try using a shorter range of values.';
+        }
+
+        for (
+            let index = indexOfCurrentCalendarInterval + 1;
+            index < queryFormatMillisecondsMapKeys.length;
+            index += 1
+        ) {
+            if (totalRange / Object.values(queryFormatMillisecondsMap)[index] <= 100) {
+                const calendarIntervalKey = queryFormatMillisecondsMapKeys[index];
+                return {
+                    errorMessage: `Please pass calendarInterval prop with value greater than or equal to a \`${calendarIntervalKey}\` for a meaningful resolution of histogram.`,
+                    calculatedCalendarInterval: calendarIntervalKey,
+                };
+            }
+        }
+
+        return {
+            errorMessage: 'Try using a shorter range of values.',
+            calculatedCalendarInterval: 'year',
+        }; // we return the highest possible interval to shorten then interval value
+    };
+
     return (
         <div
             css={{
@@ -986,7 +1029,21 @@ const Filters = ({
                     if(type === 'date') {
                         dateProps = {
                             queryFormat: 'date',
+                            calendarInterval: getCalendarIntervalErrorMessage(
+                                new Date(get(
+                                    listComponent,
+                                    'rsConfig.startValue',
+                                    ''
+                                ))
+                                -
+                                new Date(get(
+                                    listComponent,
+                                    'rsConfig.endValue',
+                                    ''
+                                ))
+                            ).calculatedCalendarInterval
                         }
+                        console.log(dateProps);
                     }
                     return (
                         <Panel
