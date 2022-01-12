@@ -1043,7 +1043,6 @@ const Filters = ({
                                 ))
                             ).calculatedCalendarInterval
                         }
-                        console.log(dateProps);
                     }
                     return (
                         <Panel
