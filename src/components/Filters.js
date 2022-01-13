@@ -700,6 +700,7 @@ const Filters = ({
                 URLParams
                 css={font}
                 filterLabel={get(sizeFilter, 'rsConfig.title', 'size')}
+                {...dateProps}
             />
         )
 
