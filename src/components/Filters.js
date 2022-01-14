@@ -1027,10 +1027,16 @@ const Filters = ({
                 {dynamicFacets.map((listComponent) => {
                     const type = listComponent?.rsConfig?.filterType;
                     let dateProps = {};
+                    const calendarInterval = get(
+                        listComponent,
+                        'rsConfig.calendarInterval',
+                        'year'
+                    )
                     if(type === 'date') {
                         dateProps = {
                             queryFormat: 'date',
-                            calendarInterval: getCalendarIntervalErrorMessage(
+                            // eslint-disable-next-line
+                            calendarInterval: calendarInterval ? calendarInterval : getCalendarIntervalErrorMessage(
                                 new Date(get(
                                     listComponent,
                                     'rsConfig.startValue',
@@ -1044,7 +1050,7 @@ const Filters = ({
                                 ))
                             ).calculatedCalendarInterval
                         }
-                        console.log(dateProps);
+                        console.log(calendarInterval);
                     }
                     return (
                         <Panel
