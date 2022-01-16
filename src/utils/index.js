@@ -178,6 +178,7 @@ export const defaultPreferences = {
         layout: 'grid',
         viewSwitcher: true,
         mapLayout: 'map',
+        locationDatafield: 'location',
         mapComponent: 'googleMap',
         defaultZoom: 13,
         showSearchAsMove: true,

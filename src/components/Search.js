@@ -5,7 +5,7 @@ import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
     ReactiveBase,
-    DataSearch,
+    SearchBox,
     MultiList,
     ReactiveList,
     SelectedFilters,
@@ -429,11 +429,749 @@ class Search extends Component {
         return fontFamily ? { fontFamily } : {};
     };
 
+    renderCollectionFilter = (font) => {
+        if (!this.collectionFilter) {
+            return null;
+        }
+
+        const type = get(this.collectionFilter, 'rsConfig.filterType', '');
+        if(type === 'list') {
+            return (
+                <React.Fragment>
+                    <ReactiveComponent
+                        componentId="filter_by_collection"
+                        customQuery={() =>
+                            this.exportType === 'shopify'
+                                ? {
+                                      query: {
+                                          term: { 'type.keyword': ['collection'] },
+                                      },
+                                  }
+                                : null
+                        }
+                    />
+                    <MultiList
+                        innerClass={{
+                            input: 'list-input'
+                        }}
+                        componentId="collection"
+                        dataField="collection"
+                        style={{
+
+                        }}
+                        defaultQuery={() => ({
+                            aggs: {
+                                collections: {
+                                    terms: {
+                                        field: '_id',
+                                        size: 50,
+                                        order: {
+                                            'product_count.value': 'desc',
+                                        },
+                                    },
+                                    aggs: {
+                                        top_collections: {
+                                            top_hits: {
+                                                _source: {
+                                                    includes: [
+                                                        'title',
+                                                        'product_count',
+                                                    ],
+                                                },
+                                                size: 1,
+                                            },
+                                        },
+                                        product_count: {
+                                            sum: {
+                                                field: 'product_count',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        })}
+                        size={50}
+                        showCheckbox={this.themeType !== 'minimal'}
+                        react={{
+                            and: [
+                                'filter_by_collection',
+                                // TODO: Make it reactive to other filters
+                                // ...getReactDependenciesFromPreferences(
+                                //     this.preferences,
+                                //     'collection',
+                                // ),
+                            ],
+                        }}
+                        // TODO: transform the value to title later
+                        showFilter={false}
+                        render={({ loading, data, value, handleChange }) => {
+                            if (loading) {
+                                return (
+                                    <div
+                                        css={loaderStyle}
+                                        // eslint-disable-next-line
+                                        dangerouslySetInnerHTML={{
+                                            __html: get(
+                                                this.collectionFilter,
+                                                'customMessages.loading',
+                                                'Loading collections',
+                                            ),
+                                        }}
+                                    />
+                                );
+                            }
+                            return (
+                                <UL role="listbox" aria-label="collection-items">
+                                    {data.length ? null : (
+                                        <div
+                                            // eslint-disable-next-line
+                                            dangerouslySetInnerHTML={{
+                                                __html: get(
+                                                    this.collectionFilter,
+                                                    'customMessages.noResults',
+                                                    'No items Found',
+                                                ),
+                                            }}
+                                        />
+                                    )}
+                                    {data.map((item) => {
+                                        const isChecked = !!value[item.key];
+                                        const title = get(
+                                            item,
+                                            'top_collections.hits.hits[0]._source.title',
+                                        );
+                                        const count = get(
+                                            item,
+                                            'top_collections.hits.hits[0]._source.product_count',
+                                        );
+                                        return (
+                                            <li
+                                                key={item.key}
+                                                className={`${
+                                                    isChecked ? 'active' : ''
+                                                }`}
+                                                role="option"
+                                                aria-checked={isChecked}
+                                                aria-selected={isChecked}
+                                            >
+                                                <Checkbox
+                                                    id={`collection-${item.key}`}
+                                                    name={`collection-${item.key}`}
+                                                    value={item.key}
+                                                    onChange={handleChange}
+                                                    checked={isChecked}
+                                                    show
+                                                />
+                                                {/* eslint-disable-next-line */}
+                                                <label
+                                                    htmlFor={`collection-${item.key}`}
+                                                >
+                                                    <span>
+                                                        <span>{title}</span>
+                                                        <span>{count}</span>
+                                                    </span>
+                                                </label>
+                                            </li>
+                                        );
+                                    })}
+                                </UL>
+                            );
+                        }}
+                        URLParams
+                        {...get(this.collectionFilter, 'rsConfig')}
+                        title=""
+                    />
+                </React.Fragment>
+            );
+        }
+
+        if( get(this.collectionFilter, 'rsConfig.startValue', '') && get(this.collectionFilter, 'rsConfig.endValue', '')) {
+            return (
+                <RangeInput
+                    key="filter_by_collection"
+                    componentId="filter_by_collection"
+                    dataField={get(
+                        this.collectionFilter,
+                        'rsConfig.dataField',
+                        shopifyDefaultFields.size,
+                    )}
+                    range={{
+                        start: parseInt(get(
+                            this.collectionFilter,
+                            'rsConfig.startValue',
+                            ''
+                        ), 10),
+                        end: parseInt(get(
+                            this.collectionFilter,
+                            'rsConfig.endValue',
+                            ''
+                        ), 10),
+                    }}
+                    rangeLabels={{
+                        start: get(
+                            this.collectionFilter,
+                            'rsConfig.startLabel',
+                            ''
+                        ),
+                        end: get(
+                            this.collectionFilter,
+                            'rsConfig.endLabel',
+                            ''
+                        ),
+                    }}
+                    showHistogram={get(
+                        this.collectionFilter,
+                        'rsConfig.showHistogram',
+                        false
+                    )}
+                    filterLabel={get(this.collectionFilter, 'rsConfig.title', 'Collection')}
+                    URLParams
+                    css={font}
+                />
+            );
+        }
+        return (
+            <DynamicRangeSlider
+                key="filter_by_collection"
+                componentId="filter_by_collection"
+                dataField={get(
+                    this.collectionFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
+                )}
+                showHistogram={get(
+                    this.collectionFilter,
+                    'rsConfig.showHistogram',
+                    false
+                )}
+                filterLabel={get(this.collectionFilter, 'rsConfig.title', 'Collection')}
+                URLParams
+                css={font}
+            />
+        )
+
+    };
+
+    renderProductTypeFilter = (font) => {
+        if (!this.productTypeFilter) {
+            return null;
+        }
+
+        const type = get(this.productTypeFilter, 'rsConfig.filterType', '');
+        if(type === 'list') {
+            return (
+                <MultiList
+                    componentId="productType"
+                    dataField="product_type.keyword"
+                    innerClass={{
+                        input: 'list-input'
+                    }}
+                    css={font}
+                    showCheckbox={this.themeType !== 'minimal'}
+                    react={{
+                        and: [
+                            ...getReactDependenciesFromPreferences(
+                                this.preferences,
+                                'productType',
+                            ),
+                        ],
+                    }}
+                    filterLabel="Product Type"
+                    URLParams
+                    {...get(this.productTypeFilter, 'rsConfig')}
+                    title=""
+                />
+            );
+        }
+
+        if( get(this.productTypeFilter, 'rsConfig.startValue', '') && get(this.productTypeFilter, 'rsConfig.endValue', '')) {
+            return (
+                <RangeInput
+                    key="productType"
+                    componentId="productType"
+                    dataField="product_type"
+                    range={{
+                        start: parseInt(get(
+                            this.productTypeFilter,
+                            'rsConfig.startValue',
+                            ''
+                        ), 10),
+                        end: parseInt(get(
+                            this.productTypeFilter,
+                            'rsConfig.endValue',
+                            ''
+                        ), 10),
+                    }}
+                    rangeLabels={{
+                        start: get(
+                            this.productTypeFilter,
+                            'rsConfig.startLabel',
+                            ''
+                        ),
+                        end: get(
+                            this.productTypeFilter,
+                            'rsConfig.endLabel',
+                            ''
+                        ),
+                    }}
+                    showHistogram={get(
+                        this.productTypeFilter,
+                        'rsConfig.showHistogram',
+                        false
+                    )}
+                    URLParams
+                    filterLabel={get(this.productTypeFilter, 'rsConfig.title', 'productType')}
+                    css={font}
+                />
+            );
+        }
+        return (
+            <DynamicRangeSlider
+                key="productType"
+                componentId="productType"
+                dataField={get(
+                    this.productTypeFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
+                )}
+                showHistogram={get(
+                    this.productTypeFilter,
+                    'rsConfig.showHistogram',
+                    false
+                )}
+                URLParams
+                css={font}
+                filterLabel={get(this.productTypeFilter, 'rsConfig.title', 'productType')}
+            />
+        )
+    };
+
+    renderColorFilter = (font) => {
+        const type = get(this.colorFilter, 'rsConfig.filterType', '');
+        if(type === 'list') {
+            return (
+                <MultiList
+                    componentId="color"
+                    innerClass={{
+                        input: 'list-input'
+                    }}
+                    react={{
+                        and: [
+                            'colorOption',
+                            ...getReactDependenciesFromPreferences(
+                                this.preferences,
+                                'color',
+                            ),
+                        ],
+                    }}
+                    showSearch={false}
+                    css={font}
+                    showCheckbox={this.themeType !== 'minimal'}
+                    render={({ loading, error, data, handleChange, value }) => {
+                        const values = [...new Set(Object.keys(value))];
+                        const browserStringColors = Object.keys(browserColors);
+                        if (loading) {
+                            return (
+                                <div
+                                    css={loaderStyle}
+                                    // eslint-disable-next-line
+                                    dangerouslySetInnerHTML={{
+                                        __html: get(
+                                            this.colorFilter,
+                                            'customMessages.noResults',
+                                            'Fetching Colors',
+                                        ),
+                                    }}
+                                />
+                            );
+                        }
+                        if (error) {
+                            return (
+                                <div>
+                                    No colors found!
+                                </div>
+                            );
+                        }
+                        if (data.length === 0) {
+                            return (
+                                <div
+                                    // eslint-disable-next-line
+                                    dangerouslySetInnerHTML={{
+                                        __html: get(
+                                            this.colorFilter,
+                                            'customMessages.noResults',
+                                            'Fetching Colors',
+                                        ),
+                                    }}
+                                />
+                            );
+                        }
+                        const primaryColor =
+                            get(this.theme, 'colors.primaryColor', '') || '#0B6AFF';
+                        const normalizedData = [];
+                        data.forEach((i) => {
+                            if (
+                                !normalizedData.find(
+                                    (n) => n.key === i.key.toLowerCase(),
+                                )
+                            ) {
+                                normalizedData.push({
+                                    ...i,
+                                    key: i.key.toLowerCase(),
+                                });
+                            }
+                        });
+                        return (
+                            <div css={colorContainer}>
+                                {normalizedData.map((item) =>
+                                    browserStringColors.includes(
+                                        item.key.toLowerCase(),
+                                    ) ? (
+                                        <Tooltip
+                                            key={item.key}
+                                            placement="top"
+                                            title={item.key}
+                                        >
+                                            {/* eslint-disable-next-line */}
+                                            <div
+                                                onClick={() => handleChange(item.key)}
+                                                style={{
+                                                    width: '100%',
+                                                    height: 30,
+                                                    background: item.key,
+                                                    transition: 'all ease .2s',
+                                                    cursor: 'pointer',
+                                                    border:
+                                                        values &&
+                                                        values.includes(item.key)
+                                                            ? `2px solid ${primaryColor}`
+                                                            : `1px solid #ccc`,
+                                                }}
+                                            />
+                                        </Tooltip>
+                                    ) : null,
+                                )}
+                            </div>
+                        );
+                    }}
+                    loader={
+                        <div
+                            css={loaderStyle}
+                            // eslint-disable-next-line
+                            dangerouslySetInnerHTML={{
+                                __html: get(
+                                    this.colorFilter,
+                                    'customMessages.loading',
+                                    'Loading colors',
+                                ),
+                            }}
+                        />
+                    }
+                    URLParams
+                    {...get(this.colorFilter, 'rsConfig')}
+                    dataField={get(
+                        this.colorFilter,
+                        'rsConfig.dataField',
+                        shopifyDefaultFields.color,
+                    )}
+                    title=""
+                />
+            );
+        }
+
+        if( get(this.colorFilter, 'rsConfig.startValue', '') && get(this.colorFilter, 'rsConfig.endValue', '')) {
+            return (
+                <RangeInput
+                    key="color"
+                    componentId="color"
+                    dataField={get(
+                        this.colorFilter,
+                        'rsConfig.dataField',
+                        shopifyDefaultFields.size,
+                    )}
+                    range={{
+                        start: parseInt(get(
+                            this.colorFilter,
+                            'rsConfig.startValue',
+                            ''
+                        ), 10),
+                        end: parseInt(get(
+                            this.colorFilter,
+                            'rsConfig.endValue',
+                            ''
+                        ), 10),
+                    }}
+                    rangeLabels={{
+                        start: get(
+                            this.colorFilter,
+                            'rsConfig.startLabel',
+                            ''
+                        ),
+                        end: get(
+                            this.colorFilter,
+                            'rsConfig.endLabel',
+                            ''
+                        ),
+                    }}
+                    showHistogram={get(
+                        this.colorFilter,
+                        'rsConfig.showHistogram',
+                        false
+                    )}
+                    URLParams
+                    css={font}
+                    filterLabel={get(this.colorFilter, 'rsConfig.title', 'color')}
+                />
+            )
+        }
+        return (
+            <DynamicRangeSlider
+                key="color"
+                componentId="color"
+                dataField={get(
+                    this.colorFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
+                )}
+                showHistogram={get(
+                    this.colorFilter,
+                    'rsConfig.showHistogram',
+                    false
+                )}
+                URLParams
+                filterLabel={get(this.colorFilter, 'rsConfig.title', 'color')}
+                css={font}
+            />
+        )
+
+    }
+
+    renderSizeFilter = (font) => {
+        const type = get(this.sizeFilter, 'rsConfig.filterType', '');
+        if(type === 'list') {
+            return (
+                <React.Fragment>
+                    <MultiList
+                        componentId="size"
+                        innerClass={{
+                            input: 'list-input'
+                        }}
+                        react={{
+                            and: [
+                                'sizeOption',
+                                ...getReactDependenciesFromPreferences(
+                                    this.preferences,
+                                    'size',
+                                ),
+                            ],
+                        }}
+                        css={font}
+                        loader={
+                            <div
+                                css={loaderStyle}
+                                // eslint-disable-next-line
+                                dangerouslySetInnerHTML={{
+                                    __html: get(
+                                        this.sizeFilter,
+                                        'customMessages.loading',
+                                        'Loading sizes',
+                                    ),
+                                }}
+                            />
+                        }
+                        renderNoResults={() => (
+                            <div
+                                // eslint-disable-next-line
+                                dangerouslySetInnerHTML={{
+                                    __html: get(
+                                        this.sizeFilter,
+                                        'customMessages.noResults',
+                                        'No sizes Found',
+                                    ),
+                                }}
+                            />
+                        )}
+                        showCheckbox={this.themeType !== 'minimal'}
+                        URLParams
+                        {...get(this.sizeFilter, 'rsConfig')}
+                        dataField={get(
+                            this.sizeFilter,
+                            'rsConfig.dataField',
+                            shopifyDefaultFields.size,
+                        )}
+                        title=""
+                    />
+                </React.Fragment>
+            );
+        }
+
+        if( get(this.sizeFilter, 'rsConfig.startValue', '') && get(this.sizeFilter, 'rsConfig.endValue', '')) {
+            return (
+                <RangeInput
+                    key="size"
+                    componentId="size"
+                    dataField={get(
+                        this.sizeFilter,
+                        'rsConfig.dataField',
+                        shopifyDefaultFields.size,
+                    )}
+                    range={{
+                        start: parseInt(get(
+                            this.sizeFilter,
+                            'rsConfig.startValue',
+                            ''
+                        ), 10),
+                        end: parseInt(get(
+                            this.sizeFilter,
+                            'rsConfig.endValue',
+                            ''
+                        ), 10),
+                    }}
+                    rangeLabels={{
+                        start: get(
+                            this.sizeFilter,
+                            'rsConfig.startLabel',
+                            ''
+                        ),
+                        end: get(
+                            this.sizeFilter,
+                            'rsConfig.endLabel',
+                            ''
+                        ),
+                    }}
+                    showHistogram={get(
+                        this.sizeFilter,
+                        'rsConfig.showHistogram',
+                        false
+                    )}
+                    URLParams
+                    css={font}
+                    filterLabel={get(this.sizeFilter, 'rsConfig.title', 'size')}
+                />
+            );
+        }
+        return (
+            <DynamicRangeSlider
+                key="size"
+                componentId="size"
+                dataField={get(
+                    this.sizeFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
+                )}
+                showHistogram={get(
+                    this.sizeFilter,
+                    'rsConfig.showHistogram',
+                    false
+                )}
+                URLParams
+                css={font}
+                filterLabel={get(this.sizeFilter, 'rsConfig.title', 'size')}
+            />
+        )
+
+    }
+
+    renderPriceFilter = (font) => {
+        if( get(this.priceFilter, 'rsConfig.startValue', '') && get(this.priceFilter, 'rsConfig.endValue', '')) {
+            return (
+                <RangeInput
+                    componentId="price"
+                    dataField={get(
+                        this.priceFilter,
+                        'rsConfig.dataField',
+                        'variants.price',
+                    )}
+                    range={{
+                        start: parseInt(get(
+                            this.priceFilter,
+                            'rsConfig.startValue',
+                            ''
+                        ), 10),
+                        end: parseInt(get(
+                            this.priceFilter,
+                            'rsConfig.endValue',
+                            ''
+                        ), 10),
+                    }}
+                    rangeLabels={{
+                        start: get(
+                            this.priceFilter,
+                            'rsConfig.startLabel',
+                            ''
+                        ),
+                        end: get(
+                            this.priceFilter,
+                            'rsConfig.endLabel',
+                            ''
+                        ),
+                    }}
+                    showHistogram={get(
+                        this.priceFilter,
+                        'rsConfig.showHistogram',
+                        false
+                    )}
+                    URLParams
+                    css={font}
+                    filterLabel={get(this.priceFilter, 'rsConfig.title', 'size')}
+                />
+            )
+        }
+
+        return (
+            <DynamicRangeSlider
+                componentId="price"
+                dataField={get(
+                    this.priceFilter,
+                    'rsConfig.dataField',
+                    'variants.price',
+                )}
+                showHistogram={get(
+                    this.priceFilter,
+                    'rsConfig.showHistogram',
+                    false
+                )}
+                URLParams
+                css={font}
+                style={{
+                    marginTop: 50,
+                }}
+                loader={
+                    <div
+                        css={loaderStyle}
+                        // eslint-disable-next-line
+                        dangerouslySetInnerHTML={{
+                            __html: get(
+                                this.priceFilter,
+                                'customMessages.loading',
+                                '',
+                            ),
+                        }}
+                    />
+                }
+                rangeLabels={(min, max) => ({
+                    start: `${
+                        this.currency
+                    } ${min.toFixed(2)}`,
+                    end: `${
+                        this.currency
+                    } ${max.toFixed(2)}`,
+                })}
+                {...this.priceFilter.rsConfig}
+                title=""
+            />
+        )
+    }
+
+    isMobile = () => {
+        return window.innerWidth <= 768 ;
+    }
+
     renderCategorySearch = (categorySearchProps) => {
         const { toggleFilters, blur } = this.state;
         const { isPreview } = this.props;
         return (
-            <DataSearch
+            <SearchBox
                 // Don't change the component id it is tied to shopify
                 componentId="q"
                 filterLabel="Search"
@@ -451,19 +1189,24 @@ class Search extends Component {
                     zIndex: 4,
                     display: toggleFilters ? 'none' : 'block',
                 }}
-                onKeyDown={(e) => {
-                    if(e.keyCode === 27) {
-                        document.getElementById('q-downshift-input').blur();
-                    }
+                // onKeyDown={(e) => {
+                //     if(e.keyCode === 27) {
+                //         document.getElementById('q-downshift-input').blur();
+                //     }
+                // }}
+                popularSuggestionsConfig={{
+                    size: 3,
                 }}
+                recentSuggestionsConfig={{
+                    size: 3,
+                }}
+                size={10}
                 onFocus={(e) => { this.setState({ blur: false })}}
                 onBlur={(e) => { this.setState({ blur: true })}}
                 render={({
                     value,
                     categories,
                     data,
-                    popularSuggestions,
-                    recentSearches,
                     downshiftProps,
                     loading,
                 }) => {
@@ -474,7 +1217,6 @@ class Search extends Component {
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
                             currentValue={value}
-                            categories={categories}
                             customMessage={get(
                                 this.searchSettings,
                                 'customMessages',
@@ -482,11 +1224,6 @@ class Search extends Component {
                             )}
                             getItemProps={downshiftProps.getItemProps}
                             highlightedIndex={downshiftProps.highlightedIndex}
-                            parsedSuggestions={data.filter(
-                                (suggestion) =>
-                                    get(suggestion, 'source.type') !==
-                                    'collections',
-                            )}
                             themeConfig={this.theme}
                             currency={this.currency}
                             customSuggestions={get(
@@ -494,8 +1231,22 @@ class Search extends Component {
                                 'customSuggestions',
                             )}
                             isPreview={isPreview}
-                            popularSuggestions={popularSuggestions}
-                            recentSearches={recentSearches}
+                            suggestions={data}
+                            popularSuggestions={data.filter(
+                                (suggestion) =>
+                                    get(suggestion, '_suggestion_type') ===
+                                    'popular',
+                            )}
+                            recentSearches={data.filter(
+                                (suggestion) =>
+                                    get(suggestion, '_suggestion_type') ===
+                                    'recent',
+                            )}
+                            parsedSuggestions={data.filter(
+                                (suggestion) =>
+                                    get(suggestion, '_suggestion_type') ===
+                                    'index',
+                            )}
                             loading={loading}
                             highlight={this.searchSettings.rsConfig.highlight}
                         />

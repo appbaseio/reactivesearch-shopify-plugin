@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.3",
+    "@appbaseio/reactivesearch": "3.28.0",
     "@appbaseio/reactivemaps": "^3.0.0-beta.17",
     "@appbaseio/reactivesearch": "3.28.0",
     "@emotion/core": "^10.0.35",

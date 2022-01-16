@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { List, Button, Icon } from 'antd';
 import { css, jsx } from '@emotion/core';
-import { func, object } from "prop-types";
+import { func, array } from "prop-types";
 import get from 'lodash.get';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
@@ -69,7 +69,7 @@ export const listStyles = ({ titleColor, primaryColor }) => css`
 `;
 
 
-export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
+export default function ListLayout({ data, triggerClickAnalytics, isPreview, renderPagination }) {
 
     const preferences = getSearchPreferences();
 
@@ -90,159 +90,162 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
     const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText.text', 'View Product');
 
     return (
-        <List
-            css={NoDataStyles}
-            itemLayout="vertical"
-            size="large"
-            dataSource={data}
-            renderItem={(item) => {
-                const handle = isPreview
-                    ? ''
-                    : get(item, get(resultSettings, 'fields.handle'));
+        <div style={{ padding: '20px 0px' }}>
+            <List
+                css={NoDataStyles}
+                itemLayout="vertical"
+                size="large"
+                dataSource={data}
+                renderItem={(item) => {
+                    const handle = isPreview
+                        ? ''
+                        : get(item, get(resultSettings, 'fields.handle'));
 
-                const image = get(
-                    item,
-                    get(resultSettings, 'fields.image'),
-                );
-                const title = get(
-                    item,
-                    get(resultSettings, 'fields.title'),
-                );
+                    const image = get(
+                        item,
+                        get(resultSettings, 'fields.image'),
+                    );
+                    const title = get(
+                        item,
+                        get(resultSettings, 'fields.title'),
+                    );
 
-                const description = get(
-                    item,
-                    get(resultSettings, 'fields.description'),
-                );
-                const price = get(
-                    item,
-                    get(resultSettings, 'fields.price'),
-                );
+                    const description = get(
+                        item,
+                        get(resultSettings, 'fields.description'),
+                    );
+                    const price = get(
+                        item,
+                        get(resultSettings, 'fields.price'),
+                    );
 
-                const redirectToProduct = !isPreview || handle;
+                    const redirectToProduct = !isPreview || handle;
 
-                const { variants } = item;
+                    const { variants } = item;
 
-                return (
-                    <a
-                        onClick={triggerClickAnalytics}
-                        href={
-                            redirectToProduct
-                                ? `/products/${handle}`
-                                : undefined
-                        }
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        key={item._id}
-                        id={item._id}
-                    >
-                        <List.Item
-                            id={item._id}
+                    return (
+                        <a
                             onClick={triggerClickAnalytics}
-                            css={listStyles({
-                                ...get(theme, 'colors'),
-                            })}
+                            href={
+                                redirectToProduct
+                                    ? `/products/${handle}`
+                                    : undefined
+                            }
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            key={item._id}
+                            id={item._id}
                         >
-                            <List.Item.Meta
-                                avatar={
-                                    <div className="list-image-container">
-                                        {image && (
-                                            <img
-                                                className="product-image"
-                                                src={image}
-                                                height="100%"
-                                                width="100%"
-                                                alt={title}
-                                                onError={(event) => {
-                                                    event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
-                                                }}
-                                            />
-                                        )}
-                                    </div>
-                                }
-                                title={
-                                    <div>
-                                        {title && (
-                                            <Truncate
-                                                lines={1}
-                                                ellipsis={
-                                                    <span>...</span>
-                                                }
-                                            >
-                                                {strip(title)}
-                                            </Truncate>
-                                        )}
-                                    </div>
-                                }
-                                description={
-                                    <div>
-                                        <div style={{ height: 45 }}>
-                                            {description &&
+                            <List.Item
+                                id={item._id}
+                                onClick={triggerClickAnalytics}
+                                css={listStyles({
+                                    ...get(theme, 'colors'),
+                                })}
+                            >
+                                <List.Item.Meta
+                                    avatar={
+                                        <div className="list-image-container">
+                                            {image && (
+                                                <img
+                                                    className="product-image"
+                                                    src={image}
+                                                    height="100%"
+                                                    width="100%"
+                                                    alt={title}
+                                                    onError={(event) => {
+                                                        event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                    }}
+                                                />
+                                            )}
+                                        </div>
+                                    }
+                                    title={
+                                        <div>
+                                            {title && (
                                                 <Truncate
-                                                    lines={2}
+                                                    lines={1}
                                                     ellipsis={
                                                         <span>...</span>
                                                     }
                                                 >
-                                                    {get(resultSettings, 'resultHighlight', false) ? (
-                                                        <p
-                                                            dangerouslySetInnerHTML={{ __html: description }}
-                                                        />
-                                                    ) : (
-                                                        strip(description)
-                                                    )}
+                                                    {strip(title.toString())}
                                                 </Truncate>
-                                            }
+                                            )}
                                         </div>
+                                    }
+                                    description={
                                         <div>
-                                            <h3
-                                                style={{
-                                                    height: 25,
-                                                    fontWeight: 500,
-                                                    fontSize: '1rem',
-                                                    marginTop: 6,
-                                                    color:
-                                                        get(
-                                                            theme,
-                                                            'colors.titleColor',
-                                                        ),
-                                                }}
-                                            >
-                                                {variants?.length ||
-                                                price
-                                                    ? `${currency} ${
-                                                            variants
-                                                                ? get(
-                                                                    variants[0],
-                                                                    'price',
-                                                                    '',
-                                                                )
-                                                                : price
-                                                        }`
-                                                    : null}
-                                            </h3>
+                                            <div style={{ height: 45 }}>
+                                                {description &&
+                                                    <Truncate
+                                                        lines={2}
+                                                        ellipsis={
+                                                            <span>...</span>
+                                                        }
+                                                    >
+                                                        {get(resultSettings, 'resultHighlight', false) ? (
+                                                            <p
+                                                                dangerouslySetInnerHTML={{ __html: description }}
+                                                            />
+                                                        ) : (
+                                                            strip(description.toString())
+                                                        )}
+                                                    </Truncate>
+                                                }
+                                            </div>
+                                            <div>
+                                                <h3
+                                                    style={{
+                                                        height: 25,
+                                                        fontWeight: 500,
+                                                        fontSize: '1rem',
+                                                        marginTop: 6,
+                                                        color:
+                                                            get(
+                                                                theme,
+                                                                'colors.titleColor',
+                                                            ),
+                                                    }}
+                                                >
+                                                    {variants?.length ||
+                                                    price
+                                                        ? `${currency} ${
+                                                                variants
+                                                                    ? get(
+                                                                        variants[0],
+                                                                        'price',
+                                                                        '',
+                                                                    )
+                                                                    : price
+                                                            }`
+                                                        : null}
+                                                </h3>
+                                            </div>
                                         </div>
-                                    </div>
-                                }
-                            />
-                            {redirectToProduct ? (
-                                <Button
-                                    type="primary"
-                                    size="large"
-                                    className="product-button"
-                                >
-                                    <Icon type="eye" />
-                                    {redirectUrlText}
-                                </Button>
-                            ) : null}
-                        </List.Item>
-                    </a>
-                );
-            }}
-        />
+                                    }
+                                />
+                                {redirectToProduct ? (
+                                    <Button
+                                        type="primary"
+                                        size="large"
+                                        className="product-button"
+                                    >
+                                        <Icon type="eye" />
+                                        {redirectUrlText}
+                                    </Button>
+                                ) : null}
+                            </List.Item>
+                        </a>
+                    );
+                }}
+            />
+            {renderPagination()}
+        </div>
     )
 }
 
 ListLayout.propTypes = {
-    data: object,
+    data: array,
     triggerClickAnalytics: func,
 }
