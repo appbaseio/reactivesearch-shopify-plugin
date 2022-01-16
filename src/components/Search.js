@@ -5,7 +5,7 @@ import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
     ReactiveBase,
-    DataSearch,
+    SearchBox,
     MultiList,
     ReactiveList,
     SelectedFilters,
@@ -1162,11 +1162,16 @@ class Search extends Component {
         )
     }
 
+    isMobile = () => {
+        return window.innerWidth <= 768 ;
+    }
+
+
     renderCategorySearch = (categorySearchProps) => {
         const { toggleFilters, blur } = this.state;
         const { isPreview } = this.props;
         return (
-            <DataSearch
+            <SearchBox
                 // Don't change the component id it is tied to shopify
                 componentId="q"
                 filterLabel="Search"
@@ -1184,19 +1189,24 @@ class Search extends Component {
                     zIndex: 4,
                     display: toggleFilters ? 'none' : 'block',
                 }}
-                onKeyDown={(e) => {
-                    if(e.keyCode === 27) {
-                        document.getElementById('q-downshift-input').blur();
-                    }
+                // onKeyDown={(e) => {
+                //     if(e.keyCode === 27) {
+                //         document.getElementById('q-downshift-input').blur();
+                //     }
+                // }}
+                popularSuggestionsConfig={{
+                    size: 3,
                 }}
+                recentSuggestionsConfig={{
+                    size: 3,
+                }}
+                size={10}
                 onFocus={(e) => { this.setState({ blur: false })}}
                 onBlur={(e) => { this.setState({ blur: true })}}
                 render={({
                     value,
                     categories,
                     data,
-                    popularSuggestions,
-                    recentSearches,
                     downshiftProps,
                     loading,
                 }) => {
@@ -1207,7 +1217,6 @@ class Search extends Component {
                             themeType={this.themeType}
                             fields={get(this.searchSettings, 'fields', {})}
                             currentValue={value}
-                            categories={categories}
                             customMessage={get(
                                 this.searchSettings,
                                 'customMessages',
@@ -1215,11 +1224,6 @@ class Search extends Component {
                             )}
                             getItemProps={downshiftProps.getItemProps}
                             highlightedIndex={downshiftProps.highlightedIndex}
-                            parsedSuggestions={data.filter(
-                                (suggestion) =>
-                                    get(suggestion, 'source.type') !==
-                                    'collections',
-                            )}
                             themeConfig={this.theme}
                             currency={this.currency}
                             customSuggestions={get(
@@ -1227,8 +1231,22 @@ class Search extends Component {
                                 'customSuggestions',
                             )}
                             isPreview={isPreview}
-                            popularSuggestions={popularSuggestions}
-                            recentSearches={recentSearches}
+                            suggestions={data}
+                            popularSuggestions={data.filter(
+                                (suggestion) =>
+                                    get(suggestion, '_suggestion_type') ===
+                                    'popular',
+                            )}
+                            recentSearches={data.filter(
+                                (suggestion) =>
+                                    get(suggestion, '_suggestion_type') ===
+                                    'recent',
+                            )}
+                            parsedSuggestions={data.filter(
+                                (suggestion) =>
+                                    get(suggestion, '_suggestion_type') ===
+                                    'index',
+                            )}
                             loading={loading}
                             highlight={this.searchSettings.rsConfig.highlight}
                         />
