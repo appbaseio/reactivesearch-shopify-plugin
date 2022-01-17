@@ -4,8 +4,6 @@
 import { useState } from 'react';
 import { Card, Button, Icon, List } from 'antd';
 import { bool } from 'prop-types';
-import strip from 'striptags';
-import Truncate from 'react-truncate';
 import { css, jsx } from '@emotion/core';
 import get from 'lodash.get';
 import { mediaMax } from '../utils/media';
@@ -182,6 +180,20 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     }
 `;
 
+const highlightStyle = ({ primaryColor, titleColor }) => css`
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    mark{
+        font-weight: 700;
+        padding: 0;
+        background: ${primaryColor}33;
+        color: ${titleColor}
+        fontSize: 1rem;
+    }
+`;
+
 const { Meta } = Card;
 
 function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
@@ -217,6 +229,8 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
         'resultSettings.viewSwitcher',
         defaultPreferences.resultSettings.viewSwitcher,
     );
+
+    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText.text', 'View Product');
 
     const resultSettings = get(preferences, 'resultSettings');
 
@@ -326,22 +340,24 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                         : {}
                                                 }
                                             >
-                                                <Truncate
-                                                    lines={1}
-                                                    ellipsis={<span>...</span>}
-                                                >
-                                                    {strip(title)}
-                                                </Truncate>
+                                                <div
+                                                    dangerouslySetInnerHTML={{ __html: title }}
+                                                    css={highlightStyle(get(theme, 'colors'))}
+                                                />
                                             </h3>
                                         }
                                         description={
                                             themeType === 'classic' ? (
-                                                <Truncate
-                                                    lines={2}
-                                                    ellipsis={<span>...</span>}
-                                                >
-                                                    {strip(description)}
-                                                </Truncate>
+                                                <div
+                                                    dangerouslySetInnerHTML={{ __html: description }}
+                                                    css={highlightStyle(get(theme, 'colors'))}
+                                                    style={{
+                                                        display: '-webkit-box',
+                                                        WebkitBoxOrient: 'vertical',
+                                                        WebkitLineClamp: 2,
+                                                        whiteSpace: 'initial'
+                                                    }}
+                                                />
                                             ) : null
                                         }
                                     />
@@ -388,7 +404,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                             className="product-button"
                                         >
                                             <Icon type="eye" />
-                                            View Product
+                                            {redirectUrlText}
                                         </Button>
                                    ) : null}
                                 </Card>
@@ -467,14 +483,10 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                         title={
                                             <div>
                                                 {title && (
-                                                    <Truncate
-                                                        lines={1}
-                                                        ellipsis={
-                                                            <span>...</span>
-                                                        }
-                                                    >
-                                                        {strip(title)}
-                                                    </Truncate>
+                                                    <div
+                                                        dangerouslySetInnerHTML={{ __html: title }}
+                                                        css={highlightStyle(get(theme, 'colors'))}
+                                                    />
                                                 )}
                                             </div>
                                         }
@@ -483,16 +495,16 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                 <div style={{ height: 45 }}>
                                                     {description &&
                                                     themeType === 'classic' ? (
-                                                        <Truncate
-                                                            lines={2}
-                                                            ellipsis={
-                                                                <span>...</span>
-                                                            }
-                                                        >
-                                                            {strip(
-                                                                description,
-                                                            )}
-                                                        </Truncate>
+                                                        <div
+                                                            dangerouslySetInnerHTML={{ __html: description }}
+                                                            css={highlightStyle(get(theme, 'colors'))}
+                                                            style={{
+                                                                display: '-webkit-box',
+                                                                WebkitBoxOrient: 'vertical',
+                                                                WebkitLineClamp: 2,
+                                                                whiteSpace: 'initial'
+                                                            }}
+                                                        />
                                                     ) : null}
                                                 </div>
                                                 <div>
@@ -539,7 +551,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                             className="product-button"
                                         >
                                             <Icon type="eye" />
-                                            View Product
+                                            {redirectUrlText}
                                         </Button>
                                     ) : null}
                                 </List.Item>

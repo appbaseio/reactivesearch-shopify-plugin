@@ -12,6 +12,7 @@ import {
     DynamicRangeSlider,
     ReactiveComponent,
 } from '@appbaseio/reactivesearch';
+import { ReactiveGoogleMap } from '@appbaseio/reactivemaps';
 import {
     UL,
     Checkbox,
@@ -32,6 +33,7 @@ import {
     getSearchPreferences,
     shopifyDefaultFields,
 } from '../utils';
+import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
 
 const { Meta } = Card;
 const { Panel } = Collapse;
@@ -49,6 +51,17 @@ const minimalSearchStyles = ({ titleColor }) => css`
 const loaderStyle = css`
     margin: 10px 0;
     position: relative;
+`;
+
+export const listLayoutStyles = css`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    ${mediaMax.medium} {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 50px;
+    }
 `;
 
 const reactiveListCls = (toggleFilters, theme) => css`
@@ -856,6 +869,7 @@ class Search extends Component {
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
                 showDistinctSuggestions
+                highlight={get(this.resultSettings, 'resultHighlight', false)}
             />
         );
     };
@@ -954,7 +968,7 @@ class Search extends Component {
                     </Affix>
                 ) : null}
 
-                {Object.keys(logoSettings).length ? (
+                {Object.keys(logoSettings).length && logoSettings.logoUrl ? (
                     <div>
                         <img
                             src={logoSettings.logoUrl}
@@ -969,7 +983,7 @@ class Search extends Component {
                 ): null}
 
                 <div style={{ maxWidth: '90%', margin: '25px auto' }}>
-                    {this.themeType === 'classic' &&
+                    {(this.themeType === 'classic' || this.themeType === 'geo') &&
                         this.renderCategorySearch()}
 
                     <div
@@ -1328,86 +1342,93 @@ class Search extends Component {
                                         : null
                                 }
                             />
-                            <ReactiveList
-                                componentId="results"
-                                dataField="title"
-                                ref={resultRef}
-                                defaultQuery={() => ({
-                                    track_total_hits: true,
-                                })}
-                                renderNoResults={() => (
-                                    <div
-                                        style={{ textAlign: 'right' }}
-                                        // eslint-disable-next-line
-                                        dangerouslySetInnerHTML={{
-                                            __html: get(
-                                                this.resultSettings,
-                                                'customMessages.noResults',
-                                                'No Results Found',
-                                            ),
-                                        }}
-                                    />
-                                )}
-                                renderResultStats={({
-                                    numberOfResults,
-                                    time,
-                                }) => (
-                                    <div
-                                        // eslint-disable-next-line
-                                        dangerouslySetInnerHTML={{
-                                            __html: get(
-                                                this.resultSettings,
-                                                'customMessages.resultStats',
-                                                '[count] products found in [time] ms',
-                                            )
-                                                .replace(
-                                                    '[count]',
-                                                    numberOfResults,
-                                                )
-                                                .replace('[time]', time),
-                                        }}
-                                    />
-                                )}
-                                size={9}
-                                infiniteScroll
-                                render={({ data, triggerClickAnalytics }) => {
-                                    return !toggleFilters ? (
-                                        <ResultsLayout
-                                            data={data}
-                                            theme={this.theme}
-                                            triggerClickAnalytics={
-                                                triggerClickAnalytics
-                                            }
-                                            isPreview={isPreview}
-                                            getFontFamily={this.getFontFamily()}
+                            {this.themeType === 'geo' ? (
+                                <GeoResultsLayout
+                                    isPreview={isPreview}
+                                />
+
+                            ) : (
+                                <ReactiveList
+                                    componentId="results"
+                                    dataField="title"
+                                    ref={resultRef}
+                                    defaultQuery={() => ({
+                                        track_total_hits: true,
+                                    })}
+                                    renderNoResults={() => (
+                                        <div
+                                            style={{ textAlign: 'right' }}
+                                            // eslint-disable-next-line
+                                            dangerouslySetInnerHTML={{
+                                                __html: get(
+                                                    this.resultSettings,
+                                                    'customMessages.noResults',
+                                                    'No Results Found',
+                                                ),
+                                            }}
                                         />
-                                    ) : null;
-                                }}
-                                innerClass={{
-                                    list: 'custom-result-list',
-                                    resultsInfo: 'custom-result-info',
-                                    poweredBy: 'custom-powered-by',
-                                    noResults: 'custom-no-results',
-                                    pagination: 'custom-pagination',
-                                }}
-                                {...this.resultSettings.rsConfig}
-                                css={reactiveListCls(toggleFilters, this.theme)}
-                                react={{
-                                    and: [
-                                        'filter_by_product',
-                                        ...getReactDependenciesFromPreferences(
-                                            this.preferences,
-                                            'result',
-                                        ),
-                                        'ToggleResults',
-                                        ...getReactDependenciesFromPreferences(
-                                            this.preferences,
-                                            'result',
-                                        ),
-                                    ],
-                                }}
-                                {...newProps}
-                            />
+                                    )}
+                                    renderResultStats={({
+                                        numberOfResults,
+                                        time,
+                                    }) => (
+                                        <div
+                                            // eslint-disable-next-line
+                                            dangerouslySetInnerHTML={{
+                                                __html: get(
+                                                    this.resultSettings,
+                                                    'customMessages.resultStats',
+                                                    '[count] products found in [time] ms',
+                                                )
+                                                    .replace(
+                                                        '[count]',
+                                                        numberOfResults,
+                                                    )
+                                                    .replace('[time]', time),
+                                            }}
+                                        />
+                                    )}
+                                    size={9}
+                                    infiniteScroll
+                                    render={({ data, triggerClickAnalytics }) => {
+                                        return !toggleFilters ? (
+                                            <ResultsLayout
+                                                data={data}
+                                                theme={this.theme}
+                                                triggerClickAnalytics={
+                                                    triggerClickAnalytics
+                                                }
+                                                isPreview={isPreview}
+                                                getFontFamily={this.getFontFamily()}
+                                            />
+                                        ) : null;
+                                    }}
+                                    innerClass={{
+                                        list: 'custom-result-list',
+                                        resultsInfo: 'custom-result-info',
+                                        poweredBy: 'custom-powered-by',
+                                        noResults: 'custom-no-results',
+                                        pagination: 'custom-pagination',
+                                    }}
+                                    {...this.resultSettings.rsConfig}
+                                    css={reactiveListCls(toggleFilters, this.theme)}
+                                    react={{
+                                        and: [
+                                            'filter_by_product',
+                                            ...getReactDependenciesFromPreferences(
+                                                this.preferences,
+                                                'result',
+                                            ),
+                                            'ToggleResults',
+                                            ...getReactDependenciesFromPreferences(
+                                                this.preferences,
+                                                'result',
+                                            ),
+                                        ],
+                                    }}
+                                    {...newProps}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>

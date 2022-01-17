@@ -5,8 +5,9 @@ import { jsx } from '@emotion/core';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import { Card, Button, Icon } from 'antd';
+import get from 'lodash.get';
 import { cardStyles, cardTitleStyles } from './Search';
-import { CtaActions } from '../utils';
+import { CtaActions, getSearchPreferences } from '../utils';
 
 const { Meta } = Card;
 
@@ -37,6 +38,9 @@ const SuggestionCard = ({
         });
     }, []);
     const shouldShowCtaAction = ctaAction !== CtaActions.NO_BUTTON;
+    const preferences = getSearchPreferences();
+    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText.text', 'View Product');
+
     return (
         <div {...props}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
@@ -159,7 +163,7 @@ const SuggestionCard = ({
                             className="product-button"
                         >
                             <Icon type="eye" />
-                            {ctaTitle || 'View Product'}
+                            {redirectUrlText || ctaTitle}
                         </Button>
                     ) : null}
                 </Card>
