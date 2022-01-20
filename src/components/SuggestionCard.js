@@ -46,9 +46,7 @@ const SuggestionCard = ({
         <div {...props}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
-                onClick={() => {
-                    triggerAnalytics(clickId);
-                }}
+                onClick={() => triggerAnalytics(clickId)}
                 href={
                      shouldShowCtaAction && handle && !isPreview
                         ? `/products/${handle}`

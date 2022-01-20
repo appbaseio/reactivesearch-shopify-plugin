@@ -277,7 +277,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                         const { variants } = item;
                         return (
                             <a
-                                onClick={triggerClickAnalytics}
+                                onClick={() => triggerClickAnalytics(item._click_id)}
                                 href={
                                     redirectToProduct
                                         ? `/products/${handle}`
@@ -445,6 +445,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
 
                         const { variants } = item;
 
+                        console.log(item);
                         return (
                             <a
                                 href={
@@ -458,7 +459,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             >
                                 <List.Item
                                     id={item._id}
-                                    onClick={triggerClickAnalytics}
+                                    onClick={() => triggerClickAnalytics(item._click_id)}
                                     css={listStyles({
                                         ...get(theme, 'colors'),
                                     })}

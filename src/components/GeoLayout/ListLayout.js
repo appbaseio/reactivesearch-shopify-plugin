@@ -125,7 +125,6 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
 
                     return (
                         <a
-                            onClick={triggerClickAnalytics}
                             href={
                                 redirectToProduct
                                     ? `/products/${handle}`
@@ -138,7 +137,7 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
                         >
                             <List.Item
                                 id={item._id}
-                                onClick={triggerClickAnalytics}
+                                onClick={() => triggerClickAnalytics(item._click_id)}
                                 css={listStyles({
                                     ...get(theme, 'colors'),
                                 })}
