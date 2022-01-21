@@ -152,7 +152,6 @@ function GeoResultsLayout({isPreview}) {
                         showMarkerClusters={showMarkerClusters}
                         showSearchAsMove={showSearchAsMove}
                         onPopoverClick={(item) => {
-                            // console.log(item);
                             const handle = isPreview
                                 ? ''
                                 : get(item, get(resultSettings, 'fields.handle'));

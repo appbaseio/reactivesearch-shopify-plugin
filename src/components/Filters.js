@@ -1050,7 +1050,6 @@ const Filters = ({
                                 ))
                             ).calculatedCalendarInterval
                         }
-                        console.log(calendarInterval);
                     }
                     return (
                         <Panel

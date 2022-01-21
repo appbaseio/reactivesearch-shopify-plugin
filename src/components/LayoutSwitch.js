@@ -1,6 +1,6 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import { MenuOutlined, AppstoreOutlined}  from "@ant-design/icons";
+import { Icon } from 'antd';
 import { css, jsx } from '@emotion/core';
 import { func } from "prop-types";
 
@@ -21,8 +21,8 @@ export default function LayoutSwitch({ switchViewLayout }) {
 
     return (
         <div css={viewSwitcherStyles}>
-            <AppstoreOutlined className="icon-styles" onClick={() => switchViewLayout('grid')}/>
-            <MenuOutlined className="icon-styles" onClick={() => switchViewLayout('list')}/>
+            <Icon type="appstore" className="icon-styles" onClick={() => switchViewLayout('grid')}/>
+            <Icon type="menu" className="icon-styles" onClick={() => switchViewLayout('list')} />
         </div>
     )
 }
