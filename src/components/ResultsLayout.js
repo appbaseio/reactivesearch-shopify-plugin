@@ -445,7 +445,6 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
 
                         const { variants } = item;
 
-                        console.log(item);
                         return (
                             <a
                                 href={

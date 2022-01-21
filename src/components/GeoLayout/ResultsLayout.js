@@ -11,7 +11,6 @@ import { getSearchPreferences, defaultPreferences } from '../../utils';
 
 function ResultsLayout({meta, data, isPreview, triggerClickAnalytics, renderMap, renderPagination}) {
 
-    console.log(data);
     const [resultsLayout, setResultsLayout] = useState(
         get(
             getSearchPreferences(),
