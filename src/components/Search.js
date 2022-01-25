@@ -1269,8 +1269,9 @@ class Search extends Component {
                 sortOptions: get(this.resultSettings, 'sortOptionSelector')
             }
         }
-
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
+        const mapsAPIkey = get(this.resultSettings, 'mapsAPIkey', '');
+
         return (
             <ReactiveBase
                 app={this.index}
@@ -1282,6 +1283,7 @@ class Search extends Component {
                     recordAnalytics: true,
                     ...userIdObj
                 }}
+                mapKey={mapsAPIkey}
                 setSearchParams={
                     isPreview
                         ? () => {}
