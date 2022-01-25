@@ -232,8 +232,6 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
 
     const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText', 'View Product');
     const redirectUrlIcon = get(preferences, 'searchSettings.redirectUrlIcon', '');
-
-    console.log(redirectUrlIcon);
     const resultSettings = get(preferences, 'resultSettings');
 
     function getFontFamily() {
