@@ -167,8 +167,9 @@ export const defaultPreferences = {
             text: 'Click here to Search',
         },
         rsConfig: null,
-        redirectUrlText: 'View Product',
-        redirectUrlIcon: '',
+        redirectUrlText: {
+            text: 'View Product',
+        }
     },
     resultSettings: {
         rsConfig: {
@@ -181,7 +182,7 @@ export const defaultPreferences = {
         defaultZoom: 13,
         showSearchAsMove: true,
         showMarkerClusters: true,
-        mapsAPIkey: '',
+        mapsAPIkey: 'AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU',
         resultHighlight: false,
     },
     facetSettings: {

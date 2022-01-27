@@ -121,8 +121,7 @@ function GeoResultsLayout({isPreview}) {
 
     const resultSettings = get(preferences, 'resultSettings');
 
-    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText', 'View Product');
-    const redirectUrlIcon = get(preferences, 'searchSettings.redirectUrlIcon', '');
+    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText.text', 'View Product');
 
     function getFontFamily() {
         const receivedFont = get(theme, 'typography.fontFamily', '');
@@ -238,19 +237,7 @@ function GeoResultsLayout({isPreview}) {
                                                 size="large"
                                                 className="product-button"
                                             >
-                                                {redirectUrlIcon ?
-                                                    <img
-                                                        src={redirectUrlIcon}
-                                                        alt='redirect-url-icon'
-                                                        height="15px"
-                                                        width="15px"
-                                                        style={{
-                                                            marginRight: 5
-                                                        }}
-                                                    />
-                                                    :
-                                                    <Icon type="eye" />
-                                                }
+                                                <Icon type="eye" />
                                                 {redirectUrlText}
                                             </Button>
                                         ) : null}
@@ -399,19 +386,7 @@ function GeoResultsLayout({isPreview}) {
                                                 size="large"
                                                 className="product-button"
                                             >
-                                                {redirectUrlIcon ?
-                                                    <img
-                                                        src={redirectUrlIcon}
-                                                        alt='redirect-url-icon'
-                                                        height="15px"
-                                                        width="15px"
-                                                        style={{
-                                                            marginRight: 5
-                                                        }}
-                                                    />
-                                                    :
-                                                    <Icon type="eye" />
-                                                }
+                                                <Icon type="eye" />
                                                 {redirectUrlText}
                                             </Button>
                                         ) : null}
