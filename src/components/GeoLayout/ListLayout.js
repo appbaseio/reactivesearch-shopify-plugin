@@ -87,7 +87,9 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
 
     const resultSettings = get(preferences, 'resultSettings');
 
-    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText.text', 'View Product');
+    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText', 'View Product');
+    const redirectUrlIcon = get(preferences, 'searchSettings.redirectUrlIcon', '');
+
 
     return (
         <List
@@ -229,7 +231,19 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
                                     size="large"
                                     className="product-button"
                                 >
-                                    <Icon type="eye" />
+                                    {redirectUrlIcon ?
+                                        <img
+                                            src={redirectUrlIcon}
+                                            alt='redirect-url-icon'
+                                            height="15px"
+                                            width="15px"
+                                            style={{
+                                                marginRight: 5
+                                            }}
+                                        />
+                                        :
+                                        <Icon type="eye" />
+                                    }
                                     {redirectUrlText}
                                 </Button>
                             ) : null}

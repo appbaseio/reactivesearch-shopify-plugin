@@ -797,6 +797,7 @@ class Search extends Component {
     renderCategorySearch = (categorySearchProps) => {
         const { toggleFilters, blur } = this.state;
         const { isPreview } = this.props;
+        const searchIcon = get(this.searchSettings, 'searchButton.icon', '');
         return (
             <DataSearch
                 // Don't change the component id it is tied to shopify
@@ -806,7 +807,7 @@ class Search extends Component {
                 debounce={100}
                 placeholder="Search for products..."
                 iconPosition="right"
-                icon={get(this.searchSettings, 'searchButton.icon')}
+                icon={searchIcon ? <img src={searchIcon} alt="Search Icon" width="20px" height="20px"/> : searchIcon}
                 ref={searchRef}
                 URLParams
                 style={{
@@ -897,8 +898,9 @@ class Search extends Component {
                 sortOptions: get(this.resultSettings, 'sortOptionSelector')
             }
         }
-
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
+        const mapsAPIkey = get(this.resultSettings, 'mapsAPIkey', '');
+
         return (
             <ReactiveBase
                 app={this.index}
@@ -910,6 +912,7 @@ class Search extends Component {
                     recordAnalytics: true,
                     ...userIdObj
                 }}
+                mapKey={mapsAPIkey}
                 setSearchParams={
                     isPreview
                         ? () => {}
