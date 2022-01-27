@@ -1170,6 +1170,8 @@ class Search extends Component {
     renderCategorySearch = (categorySearchProps) => {
         const { toggleFilters, blur } = this.state;
         const { isPreview } = this.props;
+        const searchIcon = get(this.searchSettings, 'searchButton.icon', '');
+
         return (
             <SearchBox
                 // Don't change the component id it is tied to shopify
@@ -1179,7 +1181,7 @@ class Search extends Component {
                 debounce={100}
                 placeholder="Search for products..."
                 iconPosition="right"
-                icon={<img src={get(this.searchSettings, 'searchButton.icon')} alt="Search Icon" width="20px" height="20px"/>}
+                icon={searchIcon ? <img src={searchIcon} alt="Search Icon" width="20px" height="20px"/> : searchIcon}
                 ref={searchRef}
                 URLParams
                 style={{
