@@ -665,10 +665,7 @@ class ProductSuggestions extends React.Component {
                     </div>
                 ): null}
                 <div style={{ margin: '25px auto', position: 'relative' }}>
-
-                    <div css={titleCls}>
-                        {this.recommendation.title}
-                    </div>
+                    <div css={titleCls}>{this.recommendation.title}</div>
                     <div css={main}>
                         <Button
                             disabled={currentPage === 1}
