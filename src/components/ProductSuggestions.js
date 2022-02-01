@@ -201,6 +201,7 @@ class ProductSuggestions extends React.Component {
         this.credentials = get(preferences, 'appbaseSettings.credentials');
         this.url = get(preferences, 'appbaseSettings.url');
         this.userId = get(this.preferences, 'appbaseSettings.userId', '');
+        this.logoSettings = get(preferences, 'globalSettings.meta.branding', {});
     }
 
    componentDidMount() {
