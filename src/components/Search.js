@@ -1188,7 +1188,7 @@ class Search extends Component {
                     marginBottom: 20,
                     position: 'sticky',
                     top: '10px',
-                    zIndex: 4,
+                    zIndex: 1000,
                     display: toggleFilters ? 'none' : 'block',
                 }}
                 // onKeyDown={(e) => {
