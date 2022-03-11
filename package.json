@@ -8,7 +8,7 @@
     "url": "https://github.com/divyanshu013"
   },
   "dependencies": {
-    "@appbaseio/reactivesearch": "3.28.0",
+    "@appbaseio/reactivesearch": "3.29.0",
     "@appbaseio/reactivemaps": "^3.0.0-beta.17",
     "@emotion/core": "^10.0.35",
     "antd": "3.26.20",
