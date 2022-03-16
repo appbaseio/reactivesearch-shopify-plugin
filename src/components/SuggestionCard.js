@@ -44,7 +44,7 @@ const SuggestionCard = ({
     const redirectUrlIcon = get(preferences, 'searchSettings.redirectUrlIcon', '');
     let url = '';
     if(shouldShowCtaAction && handle && !isPreview) {
-        if(handle.includes('http')) {
+        if(handle.includes('http://') || handle.includes('https://')) {
             url = handle;
         } else {
             url = `/products/${handle}`;
