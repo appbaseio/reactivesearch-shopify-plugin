@@ -275,17 +275,24 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             item,
                             get(resultSettings, 'fields.price'),
                         );
-                        const redirectToProduct = !isPreview || handle;
-
                         const { variants } = item;
+
+                        const redirectToProduct = !isPreview || handle;
+                        let url = '';
+                        if(redirectToProduct) {
+                            if(handle.includes('http')) {
+                                url = handle;
+                            } else {
+                                url = `/products/${handle}`;
+                            }
+                        }  else {
+                            url = undefined;
+                        }
+
                         return (
                             <a
                                 onClick={() => triggerClickAnalytics(item._click_id)}
-                                href={
-                                    redirectToProduct
-                                        ? `/products/${handle}`
-                                        : undefined
-                                }
+                                href={url}
                                 target="_blank"
                                 rel="noreferrer noopener"
                                 key={item._id}
@@ -455,18 +462,22 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             item,
                             get(resultSettings, 'fields.price'),
                         );
-
-                        const redirectToProduct = !isPreview || handle;
-
                         const { variants } = item;
 
+                        const redirectToProduct = !isPreview || handle;
+                        let url = '';
+                        if(redirectToProduct) {
+                            if(handle.includes('http')) {
+                                url = handle;
+                            } else {
+                                url = `/products/${handle}`;
+                            }
+                        }  else {
+                            url = undefined;
+                        }
                         return (
                             <a
-                                href={
-                                    redirectToProduct
-                                        ? `/products/${handle}`
-                                        : undefined
-                                }
+                                href={url}
                                 target="_blank"
                                 rel="noreferrer noopener"
                                 key={item._id}

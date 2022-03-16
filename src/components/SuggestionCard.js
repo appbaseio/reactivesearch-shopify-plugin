@@ -42,17 +42,23 @@ const SuggestionCard = ({
     const preferences = getSearchPreferences();
     const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText', 'View Product');
     const redirectUrlIcon = get(preferences, 'searchSettings.redirectUrlIcon', '');
+    let url = '';
+    if(shouldShowCtaAction && handle && !isPreview) {
+        if(handle.includes('http')) {
+            url = handle;
+        } else {
+            url = `/products/${handle}`;
+        }
+    }  else {
+        url = undefined;
+    }
 
     return (
         <div {...props}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
                 onClick={() => triggerAnalytics(clickId)}
-                href={
-                     shouldShowCtaAction && handle && !isPreview
-                        ? `/products/${handle}`
-                        : undefined
-                }
+                href={url}
             >
                 <Card
                     hoverable

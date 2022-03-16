@@ -177,14 +177,20 @@ function GeoResultsLayout({isPreview}) {
                             const { variants } = item;
 
                             const redirectToProduct = !isPreview || handle;
+                            let url = '';
+                            if(redirectToProduct) {
+                                if(handle.includes('http')) {
+                                    url = handle;
+                                } else {
+                                    url = `/products/${handle}`;
+                                }
+                            }  else {
+                                url = undefined;
+                            }
 
                             return (
                                 <a
-                                    href={
-                                        redirectToProduct
-                                            ? `/products/${handle}`
-                                            : undefined
-                                    }
+                                    href={url}
                                     target="_blank"
                                     rel="noreferrer noopener"
                                     key={item._id}
@@ -339,14 +345,20 @@ function GeoResultsLayout({isPreview}) {
                             const { variants } = item;
 
                             const redirectToProduct = !isPreview || handle;
+                            let url = '';
+                            if(redirectToProduct) {
+                                if(handle.includes('http')) {
+                                    url = handle;
+                                } else {
+                                    url = `/products/${handle}`;
+                                }
+                            }  else {
+                                url = undefined;
+                            }
 
                             return (
                                 <a
-                                    href={
-                                        redirectToProduct
-                                            ? `/products/${handle}`
-                                            : undefined
-                                    }
+                                    href={url}
                                     target="_blank"
                                     rel="noreferrer noopener"
                                     key={item._id}
