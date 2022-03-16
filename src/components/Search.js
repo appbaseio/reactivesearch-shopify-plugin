@@ -23,6 +23,7 @@ import { string, bool } from 'prop-types';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import { Card, Collapse, Button, Icon, Affix, Tooltip, List } from 'antd';
+import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
 import Suggestions from './Suggestions';
 import LayoutSwitch from './LayoutSwitch';
@@ -37,6 +38,7 @@ import {
 import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
 import Filters from './Filters';
 
+const DOMPurify = createDOMPurify(window);
 const { Meta } = Card;
 const { Panel } = Collapse;
 
@@ -511,11 +513,11 @@ class Search extends Component {
                                         css={loaderStyle}
                                         // eslint-disable-next-line
                                         dangerouslySetInnerHTML={{
-                                            __html: get(
+                                            __html: DOMPurify.sanitize(get(
                                                 this.collectionFilter,
                                                 'customMessages.loading',
                                                 'Loading collections',
-                                            ),
+                                            )),
                                         }}
                                     />
                                 );
@@ -526,11 +528,11 @@ class Search extends Component {
                                         <div
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
-                                                __html: get(
+                                                __html: DOMPurify.sanitize(get(
                                                     this.collectionFilter,
                                                     'customMessages.noResults',
                                                     'No items Found',
-                                                ),
+                                                )),
                                             }}
                                         />
                                     )}
@@ -776,11 +778,11 @@ class Search extends Component {
                                     css={loaderStyle}
                                     // eslint-disable-next-line
                                     dangerouslySetInnerHTML={{
-                                        __html: get(
+                                        __html: DOMPurify.sanitize(get(
                                             this.colorFilter,
                                             'customMessages.noResults',
                                             'Fetching Colors',
-                                        ),
+                                        )),
                                     }}
                                 />
                             );
@@ -797,11 +799,11 @@ class Search extends Component {
                                 <div
                                     // eslint-disable-next-line
                                     dangerouslySetInnerHTML={{
-                                        __html: get(
+                                        __html: DOMPurify.sanitize(get(
                                             this.colorFilter,
                                             'customMessages.noResults',
                                             'Fetching Colors',
-                                        ),
+                                        )),
                                     }}
                                 />
                             );
@@ -859,11 +861,11 @@ class Search extends Component {
                             css={loaderStyle}
                             // eslint-disable-next-line
                             dangerouslySetInnerHTML={{
-                                __html: get(
+                                __html: DOMPurify.sanitize(get(
                                     this.colorFilter,
                                     'customMessages.loading',
                                     'Loading colors',
-                                ),
+                                )),
                             }}
                         />
                     }
@@ -971,11 +973,11 @@ class Search extends Component {
                                 css={loaderStyle}
                                 // eslint-disable-next-line
                                 dangerouslySetInnerHTML={{
-                                    __html: get(
+                                    __html: DOMPurify.sanitize(get(
                                         this.sizeFilter,
                                         'customMessages.loading',
                                         'Loading sizes',
-                                    ),
+                                    )),
                                 }}
                             />
                         }
@@ -983,11 +985,11 @@ class Search extends Component {
                             <div
                                 // eslint-disable-next-line
                                 dangerouslySetInnerHTML={{
-                                    __html: get(
+                                    __html: DOMPurify.sanitize(get(
                                         this.sizeFilter,
                                         'customMessages.noResults',
                                         'No sizes Found',
-                                    ),
+                                    )),
                                 }}
                             />
                         )}
@@ -1141,11 +1143,11 @@ class Search extends Component {
                         css={loaderStyle}
                         // eslint-disable-next-line
                         dangerouslySetInnerHTML={{
-                            __html: get(
+                            __html: DOMPurify.sanitize(get(
                                 this.priceFilter,
                                 'customMessages.loading',
                                 '',
-                            ),
+                            )),
                         }}
                     />
                 }
@@ -1434,11 +1436,11 @@ class Search extends Component {
                                             style={{ textAlign: 'right' }}
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
-                                                __html: get(
+                                                __html: DOMPurify.sanitize(get(
                                                     this.resultSettings,
                                                     'customMessages.noResults',
                                                     'No Results Found',
-                                                ),
+                                                )),
                                             }}
                                         />
                                     )}
@@ -1449,7 +1451,7 @@ class Search extends Component {
                                         <div
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
-                                                __html: get(
+                                                __html: DOMPurify.sanitize(get(
                                                     this.resultSettings,
                                                     'customMessages.resultStats',
                                                     '[count] products found in [time] ms',
@@ -1458,7 +1460,7 @@ class Search extends Component {
                                                         '[count]',
                                                         numberOfResults,
                                                     )
-                                                    .replace('[time]', time),
+                                                    .replace('[time]', time)),
                                             }}
                                         />
                                     )}
