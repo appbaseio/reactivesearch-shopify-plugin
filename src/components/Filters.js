@@ -9,9 +9,11 @@ import {
 } from '@appbaseio/reactivesearch/lib/styles/FormControlList';
 import { Collapse, Tooltip } from "antd";
 import { MultiList, RangeInput, DynamicRangeSlider, ReactiveComponent } from "@appbaseio/reactivesearch";
+import createDOMPurify from 'dompurify';
 import { getReactDependenciesFromPreferences, shopifyDefaultFields, browserColors } from "../utils";
 import { mediaMax } from '../utils/media';
 
+const DOMPurify = createDOMPurify(window);
 const { Panel } = Collapse;
 
 const loaderStyle = css`
@@ -125,11 +127,11 @@ const Filters = ({
                                         css={loaderStyle}
                                         // eslint-disable-next-line
                                         dangerouslySetInnerHTML={{
-                                            __html: get(
+                                            __html: DOMPurify.sanitize(get(
                                                 collectionFilter,
                                                 'customMessages.loading',
                                                 'Loading collections',
-                                            ),
+                                            )),
                                         }}
                                     />
                                 );
@@ -140,11 +142,11 @@ const Filters = ({
                                         <div
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
-                                                __html: get(
+                                                __html: DOMPurify.sanitize(get(
                                                     collectionFilter,
                                                     'customMessages.noResults',
                                                     'No items Found',
-                                                ),
+                                                )),
                                             }}
                                         />
                                     )}
@@ -390,11 +392,11 @@ const Filters = ({
                                     css={loaderStyle}
                                     // eslint-disable-next-line
                                     dangerouslySetInnerHTML={{
-                                        __html: get(
+                                        __html: DOMPurify.sanitize(get(
                                             colorFilter,
                                             'customMessages.noResults',
                                             'Fetching Colors',
-                                        ),
+                                        )),
                                     }}
                                 />
                             );
@@ -411,11 +413,11 @@ const Filters = ({
                                 <div
                                     // eslint-disable-next-line
                                     dangerouslySetInnerHTML={{
-                                        __html: get(
+                                        __html: DOMPurify.sanitize(get(
                                             colorFilter,
                                             'customMessages.noResults',
                                             'Fetching Colors',
-                                        ),
+                                        )),
                                     }}
                                 />
                             );
@@ -473,11 +475,11 @@ const Filters = ({
                             css={loaderStyle}
                             // eslint-disable-next-line
                             dangerouslySetInnerHTML={{
-                                __html: get(
+                                __html: DOMPurify.sanitize(get(
                                     colorFilter,
                                     'customMessages.loading',
                                     'Loading colors',
-                                ),
+                                )),
                             }}
                         />
                     }
@@ -586,11 +588,11 @@ const Filters = ({
                                 css={loaderStyle}
                                 // eslint-disable-next-line
                                 dangerouslySetInnerHTML={{
-                                    __html: get(
+                                    __html: DOMPurify.sanitize(get(
                                         sizeFilter,
                                         'customMessages.loading',
                                         'Loading sizes',
-                                    ),
+                                    )),
                                 }}
                             />
                         }
@@ -598,11 +600,11 @@ const Filters = ({
                             <div
                                 // eslint-disable-next-line
                                 dangerouslySetInnerHTML={{
-                                    __html: get(
+                                    __html: DOMPurify.sanitize(get(
                                         sizeFilter,
                                         'customMessages.noResults',
                                         'No sizes Found',
-                                    ),
+                                    )),
                                 }}
                             />
                         )}
@@ -775,11 +777,11 @@ const Filters = ({
                         css={loaderStyle}
                         // eslint-disable-next-line
                         dangerouslySetInnerHTML={{
-                            __html: get(
+                            __html: DOMPurify.sanitize(get(
                                 priceFilter,
                                 'customMessages.loading',
                                 '',
-                            ),
+                            )),
                         }}
                     />
                 }
@@ -1104,11 +1106,11 @@ const Filters = ({
                                                 css={loaderStyle}
                                                 // eslint-disable-next-line
                                                 dangerouslySetInnerHTML={{
-                                                    __html: get(
+                                                    __html: DOMPurify.sanitize(get(
                                                         listComponent,
                                                         'customMessages.loading',
                                                         'Loading options',
-                                                    ),
+                                                    )),
                                                 }}
                                             />
                                         }
@@ -1116,11 +1118,11 @@ const Filters = ({
                                             <div
                                                 // eslint-disable-next-line
                                                 dangerouslySetInnerHTML={{
-                                                    __html: get(
+                                                    __html: DOMPurify.sanitize(get(
                                                         listComponent,
                                                         'customMessages.noResults',
                                                         'No items Found',
-                                                    ),
+                                                    )),
                                                 }}
                                             />
                                         )}

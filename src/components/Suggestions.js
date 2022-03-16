@@ -8,9 +8,12 @@ import Highlight from 'react-highlight-words';
 import strip from 'striptags';
 import get from 'lodash.get';
 import Truncate from 'react-truncate';
+import createDOMPurify from 'dompurify';
 import {
     shopifyDefaultFields,
 } from '../utils';
+
+const DOMPurify = createDOMPurify(window);
 
 const headingStyles = ({ titleColor, primaryColor }) => css`
     margin: 8px 0;
@@ -218,11 +221,11 @@ const Suggestions = ({
                             css={highlightStyle(themeConfig.colors)}
                             // eslint-disable-next-line
                             dangerouslySetInnerHTML={{
-                                __html: get(
+                                __html: DOMPurify.sanitize(get(
                                     customMessage,
                                     'noResults',
                                     'No suggestions found for <mark>[term]</mark>',
-                                ).replace('[term]', currentValue),
+                                ).replace('[term]', currentValue)),
                             }}
                         />
                     </React.Fragment>
@@ -464,7 +467,7 @@ const Suggestions = ({
                 ): null }
 
                 {customSuggestions ? (
-                    <div dangerouslySetInnerHTML={{ __html: customSuggestions }} />
+                    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(customSuggestions) }} />
                 ) : null}
                 {
                     suggestions.length ? (

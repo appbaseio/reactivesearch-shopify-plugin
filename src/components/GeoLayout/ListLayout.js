@@ -6,8 +6,11 @@ import { func, array } from "prop-types";
 import get from 'lodash.get';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
+import createDOMPurify from 'dompurify';
 import { mediaMax } from '../../utils/media';
 import { getSearchPreferences, defaultPreferences } from '../../utils';
+
+const DOMPurify = createDOMPurify(window);
 
 export const NoDataStyles = css`
     .ant-list-empty-text {
@@ -186,7 +189,7 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
                                                     >
                                                         {get(resultSettings, 'resultHighlight', false) ? (
                                                             <p
-                                                                dangerouslySetInnerHTML={{ __html: description }}
+                                                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}
                                                             />
                                                         ) : (
                                                             strip(description.toString())

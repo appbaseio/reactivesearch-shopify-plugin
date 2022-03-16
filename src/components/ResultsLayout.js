@@ -6,9 +6,12 @@ import { Card, Button, Icon, List } from 'antd';
 import { bool } from 'prop-types';
 import { css, jsx } from '@emotion/core';
 import get from 'lodash.get';
+import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
 import LayoutSwitch from './LayoutSwitch';
 import { getSearchPreferences, defaultPreferences } from '../utils';
+
+const DOMPurify = createDOMPurify(window);
 
 export const listLayoutStyles = css`
     display: flex;
@@ -341,7 +344,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                 }
                                             >
                                                 <div
-                                                    dangerouslySetInnerHTML={{ __html: title }}
+                                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
                                                     css={highlightStyle(get(theme, 'colors'))}
                                                 />
                                             </h3>
@@ -349,7 +352,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                         description={
                                             themeType === 'classic' ? (
                                                 <div
-                                                    dangerouslySetInnerHTML={{ __html: description }}
+                                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}
                                                     css={highlightStyle(get(theme, 'colors'))}
                                                     style={{
                                                         display: '-webkit-box',
@@ -496,7 +499,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                             <div>
                                                 {title && (
                                                     <div
-                                                        dangerouslySetInnerHTML={{ __html: title }}
+                                                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
                                                         css={highlightStyle(get(theme, 'colors'))}
                                                     />
                                                 )}
@@ -508,7 +511,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                     {description &&
                                                     themeType === 'classic' ? (
                                                         <div
-                                                    dangerouslySetInnerHTML={{ __html: description }}
+                                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}
                                                     css={highlightStyle(get(theme, 'colors'))}
                                                     style={{
                                                         display: '-webkit-box',

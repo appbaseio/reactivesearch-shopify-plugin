@@ -13,6 +13,7 @@
     "@emotion/core": "^10.0.35",
     "antd": "3.26.20",
     "babel-eslint": "^10.1.0",
+    "dompurify": "^2.3.6",
     "emotion": "10.0.27",
     "lodash.get": "4.4.2",
     "prop-types": "15.7.2",
