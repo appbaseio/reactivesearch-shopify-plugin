@@ -179,7 +179,11 @@ function GeoResultsLayout({isPreview}) {
                             const redirectToProduct = !isPreview || handle;
                             let url = '';
                             if(redirectToProduct) {
-                                url = handle;
+                                if(handle.includes('http://') || handle.includes('https://')) {
+                                    url = handle;
+                                } else {
+                                    url = `/${handle}`;
+                                }
                             }  else {
                                 url = undefined;
                             }
@@ -343,7 +347,11 @@ function GeoResultsLayout({isPreview}) {
                             const redirectToProduct = !isPreview || handle;
                             let url = '';
                             if(redirectToProduct) {
-                                url = handle;
+                                if(handle.includes('http://') || handle.includes('https://')) {
+                                    url = handle;
+                                } else {
+                                    url = `/${handle}`;
+                                }
                             }  else {
                                 url = undefined;
                             }

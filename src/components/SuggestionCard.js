@@ -46,10 +46,10 @@ const SuggestionCard = ({
     const redirectUrlIcon = get(preferences, 'searchSettings.redirectUrlIcon', '');
     let url = '';
     if(shouldShowCtaAction && handle && !isPreview) {
-        if(type !== 'similar') {
-            url = handle;
-        } else {
+        if(type === 'similar') {
             url = `/products/${handle}`;
+        } else {
+            url = handle;
         }
     }  else {
         url = undefined;
