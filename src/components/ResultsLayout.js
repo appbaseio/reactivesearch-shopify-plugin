@@ -283,7 +283,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             if(handle.includes('http://') || handle.includes('https://')) {
                                 url = handle;
                             } else {
-                                url = `/products/${handle}`;
+                                url = `/${handle}`;
                             }
                         }  else {
                             url = undefined;
@@ -470,7 +470,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             if(handle.includes('http://') || handle.includes('https://')) {
                                 url = handle;
                             } else {
-                                url = `/products/${handle}`;
+                                url = `/${handle}`;
                             }
                         }  else {
                             url = undefined;
