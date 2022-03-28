@@ -2,6 +2,7 @@
 /** @jsx jsx */
 import { useEffect, useState } from 'react';
 import { jsx } from '@emotion/core';
+import { string } from 'prop-types';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import { Card, Button, Icon } from 'antd';
@@ -29,6 +30,7 @@ const SuggestionCard = ({
     ctaAction,
     ctaTitle,
     cardStyle,
+    type,
     ...props
 }) => {
     const [isFontLoaded, setFontLoad] = useState(false);
@@ -42,17 +44,23 @@ const SuggestionCard = ({
     const preferences = getSearchPreferences();
     const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText', 'View Product');
     const redirectUrlIcon = get(preferences, 'searchSettings.redirectUrlIcon', '');
+    let url = '';
+    if(shouldShowCtaAction && handle && !isPreview) {
+        if(type === 'similar') {
+            url = `/products/${handle}`;
+        } else {
+            url = handle;
+        }
+    }  else {
+        url = undefined;
+    }
 
     return (
         <div {...props}>
             {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
             <a
                 onClick={() => triggerAnalytics(clickId)}
-                href={
-                     shouldShowCtaAction && handle && !isPreview
-                        ? `/products/${handle}`
-                        : undefined
-                }
+                href={url}
             >
                 <Card
                     hoverable
@@ -182,6 +190,13 @@ const SuggestionCard = ({
             </a>
         </div>
     );
+};
+
+SuggestionCard.defaultProps = {
+    type: 'other',
+};
+SuggestionCard.propTypes = {
+    type: string,
 };
 
 export default SuggestionCard;
