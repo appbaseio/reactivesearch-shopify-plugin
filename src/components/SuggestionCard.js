@@ -176,4 +176,12 @@ const SuggestionCard = ({
     );
 };
 
+SuggestionCard.defaultProps = {
+    type: 'other',
+};
+SuggestionCard.propTypes = {
+    type: string,
+};
+
+
 export default SuggestionCard;
