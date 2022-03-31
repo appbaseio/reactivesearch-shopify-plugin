@@ -120,17 +120,24 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview }) {
                     get(resultSettings, 'fields.price'),
                 );
 
+                const { variants } = item;
+
                 const redirectToProduct = !isPreview || handle;
 
-                const { variants } = item;
+                let url = '';
+                if(redirectToProduct) {
+                    if(handle?.includes('http://') || handle?.includes('https://')) {
+                        url = handle;
+                    } else {
+                        url = `/${handle}`;
+                    }
+                }  else {
+                    url = undefined;
+                }
 
                 return (
                     <a
-                        href={
-                            redirectToProduct
-                                ? `/products/${handle}`
-                                : undefined
-                        }
+                        href={url}
                         target="_blank"
                         rel="noreferrer noopener"
                         key={item._id}
