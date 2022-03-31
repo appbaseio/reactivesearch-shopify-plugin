@@ -731,6 +731,7 @@ class ProductSuggestions extends React.Component {
                                             clickId: _click_id,
                                             triggerAnalytics: triggerClickAnalytics,
                                         }}
+                                        type={this.recommendation.type || 'other'}
                                         index={_id}
                                     />
                                 ),
