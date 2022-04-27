@@ -13,7 +13,6 @@ import {
     ReactiveComponent,
     RangeInput,
 } from '@appbaseio/reactivesearch';
-import { ReactiveGoogleMap } from '@appbaseio/reactivemaps';
 import {
     UL,
     Checkbox,
@@ -1274,7 +1273,7 @@ class Search extends Component {
             }
         }
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
-        const mapsAPIkey = get(this.resultSettings, 'mapsAPIkey', '');
+        const mapsAPIkey = get(this.resultSettings, 'mapsAPIkey', 'AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU');
 
         return (
             <ReactiveBase
@@ -1288,6 +1287,7 @@ class Search extends Component {
                     ...userIdObj
                 }}
                 mapKey={mapsAPIkey}
+                mapLibraries={['visualization', 'places']}
                 setSearchParams={
                     isPreview
                         ? () => {}

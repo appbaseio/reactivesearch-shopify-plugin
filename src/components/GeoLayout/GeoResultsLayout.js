@@ -263,18 +263,19 @@ function GeoResultsLayout({isPreview}) {
                                 </a>
                             )
                         }}
-                        renderAllData={(
-                            hits,
-                            loadMore,
-                            renderMap,
-                            renderPagination,
-                            triggerClickAnalytics,
-                            meta,
-                        ) => {
+                        render={(props) => {
+                            const {
+                                hits,
+                                loadMore,
+                                renderMap,
+                                renderPagination,
+                                triggerClickAnalytics,
+                                resultStats,
+                            } = props;
                             return (
                                 <ResultsLayout
                                     data={hits}
-                                    meta={meta}
+                                    resultStats={resultStats}
                                     isPreview={isPreview}
                                     triggerClickAnalytics={triggerClickAnalytics}
                                     renderMap={renderMap}
@@ -282,7 +283,7 @@ function GeoResultsLayout({isPreview}) {
                                 />
                             );
                         }}
-                        renderData={(data) => ({
+                        renderItem={(data) => ({
                             label: (
                                 <span style={{ width: 40, display: "block", textAlign: "center" }}>
                                 ${data.price}
@@ -431,18 +432,19 @@ function GeoResultsLayout({isPreview}) {
                                 </a>
                             )
                         }}
-                        renderAllData={(
-                            hits,
-                            loadMore,
-                            renderMap,
-                            renderPagination,
-                            triggerClickAnalytics,
-                            meta,
-                        ) => {
+                        render={(props) => {
+                            const {
+                                hits,
+                                loadMore,
+                                renderMap,
+                                renderPagination,
+                                triggerClickAnalytics,
+                                resultStats,
+                            } = props;
                             return (
                                 <ResultsLayout
                                     data={hits}
-                                    meta={meta}
+                                    resultStats={resultStats}
                                     isPreview={isPreview}
                                     triggerClickAnalytics={triggerClickAnalytics}
                                     renderMap={renderMap}
@@ -450,7 +452,7 @@ function GeoResultsLayout({isPreview}) {
                                 />
                             );
                         }}
-                        renderData={(data) => ({
+                        renderItem={(data) => ({
                             label: (
                                 <span style={{ width: 40, display: "block", textAlign: "center" }}>
                                 ${data.price}
