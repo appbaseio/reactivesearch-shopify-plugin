@@ -9,7 +9,7 @@ import ListLayout from "./ListLayout";
 import { getSearchPreferences, defaultPreferences } from '../../utils';
 
 
-function ResultsLayout({meta, data, isPreview, triggerClickAnalytics, renderMap, renderPagination}) {
+function ResultsLayout({resultStats, data, isPreview, triggerClickAnalytics, renderMap, renderPagination}) {
 
     const [resultsLayout, setResultsLayout] = useState(
         get(
@@ -30,8 +30,8 @@ function ResultsLayout({meta, data, isPreview, triggerClickAnalytics, renderMap,
     return (
         <div>
            <div >
-                {meta?.resultStats?.numberOfResults} results found in{' '}
-                {meta?.resultStats?.time}ms
+                {resultStats?.numberOfResults} results found in{' '}
+                {resultStats?.time}ms
             </div>
             {viewSwitcher && (
                 <LayoutSwitch switchViewLayout={setResultsLayout} resultsLayout={resultsLayout}/>
