@@ -3,7 +3,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import get from 'lodash.get';
-import { appbasePrefs } from './constants';
+import appbasePrefs from './constants';
 
 export const browserColors = {
     aliceblue: '#f0f8ff',
