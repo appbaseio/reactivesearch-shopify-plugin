@@ -126,7 +126,7 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
 
                     const redirectToProduct = !isPreview || handle;
                     let url = '';
-                    if(redirectToProduct && handle) {
+                    if(redirectToProduct) {
                         if(handle.includes('http://') || handle.includes('https://')) {
                             url = handle;
                         } else {

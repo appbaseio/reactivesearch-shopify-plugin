@@ -279,7 +279,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
 
                         const redirectToProduct = !isPreview || handle;
                         let url = '';
-                        if(redirectToProduct && handle) {
+                        if(redirectToProduct) {
                             if(handle.includes('http://') || handle.includes('https://')) {
                                 url = handle;
                             } else {
@@ -466,7 +466,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
 
                         const redirectToProduct = !isPreview || handle;
                         let url = '';
-                        if(redirectToProduct && handle) {
+                        if(redirectToProduct) {
                             if(handle.includes('http://') || handle.includes('https://')) {
                                 url = handle;
                             } else {
