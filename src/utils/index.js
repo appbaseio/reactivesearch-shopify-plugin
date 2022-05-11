@@ -3,6 +3,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import get from 'lodash.get';
+import { appbasePrefs } from './constants';
 
 export const browserColors = {
     aliceblue: '#f0f8ff',
@@ -254,9 +255,9 @@ export const getReactDependenciesFromPreferences = (
 
 export const getSearchPreferences = () => {
     let preferences = {};
-    if (window.APPBASE_SEARCH_PREFERENCES) {
+    if (window.APPBASE_SEARCH_PREFERENCES || appbasePrefs) {
         try {
-            preferences = JSON.parse(window.APPBASE_SEARCH_PREFERENCES);
+            preferences = JSON.parse(window.APPBASE_SEARCH_PREFERENCES || appbasePrefs);
         } catch (e) {
             console.warn(
                 'Appbase: Error encountered while parsing the search preferences, fall-backing to the default preferences',
