@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Helmet } from 'react-helmet';
 import SearchPlugin from './components/SearchPlugin';
 import ProductSuggestions from './components/ProductSuggestions';
-import "antd/dist/antd.css";
+import 'antd/dist/antd.css';
 import './index.css';
 
 const isIdAvailble = (id) => document.getElementById(id);
@@ -17,7 +17,8 @@ const getPropsById = (id) => {
             isOpen: container.getAttribute('isOpen') === 'true',
             openAsPage: container.getAttribute('openaspage') === 'true',
             isPreview: container.getAttribute('isPreview') === 'true',
-            disableSearchText: container.getAttribute('disableSearchText') === 'true',
+            disableSearchText:
+                container.getAttribute('disableSearchText') === 'true',
         };
     }
     return null;
@@ -30,21 +31,39 @@ const renderById = (id, mode) => {
             <div>
                 <Helmet>
                     <meta charset="utf-8" />
-                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+                    <meta
+                        name="viewport"
+                        content="width=device-width, initial-scale=1, shrink-to-fit=no"
+                    />
                     <meta name="theme-color" content="#000000" />
 
                     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
                     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
 
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-                        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossOrigin="anonymous" />
-                    <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/leaflet.css" rel="stylesheet" />
+                    <link
+                        rel="stylesheet"
+                        href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+                        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+                        crossOrigin="anonymous"
+                    />
+                    <link
+                        href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/leaflet.css"
+                        rel="stylesheet"
+                    />
 
-                    <link rel="shortcut icon" href="/static/images/favicon.ico" />
-                    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="preload" as="style" />
-                    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-
-                    <title>ReactiveSearch Shopify</title>
+                    <link
+                        rel="shortcut icon"
+                        href="/static/images/favicon.ico"
+                    />
+                    <link
+                        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
+                        rel="preload"
+                        as="style"
+                    />
+                    <link
+                        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
+                        rel="stylesheet"
+                    />
                 </Helmet>
                 {mode === 'suggestions' ? (
                     <ProductSuggestions {...getPropsById(id)} />
