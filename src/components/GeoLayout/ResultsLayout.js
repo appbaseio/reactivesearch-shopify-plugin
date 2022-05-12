@@ -1,16 +1,20 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 /* eslint-disable no-unused-vars */
-import React, {useState} from "react";
+import React, { useState } from 'react';
 import { jsx } from '@emotion/core';
 import get from 'lodash.get';
-import LayoutSwitch from "./LayoutSwitch";
-import ListLayout from "./ListLayout";
+import LayoutSwitch from './LayoutSwitch';
+import ListLayout from './ListLayout';
 import { getSearchPreferences, defaultPreferences } from '../../utils';
 
-
-function ResultsLayout({meta, data, isPreview, triggerClickAnalytics, renderMap}) {
-
+function ResultsLayout({
+    resultStats,
+    data,
+    isPreview,
+    triggerClickAnalytics,
+    renderMap,
+}) {
     const [resultsLayout, setResultsLayout] = useState(
         get(
             getSearchPreferences(),
@@ -29,12 +33,15 @@ function ResultsLayout({meta, data, isPreview, triggerClickAnalytics, renderMap}
 
     return (
         <div>
-           <div >
-                {meta?.resultStats?.numberOfResults} results found in{' '}
-                {meta?.resultStats?.time}ms
+            <div>
+                {resultStats?.numberOfResults} results found in{' '}
+                {resultStats?.time}ms
             </div>
             {viewSwitcher && (
-                <LayoutSwitch switchViewLayout={setResultsLayout} resultsLayout={resultsLayout}/>
+                <LayoutSwitch
+                    switchViewLayout={setResultsLayout}
+                    resultsLayout={resultsLayout}
+                />
             )}
 
             {resultsLayout !== 'map' ? (
@@ -43,13 +50,11 @@ function ResultsLayout({meta, data, isPreview, triggerClickAnalytics, renderMap}
                     isPreview={isPreview}
                     triggerClickAnalytics={triggerClickAnalytics}
                 />
-            ): (
-                <div style={{height: '90vh'}}>
-                    {renderMap()}
-                </div>
+            ) : (
+                <div style={{ height: '90vh' }}>{renderMap()}</div>
             )}
         </div>
-    )
+    );
 }
 
 export default ResultsLayout;
