@@ -262,19 +262,24 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
 
                         const redirectToProduct = !isPreview || handle;
                         let url = '';
-                        if(redirectToProduct) {
-                            if(handle?.includes('http://') || handle?.includes('https://')) {
+                        if (redirectToProduct && handle) {
+                            if (
+                                handle?.includes('http://') ||
+                                handle?.includes('https://')
+                            ) {
                                 url = handle;
                             } else {
                                 url = `/${handle}`;
                             }
-                        }  else {
+                        } else {
                             url = undefined;
                         }
 
                         return (
                             <a
-                                onClick={() => triggerClickAnalytics(item._click_id)}
+                                onClick={() =>
+                                    triggerClickAnalytics(item._click_id)
+                                }
                                 href={url}
                                 target="_blank"
                                 rel="noreferrer noopener"
@@ -298,7 +303,8 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                     width="100%"
                                                     alt={title}
                                                     onError={(event) => {
-                                                        event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                        event.target.src =
+                                                            'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
                                                     }}
                                                 />
                                             )}
@@ -397,7 +403,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                             <Icon type="eye" />
                                             View Product
                                         </Button>
-                                   ) : null}
+                                    ) : null}
                                 </Card>
                             </a>
                         );
@@ -436,13 +442,16 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
 
                         const redirectToProduct = !isPreview || handle;
                         let url = '';
-                        if(redirectToProduct) {
-                            if(handle?.includes('http://') || handle?.includes('https://')) {
+                        if (redirectToProduct && handle) {
+                            if (
+                                handle?.includes('http://') ||
+                                handle?.includes('https://')
+                            ) {
                                 url = handle;
                             } else {
                                 url = `/${handle}`;
                             }
-                        }  else {
+                        } else {
                             url = undefined;
                         }
 
@@ -455,7 +464,9 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             >
                                 <List.Item
                                     id={item._id}
-                                    onClick={() => triggerClickAnalytics(item._click_id)}
+                                    onClick={() =>
+                                        triggerClickAnalytics(item._click_id)
+                                    }
                                     css={listStyles({
                                         ...get(theme, 'colors'),
                                     })}
@@ -471,7 +482,8 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                         width="100%"
                                                         alt={title}
                                                         onError={(event) => {
-                                                            event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                            event.target.src =
+                                                                'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
                                                         }}
                                                     />
                                                 )}
@@ -502,9 +514,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                                 <span>...</span>
                                                             }
                                                         >
-                                                            {strip(
-                                                                description,
-                                                            )}
+                                                            {strip(description)}
                                                         </Truncate>
                                                     ) : null}
                                                 </div>
