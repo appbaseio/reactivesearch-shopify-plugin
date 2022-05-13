@@ -257,7 +257,9 @@ export const getSearchPreferences = () => {
     let preferences = {};
     if (window.APPBASE_SEARCH_PREFERENCES || appbasePrefs) {
         try {
-            preferences = JSON.parse(window.APPBASE_SEARCH_PREFERENCES || appbasePrefs);
+            preferences = JSON.parse(
+                window.APPBASE_SEARCH_PREFERENCES || appbasePrefs,
+            );
         } catch (e) {
             console.warn(
                 'Appbase: Error encountered while parsing the search preferences, fall-backing to the default preferences',
@@ -269,10 +271,10 @@ export const getSearchPreferences = () => {
 
 export const getRecommendationsPreferences = () => {
     let preferences = {};
-    if (window.APPBASE_RECOMMENDATIONS_PREFERENCES) {
+    if (window.APPBASE_RECOMMENDATIONS_PREFERENCES || appbasePrefs) {
         try {
             preferences = JSON.parse(
-                window.APPBASE_RECOMMENDATIONS_PREFERENCES,
+                window.APPBASE_RECOMMENDATIONS_PREFERENCES || appbasePrefs,
             );
         } catch (e) {
             console.warn(

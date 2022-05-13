@@ -1,3 +1,3 @@
-const appbasePrefs = '{{APPBASE_SEARCH_PREFERENCES}}';
+const appbasePrefs = '{{APPBASE_PREFERENCES}}';
 
 export default appbasePrefs;
