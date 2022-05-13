@@ -12,7 +12,6 @@ import {
     DynamicRangeSlider,
     ReactiveComponent,
 } from '@appbaseio/reactivesearch';
-import { ReactiveGoogleMap } from '@appbaseio/reactivemaps';
 import {
     UL,
     Checkbox,
@@ -347,10 +346,10 @@ class Search extends Component {
         try {
             const inputRef = get(searchRef, 'current._inputRef', null);
 
-            if(this.userId) {
+            if (this.userId) {
                 userIdObj = {
-                    userId: this.userId
-                }
+                    userId: this.userId,
+                };
             }
             if (inputRef) {
                 const param = new URLSearchParams(window.location.search).get(
@@ -448,13 +447,11 @@ class Search extends Component {
                 />
                 <MultiList
                     innerClass={{
-                        input: 'list-input'
+                        input: 'list-input',
                     }}
                     componentId="collection"
                     dataField="collection"
-                    style={{
-
-                    }}
+                    style={{}}
                     defaultQuery={() => ({
                         aggs: {
                             collections: {
@@ -590,7 +587,7 @@ class Search extends Component {
                 componentId="productType"
                 dataField="product_type.keyword"
                 innerClass={{
-                    input: 'list-input'
+                    input: 'list-input',
                 }}
                 css={font}
                 showCheckbox={this.themeType !== 'minimal'}
@@ -614,7 +611,7 @@ class Search extends Component {
         <MultiList
             componentId="color"
             innerClass={{
-                input: 'list-input'
+                input: 'list-input',
             }}
             react={{
                 and: [
@@ -647,11 +644,7 @@ class Search extends Component {
                     );
                 }
                 if (error) {
-                    return (
-                        <div>
-                            No colors found!
-                        </div>
-                    );
+                    return <div>No colors found!</div>;
                 }
                 if (data.length === 0) {
                     return (
@@ -744,7 +737,7 @@ class Search extends Component {
             <MultiList
                 componentId="size"
                 innerClass={{
-                    input: 'list-input'
+                    input: 'list-input',
                 }}
                 react={{
                     and: [
@@ -807,7 +800,18 @@ class Search extends Component {
                 debounce={100}
                 placeholder="Search for products..."
                 iconPosition="right"
-                icon={searchIcon ? <img src={searchIcon} alt="Search Icon" width="20px" height="20px"/> : searchIcon}
+                icon={
+                    searchIcon ? (
+                        <img
+                            src={searchIcon}
+                            alt="Search Icon"
+                            width="20px"
+                            height="20px"
+                        />
+                    ) : (
+                        searchIcon
+                    )
+                }
                 ref={searchRef}
                 URLParams
                 style={{
@@ -818,12 +822,16 @@ class Search extends Component {
                     display: toggleFilters ? 'none' : 'block',
                 }}
                 onKeyDown={(e) => {
-                    if(e.keyCode === 27) {
+                    if (e.keyCode === 27) {
                         document.getElementById('q-downshift-input').blur();
                     }
                 }}
-                onFocus={(e) => { this.setState({ blur: false })}}
-                onBlur={(e) => { this.setState({ blur: true })}}
+                onFocus={(e) => {
+                    this.setState({ blur: false });
+                }}
+                onBlur={(e) => {
+                    this.setState({ blur: true });
+                }}
                 render={({
                     value,
                     categories,
@@ -833,39 +841,44 @@ class Search extends Component {
                     downshiftProps,
                     loading,
                 }) => {
-                    return downshiftProps.isOpen &&
-                         (
-                        <Suggestions
-                            blur={blur}
-                            themeType={this.themeType}
-                            fields={get(this.searchSettings, 'fields', {})}
-                            currentValue={value}
-                            categories={categories}
-                            customMessage={get(
-                                this.searchSettings,
-                                'customMessages',
-                                {},
-                            )}
-                            getItemProps={downshiftProps.getItemProps}
-                            highlightedIndex={downshiftProps.highlightedIndex}
-                            parsedSuggestions={data.filter(
-                                (suggestion) =>
-                                    get(suggestion, 'source.type') !==
-                                    'collections',
-                            )}
-                            themeConfig={this.theme}
-                            currency={this.currency}
-                            customSuggestions={get(
-                                this.searchSettings,
-                                'customSuggestions',
-                            )}
-                            isPreview={isPreview}
-                            popularSuggestions={popularSuggestions}
-                            recentSearches={recentSearches}
-                            loading={loading}
-                            highlight={this.searchSettings.rsConfig.highlight}
-                        />
-                    ) ;
+                    return (
+                        downshiftProps.isOpen && (
+                            <Suggestions
+                                blur={blur}
+                                themeType={this.themeType}
+                                fields={get(this.searchSettings, 'fields', {})}
+                                currentValue={value}
+                                categories={categories}
+                                customMessage={get(
+                                    this.searchSettings,
+                                    'customMessages',
+                                    {},
+                                )}
+                                getItemProps={downshiftProps.getItemProps}
+                                highlightedIndex={
+                                    downshiftProps.highlightedIndex
+                                }
+                                parsedSuggestions={data.filter(
+                                    (suggestion) =>
+                                        get(suggestion, 'source.type') !==
+                                        'collections',
+                                )}
+                                themeConfig={this.theme}
+                                currency={this.currency}
+                                customSuggestions={get(
+                                    this.searchSettings,
+                                    'customSuggestions',
+                                )}
+                                isPreview={isPreview}
+                                popularSuggestions={popularSuggestions}
+                                recentSearches={recentSearches}
+                                loading={loading}
+                                highlight={
+                                    this.searchSettings.rsConfig.highlight
+                                }
+                            />
+                        )
+                    );
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
@@ -893,10 +906,10 @@ class Search extends Component {
         const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
         let newProps = {};
-        if(get(this.resultSettings, 'sortOptionSelector', []).length) {
+        if (get(this.resultSettings, 'sortOptionSelector', []).length) {
             newProps = {
-                sortOptions: get(this.resultSettings, 'sortOptionSelector')
-            }
+                sortOptions: get(this.resultSettings, 'sortOptionSelector'),
+            };
         }
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
         const mapsAPIkey = get(this.resultSettings, 'mapsAPIkey', '');
@@ -910,9 +923,10 @@ class Search extends Component {
                 enableAppbase
                 appbaseConfig={{
                     recordAnalytics: true,
-                    ...userIdObj
+                    ...userIdObj,
                 }}
                 mapKey={mapsAPIkey}
+                mapLibraries={['visualization', 'places']}
                 setSearchParams={
                     isPreview
                         ? () => {}
@@ -983,10 +997,11 @@ class Search extends Component {
                             }}
                         />
                     </div>
-                ): null}
+                ) : null}
 
                 <div style={{ maxWidth: '90%', margin: '25px auto' }}>
-                    {(this.themeType === 'classic' || this.themeType === 'geo') &&
+                    {(this.themeType === 'classic' ||
+                        this.themeType === 'geo') &&
                         this.renderCategorySearch()}
 
                     <div
@@ -1256,7 +1271,7 @@ class Search extends Component {
                                                 'rsConfig.componentId',
                                             )}
                                             innerClass={{
-                                                input: 'list-input'
+                                                input: 'list-input',
                                             }}
                                             componentId={get(
                                                 listComponent,
@@ -1346,10 +1361,7 @@ class Search extends Component {
                                 }
                             />
                             {this.themeType === 'geo' ? (
-                                <GeoResultsLayout
-                                    isPreview={isPreview}
-                                />
-
+                                <GeoResultsLayout isPreview={isPreview} />
                             ) : (
                                 <ReactiveList
                                     componentId="results"
@@ -1393,7 +1405,10 @@ class Search extends Component {
                                     )}
                                     size={9}
                                     infiniteScroll
-                                    render={({ data, triggerClickAnalytics }) => {
+                                    render={({
+                                        data,
+                                        triggerClickAnalytics,
+                                    }) => {
                                         return !toggleFilters ? (
                                             <ResultsLayout
                                                 data={data}
@@ -1414,7 +1429,10 @@ class Search extends Component {
                                         pagination: 'custom-pagination',
                                     }}
                                     {...this.resultSettings.rsConfig}
-                                    css={reactiveListCls(toggleFilters, this.theme)}
+                                    css={reactiveListCls(
+                                        toggleFilters,
+                                        this.theme,
+                                    )}
                                     react={{
                                         and: [
                                             'filter_by_product',

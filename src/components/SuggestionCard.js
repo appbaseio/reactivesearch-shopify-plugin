@@ -41,16 +41,24 @@ const SuggestionCard = ({
     }, []);
     const shouldShowCtaAction = ctaAction !== CtaActions.NO_BUTTON;
     const preferences = getSearchPreferences();
-    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText', 'View Product');
-    const redirectUrlIcon = get(preferences, 'searchSettings.redirectUrlIcon', '');
+    const redirectUrlText = get(
+        preferences,
+        'searchSettings.redirectUrlText',
+        'View Product',
+    );
+    const redirectUrlIcon = get(
+        preferences,
+        'searchSettings.redirectUrlIcon',
+        '',
+    );
     let url = '';
-    if(shouldShowCtaAction && handle && !isPreview) {
-        if(type === 'similar') {
+    if (shouldShowCtaAction && handle && !isPreview) {
+        if (type === 'similar') {
             url = `/products/${handle}`;
         } else {
             url = handle;
         }
-    }  else {
+    } else {
         url = undefined;
     }
     return (
@@ -71,18 +79,18 @@ const SuggestionCard = ({
                     className={className || 'card'}
                     cover={
                         <div className="card-image-container">
-                            {
-                                image && (
-                                    <img
-                                        src={image}
-                                        width="100%"
-                                        alt={title}
-                                        onError={(event) => {
-                                            event.target.src = "https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg"; // eslint-disable-line
-                                        }}
-                                    />
-                                )
-                            }
+                            {image && (
+                                <img
+                                    src={image}
+                                    width="100%"
+                                    alt={title}
+                                    onError={(event) => {
+                                        // eslint-disable-next-line
+                                        event.target.src =
+                                            'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                    }}
+                                />
+                            )}
                         </div>
                     }
                     style={{
@@ -109,27 +117,16 @@ const SuggestionCard = ({
                                         : {}
                                 }
                             >
-                                <Truncate
-                                    lines={
-                                        1
-                                    }
-                                    ellipsis={
-                                        <span>
-                                            ...
-                                        </span>
-                                    }
-                                >
-                                    {strip(
-                                        title,
-                                    )}
+                                <Truncate lines={1} ellipsis={<span>...</span>}>
+                                    {strip(title)}
                                 </Truncate>
                             </h3>
                         }
                         description={
-                            <div style={{height: 45}}>
-                                {
-                                    body_html
-                                    ? isFontLoaded && themeType === 'classic' && (
+                            <div style={{ height: 45 }}>
+                                {body_html
+                                    ? isFontLoaded &&
+                                      themeType === 'classic' && (
                                           <Truncate
                                               lines={2}
                                               ellipsis={<span>...</span>}
@@ -137,12 +134,11 @@ const SuggestionCard = ({
                                               {strip(body_html)}
                                           </Truncate>
                                       )
-                                    : undefined
-                                }
+                                    : undefined}
                             </div>
                         }
                     />
-                    <div style={{height: 25}}>
+                    <div style={{ height: 25 }}>
                         {((variants && variants[0]) || price) && (
                             <div>
                                 <h3
@@ -170,19 +166,19 @@ const SuggestionCard = ({
                             size="large"
                             className="product-button"
                         >
-                            {redirectUrlIcon ?
+                            {redirectUrlIcon ? (
                                 <img
                                     src={redirectUrlIcon}
-                                    alt='redirect-url-icon'
+                                    alt="redirect-url-icon"
                                     height="15px"
                                     width="15px"
                                     style={{
-                                        marginRight: 5
+                                        marginRight: 5,
                                     }}
                                 />
-                                :
+                            ) : (
                                 <Icon type="eye" />
-                            }
+                            )}
                             {redirectUrlText || ctaTitle}
                         </Button>
                     ) : null}
