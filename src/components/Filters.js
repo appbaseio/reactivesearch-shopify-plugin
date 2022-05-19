@@ -1,16 +1,25 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import React from "react";
+import React from 'react';
 import { css, jsx } from '@emotion/core';
 import get from 'lodash.get';
 import {
     UL,
     Checkbox,
 } from '@appbaseio/reactivesearch/lib/styles/FormControlList';
-import { Collapse, Tooltip } from "antd";
-import { MultiList, RangeInput, DynamicRangeSlider, ReactiveComponent } from "@appbaseio/reactivesearch";
+import { Collapse, Tooltip } from 'antd';
+import {
+    MultiList,
+    RangeInput,
+    DynamicRangeSlider,
+    ReactiveComponent,
+} from '@appbaseio/reactivesearch';
 import createDOMPurify from 'dompurify';
-import { getReactDependenciesFromPreferences, shopifyDefaultFields, browserColors } from "../utils";
+import {
+    getReactDependenciesFromPreferences,
+    shopifyDefaultFields,
+    browserColors,
+} from '../utils';
 import { mediaMax } from '../utils/media';
 
 const DOMPurify = createDOMPurify(window);
@@ -44,14 +53,13 @@ const Filters = ({
     collectionFilter,
     productTypeFilter,
 }) => {
-
     const renderCollectionFilter = (font) => {
         if (!collectionFilter) {
             return null;
         }
 
         const type = get(collectionFilter, 'rsConfig.filterType', '');
-        if(type === 'list') {
+        if (type === 'list') {
             return (
                 <React.Fragment>
                     <ReactiveComponent
@@ -60,7 +68,9 @@ const Filters = ({
                             exportType === 'shopify'
                                 ? {
                                       query: {
-                                          term: { 'type.keyword': ['collection'] },
+                                          term: {
+                                              'type.keyword': ['collection'],
+                                          },
                                       },
                                   }
                                 : null
@@ -68,13 +78,11 @@ const Filters = ({
                     />
                     <MultiList
                         innerClass={{
-                            input: 'list-input'
+                            input: 'list-input',
                         }}
                         componentId="collection"
                         dataField="collection"
-                        style={{
-
-                        }}
+                        style={{}}
                         defaultQuery={() => ({
                             aggs: {
                                 collections: {
@@ -127,26 +135,33 @@ const Filters = ({
                                         css={loaderStyle}
                                         // eslint-disable-next-line
                                         dangerouslySetInnerHTML={{
-                                            __html: DOMPurify.sanitize(get(
-                                                collectionFilter,
-                                                'customMessages.loading',
-                                                'Loading collections',
-                                            )),
+                                            __html: DOMPurify.sanitize(
+                                                get(
+                                                    collectionFilter,
+                                                    'customMessages.loading',
+                                                    'Loading collections',
+                                                ),
+                                            ),
                                         }}
                                     />
                                 );
                             }
                             return (
-                                <UL role="listbox" aria-label="collection-items">
+                                <UL
+                                    role="listbox"
+                                    aria-label="collection-items"
+                                >
                                     {data.length ? null : (
                                         <div
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(get(
-                                                    collectionFilter,
-                                                    'customMessages.noResults',
-                                                    'No items Found',
-                                                )),
+                                                __html: DOMPurify.sanitize(
+                                                    get(
+                                                        collectionFilter,
+                                                        'customMessages.noResults',
+                                                        'No items Found',
+                                                    ),
+                                                ),
                                             }}
                                         />
                                     )}
@@ -201,7 +216,10 @@ const Filters = ({
             );
         }
 
-        if( get(collectionFilter, 'rsConfig.startValue', '') && get(collectionFilter, 'rsConfig.endValue', '')) {
+        if (
+            get(collectionFilter, 'rsConfig.startValue', '') &&
+            get(collectionFilter, 'rsConfig.endValue', '')
+        ) {
             return (
                 <RangeInput
                     key="filter_by_collection"
@@ -212,35 +230,29 @@ const Filters = ({
                         shopifyDefaultFields.size,
                     )}
                     range={{
-                        start: parseInt(get(
-                            collectionFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            collectionFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
+                        start: parseInt(
+                            get(collectionFilter, 'rsConfig.startValue', ''),
+                            10,
+                        ),
+                        end: parseInt(
+                            get(collectionFilter, 'rsConfig.endValue', ''),
+                            10,
+                        ),
                     }}
                     rangeLabels={{
-                        start: get(
-                            collectionFilter,
-                            'rsConfig.startLabel',
-                            ''
-                        ),
-                        end: get(
-                            collectionFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
+                        start: get(collectionFilter, 'rsConfig.startLabel', ''),
+                        end: get(collectionFilter, 'rsConfig.endLabel', ''),
                     }}
                     showHistogram={get(
                         collectionFilter,
                         'rsConfig.showHistogram',
-                        false
+                        false,
                     )}
-                    filterLabel={get(collectionFilter, 'rsConfig.title', 'Collection')}
+                    filterLabel={get(
+                        collectionFilter,
+                        'rsConfig.title',
+                        'Collection',
+                    )}
                     URLParams
                     css={font}
                 />
@@ -258,14 +270,17 @@ const Filters = ({
                 showHistogram={get(
                     collectionFilter,
                     'rsConfig.showHistogram',
-                    false
+                    false,
                 )}
-                filterLabel={get(collectionFilter, 'rsConfig.title', 'Collection')}
+                filterLabel={get(
+                    collectionFilter,
+                    'rsConfig.title',
+                    'Collection',
+                )}
                 URLParams
                 css={font}
             />
-        )
-
+        );
     };
 
     const renderProductTypeFilter = (font) => {
@@ -274,13 +289,13 @@ const Filters = ({
         }
 
         const type = get(productTypeFilter, 'rsConfig.filterType', '');
-        if(type === 'list') {
+        if (type === 'list') {
             return (
                 <MultiList
                     componentId="productType"
                     dataField="product_type.keyword"
                     innerClass={{
-                        input: 'list-input'
+                        input: 'list-input',
                     }}
                     css={font}
                     showCheckbox={themeType !== 'minimal'}
@@ -300,43 +315,44 @@ const Filters = ({
             );
         }
 
-        if( get(productTypeFilter, 'rsConfig.startValue', '') && get(productTypeFilter, 'rsConfig.endValue', '')) {
+        if (
+            get(productTypeFilter, 'rsConfig.startValue', '') &&
+            get(productTypeFilter, 'rsConfig.endValue', '')
+        ) {
             return (
                 <RangeInput
                     key="productType"
                     componentId="productType"
                     dataField="product_type"
                     range={{
-                        start: parseInt(get(
-                            productTypeFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            productTypeFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
+                        start: parseInt(
+                            get(productTypeFilter, 'rsConfig.startValue', ''),
+                            10,
+                        ),
+                        end: parseInt(
+                            get(productTypeFilter, 'rsConfig.endValue', ''),
+                            10,
+                        ),
                     }}
                     rangeLabels={{
                         start: get(
                             productTypeFilter,
                             'rsConfig.startLabel',
-                            ''
+                            '',
                         ),
-                        end: get(
-                            productTypeFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
+                        end: get(productTypeFilter, 'rsConfig.endLabel', ''),
                     }}
                     showHistogram={get(
                         productTypeFilter,
                         'rsConfig.showHistogram',
-                        false
+                        false,
                     )}
                     URLParams
-                    filterLabel={get(productTypeFilter, 'rsConfig.title', 'productType')}
+                    filterLabel={get(
+                        productTypeFilter,
+                        'rsConfig.title',
+                        'productType',
+                    )}
                     css={font}
                 />
             );
@@ -353,23 +369,27 @@ const Filters = ({
                 showHistogram={get(
                     productTypeFilter,
                     'rsConfig.showHistogram',
-                    false
+                    false,
                 )}
                 URLParams
                 css={font}
-                filterLabel={get(productTypeFilter, 'rsConfig.title', 'productType')}
+                filterLabel={get(
+                    productTypeFilter,
+                    'rsConfig.title',
+                    'productType',
+                )}
             />
-        )
+        );
     };
 
     const renderColorFilter = (font) => {
         const type = get(colorFilter, 'rsConfig.filterType', '');
-        if(type === 'list') {
+        if (type === 'list') {
             return (
                 <MultiList
                     componentId="color"
                     innerClass={{
-                        input: 'list-input'
+                        input: 'list-input',
                     }}
                     react={{
                         and: [
@@ -392,32 +412,32 @@ const Filters = ({
                                     css={loaderStyle}
                                     // eslint-disable-next-line
                                     dangerouslySetInnerHTML={{
-                                        __html: DOMPurify.sanitize(get(
-                                            colorFilter,
-                                            'customMessages.noResults',
-                                            'Fetching Colors',
-                                        )),
+                                        __html: DOMPurify.sanitize(
+                                            get(
+                                                colorFilter,
+                                                'customMessages.noResults',
+                                                'Fetching Colors',
+                                            ),
+                                        ),
                                     }}
                                 />
                             );
                         }
                         if (error) {
-                            return (
-                                <div>
-                                    No colors found!
-                                </div>
-                            );
+                            return <div>No colors found!</div>;
                         }
                         if (data.length === 0) {
                             return (
                                 <div
                                     // eslint-disable-next-line
                                     dangerouslySetInnerHTML={{
-                                        __html: DOMPurify.sanitize(get(
-                                            colorFilter,
-                                            'customMessages.noResults',
-                                            'Fetching Colors',
-                                        )),
+                                        __html: DOMPurify.sanitize(
+                                            get(
+                                                colorFilter,
+                                                'customMessages.noResults',
+                                                'Fetching Colors',
+                                            ),
+                                        ),
                                     }}
                                 />
                             );
@@ -450,7 +470,9 @@ const Filters = ({
                                         >
                                             {/* eslint-disable-next-line */}
                                             <div
-                                                onClick={() => handleChange(item.key)}
+                                                onClick={() =>
+                                                    handleChange(item.key)
+                                                }
                                                 style={{
                                                     width: '100%',
                                                     height: 30,
@@ -459,7 +481,9 @@ const Filters = ({
                                                     cursor: 'pointer',
                                                     border:
                                                         values &&
-                                                        values.includes(item.key)
+                                                        values.includes(
+                                                            item.key,
+                                                        )
                                                             ? `2px solid ${primaryColor}`
                                                             : `1px solid #ccc`,
                                                 }}
@@ -475,11 +499,13 @@ const Filters = ({
                             css={loaderStyle}
                             // eslint-disable-next-line
                             dangerouslySetInnerHTML={{
-                                __html: DOMPurify.sanitize(get(
-                                    colorFilter,
-                                    'customMessages.loading',
-                                    'Loading colors',
-                                )),
+                                __html: DOMPurify.sanitize(
+                                    get(
+                                        colorFilter,
+                                        'customMessages.loading',
+                                        'Loading colors',
+                                    ),
+                                ),
                             }}
                         />
                     }
@@ -495,7 +521,10 @@ const Filters = ({
             );
         }
 
-        if( get(colorFilter, 'rsConfig.startValue', '') && get(colorFilter, 'rsConfig.endValue', '')) {
+        if (
+            get(colorFilter, 'rsConfig.startValue', '') &&
+            get(colorFilter, 'rsConfig.endValue', '')
+        ) {
             return (
                 <RangeInput
                     key="color"
@@ -506,39 +535,29 @@ const Filters = ({
                         shopifyDefaultFields.size,
                     )}
                     range={{
-                        start: parseInt(get(
-                            colorFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            colorFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
+                        start: parseInt(
+                            get(colorFilter, 'rsConfig.startValue', ''),
+                            10,
+                        ),
+                        end: parseInt(
+                            get(colorFilter, 'rsConfig.endValue', ''),
+                            10,
+                        ),
                     }}
                     rangeLabels={{
-                        start: get(
-                            colorFilter,
-                            'rsConfig.startLabel',
-                            ''
-                        ),
-                        end: get(
-                            colorFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
+                        start: get(colorFilter, 'rsConfig.startLabel', ''),
+                        end: get(colorFilter, 'rsConfig.endLabel', ''),
                     }}
                     showHistogram={get(
                         colorFilter,
                         'rsConfig.showHistogram',
-                        false
+                        false,
                     )}
                     URLParams
                     css={font}
                     filterLabel={get(colorFilter, 'rsConfig.title', 'color')}
                 />
-            )
+            );
         }
         return (
             <DynamicRangeSlider
@@ -552,26 +571,24 @@ const Filters = ({
                 showHistogram={get(
                     colorFilter,
                     'rsConfig.showHistogram',
-                    false
+                    false,
                 )}
                 URLParams
                 filterLabel={get(colorFilter, 'rsConfig.title', 'color')}
                 css={font}
             />
-        )
-
-    }
+        );
+    };
 
     const renderSizeFilter = (font) => {
         const type = get(sizeFilter, 'rsConfig.filterType', '');
-
-        if(type === 'list') {
+        if (type === 'list') {
             return (
                 <React.Fragment>
                     <MultiList
                         componentId="size"
                         innerClass={{
-                            input: 'list-input'
+                            input: 'list-input',
                         }}
                         react={{
                             and: [
@@ -588,11 +605,13 @@ const Filters = ({
                                 css={loaderStyle}
                                 // eslint-disable-next-line
                                 dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(get(
-                                        sizeFilter,
-                                        'customMessages.loading',
-                                        'Loading sizes',
-                                    )),
+                                    __html: DOMPurify.sanitize(
+                                        get(
+                                            sizeFilter,
+                                            'customMessages.loading',
+                                            'Loading sizes',
+                                        ),
+                                    ),
                                 }}
                             />
                         }
@@ -600,11 +619,13 @@ const Filters = ({
                             <div
                                 // eslint-disable-next-line
                                 dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(get(
-                                        sizeFilter,
-                                        'customMessages.noResults',
-                                        'No sizes Found',
-                                    )),
+                                    __html: DOMPurify.sanitize(
+                                        get(
+                                            sizeFilter,
+                                            'customMessages.noResults',
+                                            'No sizes Found',
+                                        ),
+                                    ),
                                 }}
                             />
                         )}
@@ -622,12 +643,15 @@ const Filters = ({
             );
         }
         let dateProps = {};
-        if(type === 'date') {
+        if (type === 'date') {
             dateProps = {
                 queryFormat: 'date',
-            }
+            };
         }
-        if( get(sizeFilter, 'rsConfig.startValue', '') && get(sizeFilter, 'rsConfig.endValue', '')) {
+        if (
+            get(sizeFilter, 'rsConfig.startValue', '') &&
+            get(sizeFilter, 'rsConfig.endValue', '')
+        ) {
             return (
                 <RangeInput
                     key="size"
@@ -638,45 +662,41 @@ const Filters = ({
                         shopifyDefaultFields.size,
                     )}
                     range={{
-                        start: type === 'date' ?
-                            new Date(get(
-                                sizeFilter,
-                                'rsConfig.startValue',
-                                ''
-                            )) :
-                            parseInt(get(
-                                sizeFilter,
-                                'rsConfig.startValue',
-                                ''
-                            ), 10),
-                        end: type === 'date' ?
-                            new Date(get(
-                                sizeFilter,
-                                'rsConfig.endValue',
-                                ''
-                            )) :
-                            parseInt(get(
-                                sizeFilter,
-                                'rsConfig.endValue',
-                                ''
-                            ), 10),
+                        start:
+                            type === 'date'
+                                ? new Date(
+                                      get(
+                                          sizeFilter,
+                                          'rsConfig.startValue',
+                                          '',
+                                      ),
+                                  )
+                                : parseInt(
+                                      get(
+                                          sizeFilter,
+                                          'rsConfig.startValue',
+                                          '',
+                                      ),
+                                      10,
+                                  ),
+                        end:
+                            type === 'date'
+                                ? new Date(
+                                      get(sizeFilter, 'rsConfig.endValue', ''),
+                                  )
+                                : parseInt(
+                                      get(sizeFilter, 'rsConfig.endValue', ''),
+                                      10,
+                                  ),
                     }}
                     rangeLabels={{
-                        start: get(
-                            sizeFilter,
-                            'rsConfig.startLabel',
-                            ''
-                        ),
-                        end: get(
-                            sizeFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
+                        start: get(sizeFilter, 'rsConfig.startLabel', ''),
+                        end: get(sizeFilter, 'rsConfig.endLabel', ''),
                     }}
                     showHistogram={get(
                         sizeFilter,
                         'rsConfig.showHistogram',
-                        false
+                        false,
                     )}
                     URLParams
                     css={font}
@@ -694,22 +714,20 @@ const Filters = ({
                     'rsConfig.dataField',
                     shopifyDefaultFields.size,
                 )}
-                showHistogram={get(
-                    sizeFilter,
-                    'rsConfig.showHistogram',
-                    false
-                )}
+                showHistogram={get(sizeFilter, 'rsConfig.showHistogram', false)}
                 URLParams
                 css={font}
                 filterLabel={get(sizeFilter, 'rsConfig.title', 'size')}
                 {...dateProps}
             />
-        )
-
-    }
+        );
+    };
 
     const renderPriceFilter = (font) => {
-        if( get(priceFilter, 'rsConfig.startValue', '') && get(priceFilter, 'rsConfig.endValue', '')) {
+        if (
+            get(priceFilter, 'rsConfig.startValue', '') &&
+            get(priceFilter, 'rsConfig.endValue', '')
+        ) {
             return (
                 <RangeInput
                     componentId="price"
@@ -719,39 +737,29 @@ const Filters = ({
                         'variants.price',
                     )}
                     range={{
-                        start: parseInt(get(
-                            priceFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            priceFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
+                        start: parseInt(
+                            get(priceFilter, 'rsConfig.startValue', ''),
+                            10,
+                        ),
+                        end: parseInt(
+                            get(priceFilter, 'rsConfig.endValue', ''),
+                            10,
+                        ),
                     }}
                     rangeLabels={{
-                        start: get(
-                            priceFilter,
-                            'rsConfig.startLabel',
-                            ''
-                        ),
-                        end: get(
-                            priceFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
+                        start: get(priceFilter, 'rsConfig.startLabel', ''),
+                        end: get(priceFilter, 'rsConfig.endLabel', ''),
                     }}
                     showHistogram={get(
                         priceFilter,
                         'rsConfig.showHistogram',
-                        false
+                        false,
                     )}
                     URLParams
                     css={font}
                     filterLabel={get(priceFilter, 'rsConfig.title', 'size')}
                 />
-            )
+            );
         }
 
         return (
@@ -765,7 +773,7 @@ const Filters = ({
                 showHistogram={get(
                     priceFilter,
                     'rsConfig.showHistogram',
-                    false
+                    false,
                 )}
                 URLParams
                 css={font}
@@ -777,27 +785,21 @@ const Filters = ({
                         css={loaderStyle}
                         // eslint-disable-next-line
                         dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(get(
-                                priceFilter,
-                                'customMessages.loading',
-                                '',
-                            )),
+                            __html: DOMPurify.sanitize(
+                                get(priceFilter, 'customMessages.loading', ''),
+                            ),
                         }}
                     />
                 }
                 rangeLabels={(min, max) => ({
-                    start: `${
-                        currency
-                    } ${min.toFixed(2)}`,
-                    end: `${
-                        currency
-                    } ${max.toFixed(2)}`,
+                    start: `${currency} ${min.toFixed(2)}`,
+                    end: `${currency} ${max.toFixed(2)}`,
                 })}
                 {...priceFilter.rsConfig}
                 title=""
             />
-        )
-    }
+        );
+    };
 
     const queryFormatMillisecondsMap = {
         // the below are arranged in asscending order
@@ -809,11 +811,18 @@ const Filters = ({
         month: 2629746000,
         quarter: 7889238000,
         year: 31556952000,
-    }
+    };
 
-    const getCalendarIntervalErrorMessage = (totalRange, calendarInterval = 'minute') => {
-        const queryFormatMillisecondsMapKeys = Object.keys(queryFormatMillisecondsMap);
-        const indexOfCurrentCalendarInterval = queryFormatMillisecondsMapKeys.indexOf(calendarInterval);
+    const getCalendarIntervalErrorMessage = (
+        totalRange,
+        calendarInterval = 'minute',
+    ) => {
+        const queryFormatMillisecondsMapKeys = Object.keys(
+            queryFormatMillisecondsMap,
+        );
+        const indexOfCurrentCalendarInterval = queryFormatMillisecondsMapKeys.indexOf(
+            calendarInterval,
+        );
         if (indexOfCurrentCalendarInterval === -1) {
             console.error('Invalid calendarInterval Passed');
         }
@@ -827,8 +836,12 @@ const Filters = ({
             index < queryFormatMillisecondsMapKeys.length;
             index += 1
         ) {
-            if (totalRange / Object.values(queryFormatMillisecondsMap)[index] <= 100) {
-                const calendarIntervalKey = queryFormatMillisecondsMapKeys[index];
+            if (
+                totalRange / Object.values(queryFormatMillisecondsMap)[index] <=
+                100
+            ) {
+                const calendarIntervalKey =
+                    queryFormatMillisecondsMapKeys[index];
                 return {
                     errorMessage: `Please pass calendarInterval prop with value greater than or equal to a \`${calendarIntervalKey}\` for a meaningful resolution of histogram.`,
                     calculatedCalendarInterval: calendarIntervalKey,
@@ -846,24 +859,17 @@ const Filters = ({
         <div
             css={{
                 display: 'grid',
-                gridTemplateColumns:
-                    'repeat(auto-fit, minmax (250px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax (250px, 1fr))',
                 gridGap: 0,
                 alignSelf: 'start',
-                border:
-                    themeType === 'classic'
-                        ? '1px solid #eee'
-                        : 0,
+                border: themeType === 'classic' ? '1px solid #eee' : 0,
                 [mediaMax.medium]: {
                     display: toggleFilters ? 'grid' : 'none',
                     gridTemplateColumns: '1fr',
                 },
                 boxShadow:
                     themeType === 'minimal'
-                        ? `0 0 4px ${get(
-                            theme,
-                            'colors.titleColor',
-                        )}1a`
+                        ? `0 0 4px ${get(theme, 'colors.titleColor')}1a`
                         : 0,
                 [mediaMax.medium]: {
                     display: toggleFilters ? 'grid' : 'none',
@@ -881,10 +887,7 @@ const Filters = ({
                         header={
                             <span
                                 style={{
-                                    color: get(
-                                        theme,
-                                        'colors.titleColor',
-                                    ),
+                                    color: get(theme, 'colors.titleColor'),
                                     fontWeight: 'bold',
                                     fontSize: '15px',
                                 }}
@@ -901,9 +904,7 @@ const Filters = ({
                         css={getFontFamily}
                         className="filter"
                     >
-                        {renderProductTypeFilter(
-                            getFontFamily,
-                        )}
+                        {renderProductTypeFilter(getFontFamily)}
                     </Panel>
                 ) : null}
                 {collectionFilter ? (
@@ -911,10 +912,7 @@ const Filters = ({
                         header={
                             <span
                                 style={{
-                                    color: get(
-                                        theme,
-                                        'colors.titleColor',
-                                    ),
+                                    color: get(theme, 'colors.titleColor'),
                                     fontWeight: 'bold',
                                     fontSize: '15px',
                                 }}
@@ -931,9 +929,7 @@ const Filters = ({
                         css={getFontFamily}
                         className="filter"
                     >
-                        {renderCollectionFilter(
-                            getFontFamily,
-                        )}
+                        {renderCollectionFilter(getFontFamily)}
                     </Panel>
                 ) : null}
                 {colorFilter ? (
@@ -942,28 +938,19 @@ const Filters = ({
                         header={
                             <span
                                 style={{
-                                    color: get(
-                                        theme,
-                                        'colors.titleColor',
-                                    ),
+                                    color: get(theme, 'colors.titleColor'),
                                     fontWeight: 'bold',
                                     fontSize: '15px',
                                 }}
                             >
-                                {get(
-                                    colorFilter,
-                                    'rsConfig.title',
-                                    'Color',
-                                )}
+                                {get(colorFilter, 'rsConfig.title', 'Color')}
                             </span>
                         }
                         showArrow={themeType !== 'minimal'}
                         key="color"
                         css={getFontFamily}
                     >
-                        {renderColorFilter(
-                            getFontFamily,
-                        )}
+                        {renderColorFilter(getFontFamily)}
                     </Panel>
                 ) : null}
                 {sizeFilter ? (
@@ -972,28 +959,19 @@ const Filters = ({
                         header={
                             <span
                                 style={{
-                                    color: get(
-                                        theme,
-                                        'colors.titleColor',
-                                    ),
+                                    color: get(theme, 'colors.titleColor'),
                                     fontWeight: 'bold',
                                     fontSize: '15px',
                                 }}
                             >
-                                {get(
-                                    sizeFilter,
-                                    'rsConfig.title',
-                                    'Size',
-                                )}
+                                {get(sizeFilter, 'rsConfig.title', 'Size')}
                             </span>
                         }
                         showArrow={themeType !== 'minimal'}
                         key="size"
                         css={getFontFamily}
                     >
-                        {renderSizeFilter(
-                            getFontFamily,
-                        )}
+                        {renderSizeFilter(getFontFamily)}
                     </Panel>
                 ) : null}
                 {priceFilter ? (
@@ -1001,19 +979,12 @@ const Filters = ({
                         header={
                             <span
                                 style={{
-                                    color: get(
-                                        theme,
-                                        'colors.titleColor',
-                                    ),
+                                    color: get(theme, 'colors.titleColor'),
                                     fontWeight: 'bold',
                                     fontSize: '15px',
                                 }}
                             >
-                                {get(
-                                    priceFilter,
-                                    'rsConfig.title',
-                                    'Price',
-                                )}
+                                {get(priceFilter, 'rsConfig.title', 'Price')}
                             </span>
                         }
                         showArrow={themeType !== 'minimal'}
@@ -1021,9 +992,7 @@ const Filters = ({
                         css={getFontFamily}
                         className="filter"
                     >
-                        {renderPriceFilter(
-                            getFontFamily,
-                        )}
+                        {renderPriceFilter(getFontFamily)}
                     </Panel>
                 ) : null}
                 {dynamicFacets.map((listComponent) => {
@@ -1032,56 +1001,50 @@ const Filters = ({
                     const calendarInterval = get(
                         listComponent,
                         'rsConfig.calendarInterval',
-                        'year'
-                    )
-                    if(type === 'date') {
+                        'year',
+                    );
+                    if (type === 'date') {
                         dateProps = {
                             queryFormat: 'date',
                             // eslint-disable-next-line
-                            calendarInterval: calendarInterval ? calendarInterval : getCalendarIntervalErrorMessage(
-                                new Date(get(
-                                    listComponent,
-                                    'rsConfig.startValue',
-                                    ''
-                                ))
-                                -
-                                new Date(get(
-                                    listComponent,
-                                    'rsConfig.endValue',
-                                    ''
-                                ))
-                            ).calculatedCalendarInterval
-                        }
+                            calendarInterval: calendarInterval
+                                ? calendarInterval
+                                : getCalendarIntervalErrorMessage(
+                                      new Date(
+                                          get(
+                                              listComponent,
+                                              'rsConfig.startValue',
+                                              '',
+                                          ),
+                                      ) -
+                                          new Date(
+                                              get(
+                                                  listComponent,
+                                                  'rsConfig.endValue',
+                                                  '',
+                                              ),
+                                          ),
+                                  ).calculatedCalendarInterval,
+                        };
                     }
                     return (
                         <Panel
                             header={
                                 <span
                                     style={{
-                                        color: get(
-                                            theme,
-                                            'colors.titleColor',
-                                        ),
+                                        color: get(theme, 'colors.titleColor'),
                                         fontWeight: 'bold',
                                         fontSize: '15px',
                                     }}
                                 >
-                                    {get(
-                                        listComponent,
-                                        'rsConfig.title',
-                                    )}
+                                    {get(listComponent, 'rsConfig.title')}
                                 </span>
                             }
                             showArrow={themeType !== 'minimal'}
-                            key={get(
-                                listComponent,
-                                'rsConfig.componentId',
-                            )}
+                            key={get(listComponent, 'rsConfig.componentId')}
                             css={{
                                 ...getFontFamily,
-                                maxWidth: isMobile
-                                    ? 'none'
-                                    : '298px',
+                                maxWidth: isMobile ? 'none' : '298px',
                             }}
                             className="filter"
                         >
@@ -1094,7 +1057,7 @@ const Filters = ({
                                             'rsConfig.componentId',
                                         )}
                                         innerClass={{
-                                            input: 'list-input'
+                                            input: 'list-input',
                                         }}
                                         componentId={get(
                                             listComponent,
@@ -1106,11 +1069,13 @@ const Filters = ({
                                                 css={loaderStyle}
                                                 // eslint-disable-next-line
                                                 dangerouslySetInnerHTML={{
-                                                    __html: DOMPurify.sanitize(get(
-                                                        listComponent,
-                                                        'customMessages.loading',
-                                                        'Loading options',
-                                                    )),
+                                                    __html: DOMPurify.sanitize(
+                                                        get(
+                                                            listComponent,
+                                                            'customMessages.loading',
+                                                            'Loading options',
+                                                        ),
+                                                    ),
                                                 }}
                                             />
                                         }
@@ -1118,20 +1083,18 @@ const Filters = ({
                                             <div
                                                 // eslint-disable-next-line
                                                 dangerouslySetInnerHTML={{
-                                                    __html: DOMPurify.sanitize(get(
-                                                        listComponent,
-                                                        'customMessages.noResults',
-                                                        'No items Found',
-                                                    )),
+                                                    __html: DOMPurify.sanitize(
+                                                        get(
+                                                            listComponent,
+                                                            'customMessages.noResults',
+                                                            'No items Found',
+                                                        ),
+                                                    ),
                                                 }}
                                             />
                                         )}
-                                        showCount={
-                                            themeType !== 'minimal'
-                                        }
-                                        showCheckbox={
-                                            themeType !== 'minimal'
-                                        }
+                                        showCount={themeType !== 'minimal'}
+                                        showCheckbox={themeType !== 'minimal'}
                                         {...listComponent.rsConfig}
                                         dataField={get(
                                             listComponent,
@@ -1147,134 +1110,153 @@ const Filters = ({
                                                 ),
                                             ),
                                         }}
-                                        filterLabel={get(
-                                            listComponent,
-                                            'rsConfig.filterLabel',
-                                            ''
-                                            ) || get(
+                                        filterLabel={
+                                            get(
+                                                listComponent,
+                                                'rsConfig.filterLabel',
+                                                '',
+                                            ) ||
+                                            get(
                                                 listComponent,
                                                 'rsConfig.title',
-                                                ''
+                                                '',
                                             )
                                         }
                                         title=""
                                     />
-                                ) : (
-                                    (listComponent?.rsConfig?.startValue && listComponent?.rsConfig?.endValue) ? (
-                                        <RangeInput
-                                            key={get(
+                                ) : listComponent?.rsConfig?.startValue &&
+                                  listComponent?.rsConfig?.endValue ? (
+                                    <RangeInput
+                                        key={get(
+                                            listComponent,
+                                            'rsConfig.componentId',
+                                            '',
+                                        )}
+                                        componentId={get(
+                                            listComponent,
+                                            'rsConfig.componentId',
+                                            '',
+                                        )}
+                                        dataField={get(
+                                            listComponent,
+                                            'rsConfig.dataField',
+                                            '',
+                                        )}
+                                        range={{
+                                            start:
+                                                type === 'date'
+                                                    ? new Date(
+                                                          get(
+                                                              listComponent,
+                                                              'rsConfig.startValue',
+                                                              '',
+                                                          ),
+                                                      )
+                                                    : parseInt(
+                                                          get(
+                                                              listComponent,
+                                                              'rsConfig.startValue',
+                                                              '',
+                                                          ),
+                                                          10,
+                                                      ),
+                                            end:
+                                                type === 'date'
+                                                    ? new Date(
+                                                          get(
+                                                              listComponent,
+                                                              'rsConfig.endValue',
+                                                              '',
+                                                          ),
+                                                      )
+                                                    : parseInt(
+                                                          get(
+                                                              listComponent,
+                                                              'rsConfig.endValue',
+                                                              '',
+                                                          ),
+                                                          10,
+                                                      ),
+                                        }}
+                                        rangeLabels={{
+                                            start: get(
                                                 listComponent,
-                                                'rsConfig.componentId',
-                                                ''
-                                            )}
-                                            componentId={get(
+                                                'rsConfig.startLabel',
+                                                '',
+                                            ),
+                                            end: get(
                                                 listComponent,
-                                                'rsConfig.componentId',
-                                                ''
-                                            )}
-                                            dataField={get(
-                                                listComponent,
-                                                'rsConfig.dataField',
-                                                ''
-                                            )}
-                                            range={{
-                                                start: type === 'date' ?
-                                                new Date(get(
-                                                    listComponent,
-                                                    'rsConfig.startValue',
-                                                    ''
-                                                )) : parseInt(get(
-                                                    listComponent,
-                                                    'rsConfig.startValue',
-                                                    ''
-                                                ), 10),
-                                                end: type === 'date' ?
-                                                new Date(get(
-                                                    listComponent,
-                                                    'rsConfig.endValue',
-                                                    ''
-                                                )) : parseInt(get(
-                                                    listComponent,
-                                                    'rsConfig.endValue',
-                                                    ''
-                                                ), 10),
-                                            }}
-                                            rangeLabels={{
-                                                start: get(
-                                                    listComponent,
-                                                    'rsConfig.startLabel',
-                                                    ''
-                                                ),
-                                                end: get(
-                                                    listComponent,
-                                                    'rsConfig.endLabel',
-                                                    ''
-                                                ),
-                                            }}
-                                            showHistogram={get(
-                                                listComponent,
-                                                'rsConfig.showHistogram',
-                                                false
-                                            )}
-                                            URLParams
-                                            css={getFontFamily}
-                                            filterLabel={get(
-                                                    listComponent,
-                                                    'rsConfig.filterLabel',
-                                                    ''
-                                                ) || get(
-                                                    listComponent,
-                                                    'rsConfig.title',
-                                                    ''
-                                                )
-                                            }
-                                            {...dateProps}
-                                        />
-                                    ) : (
-                                        <DynamicRangeSlider
-                                            key={get(
-                                                listComponent,
-                                                'rsConfig.componentId',
-                                                ''
-                                            )}
-                                            componentId={get(
-                                                listComponent,
-                                                'rsConfig.componentId',
-                                                ''
-                                            )}
-                                            dataField={get(
-                                                listComponent,
-                                                'rsConfig.dataField',
-                                                ''
-                                            )}
-                                            showHistogram={get(
-                                                listComponent,
-                                                'rsConfig.showHistogram',
-                                                false
-                                            )}
-                                            URLParams
-                                            css={getFontFamily}
-                                            filterLabel={get(
+                                                'rsConfig.endLabel',
+                                                '',
+                                            ),
+                                        }}
+                                        showHistogram={get(
+                                            listComponent,
+                                            'rsConfig.showHistogram',
+                                            false,
+                                        )}
+                                        URLParams
+                                        css={getFontFamily}
+                                        filterLabel={
+                                            get(
                                                 listComponent,
                                                 'rsConfig.filterLabel',
-                                                ''
-                                                ) || get(
-                                                    listComponent,
-                                                    'rsConfig.title',
-                                                    ''
-                                                )
-                                            }
-                                            {...dateProps}
-                                        />
-                                    )
+                                                '',
+                                            ) ||
+                                            get(
+                                                listComponent,
+                                                'rsConfig.title',
+                                                '',
+                                            )
+                                        }
+                                        {...dateProps}
+                                    />
+                                ) : (
+                                    <DynamicRangeSlider
+                                        key={get(
+                                            listComponent,
+                                            'rsConfig.componentId',
+                                            '',
+                                        )}
+                                        componentId={get(
+                                            listComponent,
+                                            'rsConfig.componentId',
+                                            '',
+                                        )}
+                                        dataField={get(
+                                            listComponent,
+                                            'rsConfig.dataField',
+                                            '',
+                                        )}
+                                        showHistogram={get(
+                                            listComponent,
+                                            'rsConfig.showHistogram',
+                                            false,
+                                        )}
+                                        URLParams
+                                        css={getFontFamily}
+                                        filterLabel={
+                                            get(
+                                                listComponent,
+                                                'rsConfig.filterLabel',
+                                                '',
+                                            ) ||
+                                            get(
+                                                listComponent,
+                                                'rsConfig.title',
+                                                '',
+                                            )
+                                        }
+                                        {...dateProps}
+                                    />
                                 )
                             }
                         </Panel>
-                    )}
-                )}
+                    );
+                })}
             </Collapse>
         </div>
-    )
-}
+    );
+};
 
 export default Filters;
