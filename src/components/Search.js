@@ -1172,6 +1172,11 @@ class Search extends Component {
         const { toggleFilters, blur } = this.state;
         const { isPreview } = this.props;
         const searchIcon = get(this.searchSettings, 'searchButton.icon', '');
+        const searchText = get(
+            this.searchSettings,
+            'searchButton.text',
+            'Search for products...',
+        );
 
         return (
             <SearchBox
@@ -1180,7 +1185,7 @@ class Search extends Component {
                 filterLabel="Search"
                 className="search"
                 debounce={100}
-                placeholder="Search for products..."
+                placeholder={searchText}
                 iconPosition="right"
                 icon={searchIcon ? <img src={searchIcon} alt="Search Icon" width="20px" height="20px"/> : searchIcon}
                 ref={searchRef}
