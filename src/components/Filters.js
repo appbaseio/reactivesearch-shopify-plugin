@@ -1132,6 +1132,10 @@ const Filters = ({
                                         showCheckbox={
                                             themeType !== 'minimal'
                                         }
+                                        aggregationSize={get(
+                                            listComponent,
+                                            'rsConfig.size',
+                                        )}
                                         {...listComponent.rsConfig}
                                         dataField={get(
                                             listComponent,
