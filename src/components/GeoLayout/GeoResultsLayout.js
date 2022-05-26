@@ -283,13 +283,6 @@ function GeoResultsLayout({isPreview}) {
                                 />
                             );
                         }}
-                        renderItem={(data) => ({
-                            label: (
-                                <span style={{ width: 40, display: "block", textAlign: "center" }}>
-                                ${data.price}
-                                </span>
-                            )
-                        })}
                         react={{
                             and: [
                                 'filter_by_product',
@@ -452,13 +445,6 @@ function GeoResultsLayout({isPreview}) {
                                 />
                             );
                         }}
-                        renderItem={(data) => ({
-                            label: (
-                                <span style={{ width: 40, display: "block", textAlign: "center" }}>
-                                ${data.price}
-                                </span>
-                            )
-                        })}
                         react={{
                             and: [
                                 'filter_by_product',
