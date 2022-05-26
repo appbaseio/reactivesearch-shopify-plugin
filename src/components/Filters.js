@@ -294,6 +294,10 @@ const Filters = ({
                     }}
                     filterLabel="Product Type"
                     URLParams
+                    aggregationSize={get(
+                        productTypeFilter,
+                        'rsConfig.size',
+                    )}
                     {...get(productTypeFilter, 'rsConfig')}
                     title=""
                 />
@@ -484,6 +488,10 @@ const Filters = ({
                         />
                     }
                     URLParams
+                    aggregationSize={get(
+                        colorFilter,
+                        'rsConfig.size',
+                    )}
                     {...get(colorFilter, 'rsConfig')}
                     dataField={get(
                         colorFilter,
@@ -610,6 +618,10 @@ const Filters = ({
                         )}
                         showCheckbox={themeType !== 'minimal'}
                         URLParams
+                        aggregationSize={get(
+                            sizeFilter,
+                            'rsConfig.size',
+                        )}
                         {...get(sizeFilter, 'rsConfig')}
                         dataField={get(
                             sizeFilter,
