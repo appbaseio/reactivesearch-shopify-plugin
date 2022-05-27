@@ -7,7 +7,7 @@ import strip from 'striptags';
 import Truncate from 'react-truncate';
 import { Card, Button, Icon } from 'antd';
 import get from 'lodash.get';
-import { cardStyles, cardTitleStyles } from './Search';
+import { suggestionCardStyles, cardTitleStyles } from './styles';
 import { CtaActions, getSearchPreferences } from '../utils';
 
 const { Meta } = Card;
@@ -65,7 +65,7 @@ const SuggestionCard = ({
                 <Card
                     hoverable
                     bordered={false}
-                    css={cardStyles({
+                    css={suggestionCardStyles({
                         ...theme.colors,
                     })}
                     className={className || 'card'}

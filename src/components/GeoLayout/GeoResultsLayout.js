@@ -12,68 +12,7 @@ import { mediaMax } from '../../utils/media';
 import ListLayout from "./ListLayout";
 import ResultsLayout from './ResultsLayout';
 import { getSearchPreferences, defaultPreferences, getReactDependenciesFromPreferences } from '../../utils';
-
-export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
-    position: relative;
-    overflow: hidden;
-    max-width: 200px;
-    height: 100%;
-    .image-container {
-        margin: 3px 0px;
-        height: 100px;
-        width: 190px;
-    }
-    .title-container {
-        margin: 3px 0px;
-
-        width: 190px;
-        font-weight: 400px;
-    }
-    .description-container {
-        margin: 3px 0px;
-
-        width: 190px;
-    }
-    .overflow-text {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-    .product-button {
-        top: -58%;
-        position: absolute;
-        background: ${primaryColor} !important;
-        border: 0;
-        box-shadow: 0 2px 4px ${titleColor}33;
-        left: 50%;
-        transform: translateX(-50%);
-        transition: all ease 0.2s;
-    }
-
-    ::before {
-        content: '';
-        width: 100%;
-        height: 0vh;
-        background: ${primaryColor}00 !important;
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: block;
-        transition: all ease 0.4s;
-    }
-
-
-    &:hover {
-        .product-button {
-            top: 35%;
-        }
-        ::before {
-            width: 100%;
-            height: 100%;
-            background: ${primaryColor}1a !important;
-        }
-    }
-`;
+import { geoCardStyles } from "../styles";
 
 function GeoResultsLayout({isPreview}) {
 
@@ -197,7 +136,7 @@ function GeoResultsLayout({isPreview}) {
                                     id={item._id}
                                 >
                                     <div
-                                        css={cardStyles({
+                                        css={geoCardStyles({
                                             ...get(theme, 'colors'),
                                         })}
 
@@ -208,6 +147,7 @@ function GeoResultsLayout({isPreview}) {
                                                 src={image}
                                                 alt={title}
                                                 onError={(event) => {
+                                                    // eslint-disable-next-line
                                                     event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
                                                 }}
                                             />
@@ -359,7 +299,7 @@ function GeoResultsLayout({isPreview}) {
                                     id={item._id}
                                 >
                                     <div
-                                        css={cardStyles({
+                                        css={geoCardStyles({
                                             ...get(theme, 'colors'),
                                         })}
 
@@ -370,6 +310,7 @@ function GeoResultsLayout({isPreview}) {
                                                 src={image}
                                                 alt={title}
                                                 onError={(event) => {
+                                                    // eslint-disable-next-line
                                                     event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
                                                 }}
                                             />

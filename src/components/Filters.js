@@ -1,7 +1,7 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import React from "react";
-import { css, jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import get from 'lodash.get';
 import {
     UL,
@@ -12,21 +12,10 @@ import { MultiList, RangeInput, DynamicRangeSlider, ReactiveComponent } from "@a
 import createDOMPurify from 'dompurify';
 import { getReactDependenciesFromPreferences, shopifyDefaultFields, browserColors } from "../utils";
 import { mediaMax } from '../utils/media';
+import { colorContainer, loaderStyle } from "./styles";
 
 const DOMPurify = createDOMPurify(window);
 const { Panel } = Collapse;
-
-const loaderStyle = css`
-    margin: 10px 0;
-    position: relative;
-`;
-
-const colorContainer = css`
-    display: grid;
-    grid-gap: 5px;
-    grid-template-columns: repeat(auto-fill, 30px);
-    justify-content: center;
-`;
 
 const Filters = ({
     theme,

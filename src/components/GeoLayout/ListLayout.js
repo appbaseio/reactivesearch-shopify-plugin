@@ -1,76 +1,16 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { List, Button, Icon } from 'antd';
-import { css, jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import { func, array } from "prop-types";
 import get from 'lodash.get';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import createDOMPurify from 'dompurify';
-import { mediaMax } from '../../utils/media';
 import { getSearchPreferences, defaultPreferences } from '../../utils';
+import { listStyles, NoDataStyles } from '../styles';
 
 const DOMPurify = createDOMPurify(window);
-
-export const NoDataStyles = css`
-    .ant-list-empty-text {
-        display: none;
-    }
-`;
-
-export const listStyles = ({ titleColor, primaryColor }) => css`
-    position: relative;
-    overflow: hidden;
-    padding: 5px 20px;
-    width: 100%;
-    height: auto;
-    .list-image-container {
-        width: 150px;
-        height: 150px;
-        ${mediaMax.medium} {
-            width: 100px;
-            height: 100px;
-        }
-    }
-
-    .product-image {
-        object-fit: cover;
-    }
-
-    .product-button {
-        top: -50%;
-        position: absolute;
-        background: ${primaryColor} !important;
-        border: 0;
-        box-shadow: 0 2px 4px ${titleColor}33;
-        left: 50%;
-        transform: translateX(-50%);
-        transition: all ease 0.2s;
-    }
-
-    ::before {
-        content: '';
-        width: 100%;
-        height: 0vh;
-        background: ${primaryColor}00 !important;
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: block;
-        transition: all ease 0.4s;
-    }
-    &:hover {
-        .product-button {
-            top: 45%;
-        }
-        ::before {
-            width: 100%;
-            height: 100%;
-            background: ${primaryColor}1a !important;
-        }
-    }
-`;
-
 
 export default function ListLayout({ data, triggerClickAnalytics, isPreview, renderPagination }) {
 
