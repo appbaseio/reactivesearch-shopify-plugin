@@ -24,7 +24,7 @@ import Truncate from 'react-truncate';
 import { Card, Collapse, Button, Icon, Affix, Tooltip, List } from 'antd';
 import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
-import Suggestions from './Suggestions';
+import Suggestion from './Suggestion';
 import LayoutSwitch from './LayoutSwitch';
 import ResultsLayout from './ResultsLayout';
 import {
