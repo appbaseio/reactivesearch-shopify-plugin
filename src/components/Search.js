@@ -43,6 +43,14 @@ const { Panel } = Collapse;
 
 const resultRef = React.createRef();
 
+const searchStyles = ({ titleColor, primaryColor }) => css`
+    .section-header > h3 {
+        margin: 8px 0;
+        color: ${titleColor};
+        font-size: 16px;
+    }
+`;
+
 const minimalSearchStyles = ({ titleColor }) => css`
     input {
         border: 0;
@@ -445,7 +453,7 @@ class Search extends Component {
             'Search for products...',
         );
 
-        const {value} = this.state;
+        const { value } = this.state;
 
         return (
             <SearchBox
@@ -466,7 +474,7 @@ class Search extends Component {
                     zIndex: 1000,
                     display: toggleFilters ? 'none' : 'block',
                 }}
-                css={headingStyles(this.theme.colors)}
+                css={searchStyles(this.theme.colors)}
                 value={value}
                 popularSuggestionsConfig={{
                     size: 3,
