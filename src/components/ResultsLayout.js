@@ -283,6 +283,10 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             item,
                             get(resultSettings, 'fields.price'),
                         );
+                        const priceUnit = get(
+                            item,
+                            get(resultSettings, 'fields.priceUnit'),
+                        );
                         const { variants } = item;
 
                         const redirectToProduct = !isPreview || handle;
@@ -422,7 +426,9 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                                   ),
                                                     }}
                                                 >
-                                                    {`${currency} ${
+                                                    {`${
+                                                        priceUnit || currency
+                                                    } ${
                                                         variants
                                                             ? get(
                                                                   variants[0],
@@ -490,6 +496,10 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                         const price = get(
                             item,
                             get(resultSettings, 'fields.price'),
+                        );
+                        const priceUnit = get(
+                            item,
+                            get(resultSettings, 'fields.priceUnit'),
                         );
                         const { variants } = item;
 
@@ -613,7 +623,10 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                     >
                                                         {variants?.length ||
                                                         price
-                                                            ? `${currency} ${
+                                                            ? `${
+                                                                priceUnit || currency
+
+                                                              } ${
                                                                   variants
                                                                       ? get(
                                                                             variants[0],

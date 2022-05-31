@@ -122,6 +122,10 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
                         item,
                         get(resultSettings, 'fields.price'),
                     );
+                    const priceUnit = get(
+                        item,
+                        get(resultSettings, 'fields.priceUnit'),
+                    );
                     const { variants } = item;
 
                     const redirectToProduct = !isPreview || handle;
@@ -218,7 +222,10 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
                                                 >
                                                     {variants?.length ||
                                                     price
-                                                        ? `${currency} ${
+                                                        ? `${
+                                                            priceUnit ||
+                                                            currency
+                                                        } ${
                                                                 variants
                                                                     ? get(
                                                                         variants[0],
