@@ -229,6 +229,7 @@ function GeoResultsLayout({ isPreview }) {
                                             src={image}
                                             alt={title}
                                             onError={(event) => {
+                                                // eslint-disable-next-line
                                                 event.target.src =
                                                     'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
                                             }}
@@ -398,6 +399,7 @@ function GeoResultsLayout({ isPreview }) {
                                             src={image}
                                             alt={title}
                                             onError={(event) => {
+                                                // eslint-disable-next-line
                                                 event.target.src =
                                                     'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
                                             }}
