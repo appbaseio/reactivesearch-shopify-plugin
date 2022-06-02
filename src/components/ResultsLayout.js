@@ -233,8 +233,16 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
         defaultPreferences.resultSettings.viewSwitcher,
     );
 
-    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText', 'View Product');
-    const redirectUrlIcon = get(preferences, 'searchSettings.redirectUrlIcon', '');
+    const redirectUrlText = get(
+        preferences,
+        'searchSettings.redirectUrlText',
+        'View Product',
+    );
+    const redirectUrlIcon = get(
+        preferences,
+        'searchSettings.redirectUrlIcon',
+        '',
+    );
     const resultSettings = get(preferences, 'resultSettings');
 
     function getFontFamily() {
@@ -275,23 +283,32 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             item,
                             get(resultSettings, 'fields.price'),
                         );
+                        const priceUnit = get(
+                            item,
+                            get(resultSettings, 'fields.priceUnit'),
+                        );
                         const { variants } = item;
 
                         const redirectToProduct = !isPreview || handle;
                         let url = '';
-                        if(redirectToProduct && handle) {
-                            if(handle.includes('http://') || handle.includes('https://')) {
+                        if (redirectToProduct && handle) {
+                            if (
+                                handle.includes('http://') ||
+                                handle.includes('https://')
+                            ) {
                                 url = handle;
                             } else {
                                 url = `/${handle}`;
                             }
-                        }  else {
+                        } else {
                             url = undefined;
                         }
 
                         return (
                             <a
-                                onClick={() => triggerClickAnalytics(item._click_id)}
+                                onClick={() =>
+                                    triggerClickAnalytics(item._click_id)
+                                }
                                 href={url}
                                 target="_blank"
                                 rel="noreferrer noopener"
@@ -307,18 +324,21 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                     })}
                                     cover={
                                         <div className="card-image-container">
-                                            {image && (
-                                                <img
-                                                    className="product-image"
-                                                    src={image}
-                                                    height="100%"
-                                                    width="100%"
-                                                    alt={title}
-                                                    onError={(event) => {
-                                                        event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
-                                                    }}
-                                                />
-                                            )}
+                                            <img
+                                                className="product-image"
+                                                src={
+                                                    image ||
+                                                    'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'
+                                                }
+                                                height="100%"
+                                                width="100%"
+                                                alt={title}
+                                                onError={(event) => {
+                                                    // eslint-disable-next-line
+                                                    event.target.src =
+                                                        'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                }}
+                                            />
                                         </div>
                                     }
                                     style={{
@@ -351,21 +371,34 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                 }
                                             >
                                                 <div
-                                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
-                                                    css={highlightStyle(get(theme, 'colors'))}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: DOMPurify.sanitize(
+                                                            title,
+                                                        ),
+                                                    }}
+                                                    css={highlightStyle(
+                                                        get(theme, 'colors'),
+                                                    )}
                                                 />
                                             </h3>
                                         }
                                         description={
                                             themeType === 'classic' ? (
                                                 <div
-                                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}
-                                                    css={highlightStyle(get(theme, 'colors'))}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: DOMPurify.sanitize(
+                                                            description,
+                                                        ),
+                                                    }}
+                                                    css={highlightStyle(
+                                                        get(theme, 'colors'),
+                                                    )}
                                                     style={{
                                                         display: '-webkit-box',
-                                                        WebkitBoxOrient: 'vertical',
+                                                        WebkitBoxOrient:
+                                                            'vertical',
                                                         WebkitLineClamp: 2,
-                                                        whiteSpace: 'initial'
+                                                        whiteSpace: 'initial',
                                                     }}
                                                 />
                                             ) : null
@@ -393,7 +426,9 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                                   ),
                                                     }}
                                                 >
-                                                    {`${currency} ${
+                                                    {`${
+                                                        priceUnit || currency
+                                                    } ${
                                                         variants
                                                             ? get(
                                                                   variants[0],
@@ -413,22 +448,22 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                             size="large"
                                             className="product-button"
                                         >
-                                            {redirectUrlIcon ?
+                                            {redirectUrlIcon ? (
                                                 <img
                                                     src={redirectUrlIcon}
-                                                    alt='redirect-url-icon'
+                                                    alt="redirect-url-icon"
                                                     height="15px"
                                                     width="15px"
                                                     style={{
-                                                        marginRight: 5
+                                                        marginRight: 5,
                                                     }}
                                                 />
-                                                :
+                                            ) : (
                                                 <Icon type="eye" />
-                                            }
+                                            )}
                                             {redirectUrlText}
                                         </Button>
-                                   ) : null}
+                                    ) : null}
                                 </Card>
                             </a>
                         );
@@ -462,17 +497,24 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             item,
                             get(resultSettings, 'fields.price'),
                         );
+                        const priceUnit = get(
+                            item,
+                            get(resultSettings, 'fields.priceUnit'),
+                        );
                         const { variants } = item;
 
                         const redirectToProduct = !isPreview || handle;
                         let url = '';
-                        if(redirectToProduct && handle) {
-                            if(handle.includes('http://') || handle.includes('https://')) {
+                        if (redirectToProduct && handle) {
+                            if (
+                                handle.includes('http://') ||
+                                handle.includes('https://')
+                            ) {
                                 url = handle;
                             } else {
                                 url = `/${handle}`;
                             }
-                        }  else {
+                        } else {
                             url = undefined;
                         }
                         return (
@@ -484,7 +526,9 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                             >
                                 <List.Item
                                     id={item._id}
-                                    onClick={() => triggerClickAnalytics(item._click_id)}
+                                    onClick={() =>
+                                        triggerClickAnalytics(item._click_id)
+                                    }
                                     css={listStyles({
                                         ...get(theme, 'colors'),
                                     })}
@@ -492,26 +536,38 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                     <List.Item.Meta
                                         avatar={
                                             <div className="list-image-container">
-                                                {image && (
-                                                    <img
-                                                        className="product-image"
-                                                        src={image}
-                                                        height="100%"
-                                                        width="100%"
-                                                        alt={title}
-                                                        onError={(event) => {
-                                                            event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
-                                                        }}
-                                                    />
-                                                )}
+                                                <img
+                                                    className="product-image"
+                                                    src={
+                                                        image ||
+                                                        'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'
+                                                    }
+                                                    height="100%"
+                                                    width="100%"
+                                                    alt={title}
+                                                    onError={(event) => {
+                                                        // eslint-disable-next-line
+                                                        event.target.src =
+                                                            'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                    }}
+                                                />
                                             </div>
                                         }
                                         title={
                                             <div>
                                                 {title && (
                                                     <div
-                                                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(title) }}
-                                                        css={highlightStyle(get(theme, 'colors'))}
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: DOMPurify.sanitize(
+                                                                title,
+                                                            ),
+                                                        }}
+                                                        css={highlightStyle(
+                                                            get(
+                                                                theme,
+                                                                'colors',
+                                                            ),
+                                                        )}
                                                     />
                                                 )}
                                             </div>
@@ -522,15 +578,27 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                     {description &&
                                                     themeType === 'classic' ? (
                                                         <div
-                                                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}
-                                                    css={highlightStyle(get(theme, 'colors'))}
-                                                    style={{
-                                                        display: '-webkit-box',
-                                                        WebkitBoxOrient: 'vertical',
-                                                        WebkitLineClamp: 2,
-                                                        whiteSpace: 'initial'
-                                                    }}
-                                                />
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: DOMPurify.sanitize(
+                                                                    description,
+                                                                ),
+                                                            }}
+                                                            css={highlightStyle(
+                                                                get(
+                                                                    theme,
+                                                                    'colors',
+                                                                ),
+                                                            )}
+                                                            style={{
+                                                                display:
+                                                                    '-webkit-box',
+                                                                WebkitBoxOrient:
+                                                                    'vertical',
+                                                                WebkitLineClamp: 2,
+                                                                whiteSpace:
+                                                                    'initial',
+                                                            }}
+                                                        />
                                                     ) : null}
                                                 </div>
                                                 <div>
@@ -555,7 +623,10 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                     >
                                                         {variants?.length ||
                                                         price
-                                                            ? `${currency} ${
+                                                            ? `${
+                                                                priceUnit || currency
+
+                                                              } ${
                                                                   variants
                                                                       ? get(
                                                                             variants[0],
@@ -576,19 +647,19 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                             size="large"
                                             className="product-button"
                                         >
-                                            {redirectUrlIcon ?
+                                            {redirectUrlIcon ? (
                                                 <img
                                                     src={redirectUrlIcon}
-                                                    alt='redirect-url-icon'
+                                                    alt="redirect-url-icon"
                                                     height="15px"
                                                     width="15px"
                                                     style={{
-                                                        marginRight: 5
+                                                        marginRight: 5,
                                                     }}
                                                 />
-                                                :
+                                            ) : (
                                                 <Icon type="eye" />
-                                            }
+                                            )}
                                             {redirectUrlText}
                                         </Button>
                                     ) : null}

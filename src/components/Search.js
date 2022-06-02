@@ -24,7 +24,7 @@ import Truncate from 'react-truncate';
 import { Card, Collapse, Button, Icon, Affix, Tooltip, List } from 'antd';
 import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
-import Suggestions from './Suggestions';
+import Suggestion from './Suggestion';
 import LayoutSwitch from './LayoutSwitch';
 import ResultsLayout from './ResultsLayout';
 import {
@@ -42,6 +42,14 @@ const { Meta } = Card;
 const { Panel } = Collapse;
 
 const resultRef = React.createRef();
+
+const searchStyles = ({ titleColor, primaryColor }) => css`
+    .section-header > h3 {
+        margin: 8px 0;
+        color: ${titleColor};
+        font-size: 16px;
+    }
+`;
 
 const minimalSearchStyles = ({ titleColor }) => css`
     input {
@@ -293,6 +301,7 @@ class Search extends Component {
             toggleFilters: false,
             isMobile: window.innerWidth <= 768,
             blur: false,
+            value: '',
         };
         this.preferences = getSearchPreferences();
         this.theme = get(
@@ -444,6 +453,8 @@ class Search extends Component {
             'Search for products...',
         );
 
+        const { value } = this.state;
+
         return (
             <SearchBox
                 // Don't change the component id it is tied to shopify
@@ -463,68 +474,40 @@ class Search extends Component {
                     zIndex: 1000,
                     display: toggleFilters ? 'none' : 'block',
                 }}
-                // onKeyDown={(e) => {
-                //     if(e.keyCode === 27) {
-                //         document.getElementById('q-downshift-input').blur();
-                //     }
-                // }}
+                css={searchStyles(this.theme.colors)}
+                value={value}
                 popularSuggestionsConfig={{
                     size: 3,
+                    sectionLabel:
+                        '<h3 class="section-label">Popular Suggestions</h3>',
                 }}
                 recentSuggestionsConfig={{
                     size: 3,
+                    sectionLabel:
+                        '<h3 class="section-label">Recent Suggestions</h3>',
                 }}
-                size={10}
+                enableIndexSuggestions
+                indexSuggestionsConfig={{
+                    sectionLabel:
+                        '<h3 class="section-label">Index Suggestions</h3>',
+                    size: 3,
+                }}
+                size={6}
                 onFocus={(e) => { this.setState({ blur: false })}}
                 onBlur={(e) => { this.setState({ blur: true })}}
-                render={({
-                    value,
-                    categories,
-                    data,
-                    downshiftProps,
-                    loading,
-                }) => {
-                    return downshiftProps.isOpen &&
-                         (
-                        <Suggestions
-                            blur={blur}
-                            themeType={this.themeType}
+                onChange={(val) => {
+                    this.setState({ value: val });
+                }}
+                renderItem={(suggestion) => {
+                    return (
+                        <Suggestion
+                            suggestion={suggestion}
                             fields={get(this.searchSettings, 'fields', {})}
-                            currentValue={value}
-                            customMessage={get(
-                                this.searchSettings,
-                                'customMessages',
-                                {},
-                            )}
-                            getItemProps={downshiftProps.getItemProps}
-                            highlightedIndex={downshiftProps.highlightedIndex}
                             themeConfig={this.theme}
-                            currency={this.currency}
-                            customSuggestions={get(
-                                this.searchSettings,
-                                'customSuggestions',
-                            )}
-                            isPreview={isPreview}
-                            suggestions={data}
-                            popularSuggestions={data.filter(
-                                (suggestion) =>
-                                    get(suggestion, '_suggestion_type') ===
-                                    'popular',
-                            )}
-                            recentSearches={data.filter(
-                                (suggestion) =>
-                                    get(suggestion, '_suggestion_type') ===
-                                    'recent',
-                            )}
-                            parsedSuggestions={data.filter(
-                                (suggestion) =>
-                                    get(suggestion, '_suggestion_type') ===
-                                    'index',
-                            )}
-                            loading={loading}
                             highlight={this.searchSettings.rsConfig.highlight}
+                            currentValue={value}
                         />
-                    ) ;
+                    );
                 }}
                 {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
