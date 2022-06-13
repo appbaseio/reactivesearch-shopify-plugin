@@ -699,7 +699,7 @@ class Search extends Component {
                                     <SelectedFilters showClearAll="default" />
                                 </div>
                             ) : null}
-                            <ReactiveComponent
+                            {/* <ReactiveComponent
                                 componentId="filter_by_product"
                                 customQuery={() =>
                                     this.exportType === 'shopify'
@@ -712,13 +712,13 @@ class Search extends Component {
                                           }
                                         : null
                                 }
-                            />
+                            /> */}
                             {this.themeType === 'geo' ? (
                                 <GeoResultsLayout isPreview={isPreview} />
                             ) : (
                                 <ReactiveList
                                     componentId="results"
-                                    dataField="title"
+                                    dataField={get(this.resultSettings, 'fields.title', 'title')}
                                     ref={resultRef}
                                     defaultQuery={() => ({
                                         track_total_hits: true,
