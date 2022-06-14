@@ -260,6 +260,7 @@ export const getSearchPreferences = () => {
             preferences = JSON.parse(
                 window.APPBASE_SEARCH_PREFERENCES || appbasePrefs,
             );
+            delete preferences.facetSettings.staticFacets;
         } catch (e) {
             console.warn(
                 'Appbase: Error encountered while parsing the search preferences, fall-backing to the default preferences',
