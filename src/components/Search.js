@@ -543,7 +543,6 @@ class Search extends Component {
         }
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
         const fusionSettings = get(this.preferences, 'fusionSettings', {});
-        console.log(fusionSettings);
         const mapsAPIkey = get(
             this.resultSettings,
             'mapsAPIkey',
