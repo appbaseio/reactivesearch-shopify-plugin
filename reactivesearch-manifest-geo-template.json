@@ -3,7 +3,7 @@
     "name": "geo",
     "description": "Theme appropriate for a geo search UI",
     "section": "geo",
-    "section_label": "<h3>Maps Search</h3>",
+    "section_label": "<h3>Geo Search</h3>",
     "excludePaths": [
         "/.eslintignore",
         "/.eslintrc.js",
