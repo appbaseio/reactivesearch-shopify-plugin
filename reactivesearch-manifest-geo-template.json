@@ -1,7 +1,7 @@
 {
     "image": "https://imgur.com/eU7nrhX.png",
     "name": "geo",
-    "description": "Theme appropriate for a geo search UI",
+    "description": "Theme appropriate for a geo/ map search UI",
     "section": "geo",
     "section_label": "<h3>Geo Search</h3>",
     "excludePaths": [
