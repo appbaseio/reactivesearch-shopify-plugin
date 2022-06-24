@@ -54,7 +54,7 @@ const Suggestion = ({
                 <img
                     src={
                         image ||
-                        'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'
+                        'https://banksiafdn.com/wp-content/uploads/2019/10/placeholde-image.jpg'
                     }
                     alt="suggestion"
                     width="40px"

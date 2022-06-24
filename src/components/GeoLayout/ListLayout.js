@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { List, Button, Icon } from 'antd';
 import { css, jsx } from '@emotion/core';
-import { func, array } from "prop-types";
+import { func, array } from 'prop-types';
 import get from 'lodash.get';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
@@ -71,9 +71,12 @@ export const listStyles = ({ titleColor, primaryColor }) => css`
     }
 `;
 
-
-export default function ListLayout({ data, triggerClickAnalytics, isPreview, renderPagination }) {
-
+export default function ListLayout({
+    data,
+    triggerClickAnalytics,
+    isPreview,
+    renderPagination,
+}) {
     const preferences = getSearchPreferences();
 
     const theme = get(
@@ -90,8 +93,16 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
 
     const resultSettings = get(preferences, 'resultSettings');
 
-    const redirectUrlText = get(preferences, 'searchSettings.redirectUrlText', 'View Product');
-    const redirectUrlIcon = get(preferences, 'searchSettings.redirectUrlIcon', '');
+    const redirectUrlText = get(
+        preferences,
+        'searchSettings.redirectUrlText',
+        'View Product',
+    );
+    const redirectUrlIcon = get(
+        preferences,
+        'searchSettings.redirectUrlIcon',
+        '',
+    );
 
     return (
         <div style={{ padding: '20px 0px' }}>
@@ -130,13 +141,16 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
 
                     const redirectToProduct = !isPreview || handle;
                     let url = '';
-                    if(redirectToProduct && handle) {
-                        if(handle.includes('http://') || handle.includes('https://')) {
+                    if (redirectToProduct && handle) {
+                        if (
+                            handle.includes('http://') ||
+                            handle.includes('https://')
+                        ) {
                             url = handle;
                         } else {
                             url = `/${handle}`;
                         }
-                    }  else {
+                    } else {
                         url = undefined;
                     }
 
@@ -150,7 +164,9 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
                         >
                             <List.Item
                                 id={item._id}
-                                onClick={() => triggerClickAnalytics(item._click_id)}
+                                onClick={() =>
+                                    triggerClickAnalytics(item._click_id)
+                                }
                                 css={listStyles({
                                     ...get(theme, 'colors'),
                                 })}
@@ -166,7 +182,8 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
                                                     width="100%"
                                                     alt={title}
                                                     onError={(event) => {
-                                                        event.target.src = 'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                        event.target.src =
+                                                            'https://banksiafdn.com/wp-content/uploads/2019/10/placeholde-image.jpg'; // eslint-disable-line
                                                     }}
                                                 />
                                             )}
@@ -177,9 +194,7 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
                                             {title && (
                                                 <Truncate
                                                     lines={1}
-                                                    ellipsis={
-                                                        <span>...</span>
-                                                    }
+                                                    ellipsis={<span>...</span>}
                                                 >
                                                     {strip(title.toString())}
                                                 </Truncate>
@@ -189,22 +204,32 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
                                     description={
                                         <div>
                                             <div style={{ height: 45 }}>
-                                                {description &&
+                                                {description && (
                                                     <Truncate
                                                         lines={2}
                                                         ellipsis={
                                                             <span>...</span>
                                                         }
                                                     >
-                                                        {get(resultSettings, 'resultHighlight', false) ? (
+                                                        {get(
+                                                            resultSettings,
+                                                            'resultHighlight',
+                                                            false,
+                                                        ) ? (
                                                             <p
-                                                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description) }}
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: DOMPurify.sanitize(
+                                                                        description,
+                                                                    ),
+                                                                }}
                                                             />
                                                         ) : (
-                                                            strip(description.toString())
+                                                            strip(
+                                                                description.toString(),
+                                                            )
                                                         )}
                                                     </Truncate>
-                                                }
+                                                )}
                                             </div>
                                             <div>
                                                 <h3
@@ -213,27 +238,25 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
                                                         fontWeight: 500,
                                                         fontSize: '1rem',
                                                         marginTop: 6,
-                                                        color:
-                                                            get(
-                                                                theme,
-                                                                'colors.titleColor',
-                                                            ),
+                                                        color: get(
+                                                            theme,
+                                                            'colors.titleColor',
+                                                        ),
                                                     }}
                                                 >
-                                                    {variants?.length ||
-                                                    price
+                                                    {variants?.length || price
                                                         ? `${
-                                                            priceUnit ||
-                                                            currency
-                                                        } ${
-                                                                variants
-                                                                    ? get(
+                                                              priceUnit ||
+                                                              currency
+                                                          } ${
+                                                              variants
+                                                                  ? get(
                                                                         variants[0],
                                                                         'price',
                                                                         '',
                                                                     )
-                                                                    : price
-                                                            }`
+                                                                  : price
+                                                          }`
                                                         : null}
                                                 </h3>
                                             </div>
@@ -246,19 +269,19 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
                                         size="large"
                                         className="product-button"
                                     >
-                                        {redirectUrlIcon ?
+                                        {redirectUrlIcon ? (
                                             <img
                                                 src={redirectUrlIcon}
-                                                alt='redirect-url-icon'
+                                                alt="redirect-url-icon"
                                                 height="15px"
                                                 width="15px"
                                                 style={{
-                                                    marginRight: 5
+                                                    marginRight: 5,
                                                 }}
                                             />
-                                            :
+                                        ) : (
                                             <Icon type="eye" />
-                                        }
+                                        )}
                                         {redirectUrlText}
                                     </Button>
                                 ) : null}
@@ -269,10 +292,10 @@ export default function ListLayout({ data, triggerClickAnalytics, isPreview, ren
             />
             {renderPagination()}
         </div>
-    )
+    );
 }
 
 ListLayout.propTypes = {
     data: array,
     triggerClickAnalytics: func,
-}
+};

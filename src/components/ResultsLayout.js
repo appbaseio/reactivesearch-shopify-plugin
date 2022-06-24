@@ -328,7 +328,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                 className="product-image"
                                                 src={
                                                     image ||
-                                                    'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'
+                                                    'https://banksiafdn.com/wp-content/uploads/2019/10/placeholde-image.jpg'
                                                 }
                                                 height="100%"
                                                 width="100%"
@@ -336,7 +336,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                 onError={(event) => {
                                                     // eslint-disable-next-line
                                                     event.target.src =
-                                                        'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                        'https://banksiafdn.com/wp-content/uploads/2019/10/placeholde-image.jpg'; // eslint-disable-line
                                                 }}
                                             />
                                         </div>
@@ -540,7 +540,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                     className="product-image"
                                                     src={
                                                         image ||
-                                                        'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'
+                                                        'https://banksiafdn.com/wp-content/uploads/2019/10/placeholde-image.jpg'
                                                     }
                                                     height="100%"
                                                     width="100%"
@@ -548,7 +548,7 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                     onError={(event) => {
                                                         // eslint-disable-next-line
                                                         event.target.src =
-                                                            'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                            'https://banksiafdn.com/wp-content/uploads/2019/10/placeholde-image.jpg'; // eslint-disable-line
                                                     }}
                                                 />
                                             </div>
@@ -624,8 +624,8 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                         {variants?.length ||
                                                         price
                                                             ? `${
-                                                                priceUnit || currency
-
+                                                                  priceUnit ||
+                                                                  currency
                                                               } ${
                                                                   variants
                                                                       ? get(

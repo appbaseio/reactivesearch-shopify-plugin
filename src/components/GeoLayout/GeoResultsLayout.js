@@ -231,7 +231,7 @@ function GeoResultsLayout({ isPreview }) {
                                             onError={(event) => {
                                                 // eslint-disable-next-line
                                                 event.target.src =
-                                                    'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                    'https://banksiafdn.com/wp-content/uploads/2019/10/placeholde-image.jpg'; // eslint-disable-line
                                             }}
                                         />
                                     ) : null}
@@ -401,7 +401,7 @@ function GeoResultsLayout({ isPreview }) {
                                             onError={(event) => {
                                                 // eslint-disable-next-line
                                                 event.target.src =
-                                                    'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
+                                                    'https://banksiafdn.com/wp-content/uploads/2019/10/placeholde-image.jpg'; // eslint-disable-line
                                             }}
                                         />
                                     ) : null}
