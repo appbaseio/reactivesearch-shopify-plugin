@@ -82,6 +82,7 @@ const SuggestionCard = ({
                                     width="100%"
                                     alt={title}
                                     onError={(event) => {
+                                        // eslint-disable-next-line
                                         event.target.src =
                                             'https://banksiafdn.com/wp-content/uploads/2019/10/placeholde-image.jpg'; // eslint-disable-line
                                     }}
