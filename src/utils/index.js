@@ -5,6 +5,14 @@ import { jsx } from '@emotion/core';
 import get from 'lodash.get';
 import appbasePrefs from './constants';
 
+export const staticFacetsIds = [
+    'productType',
+    'collection',
+    'color',
+    'size',
+    'price',
+];
+
 export const browserColors = {
     aliceblue: '#f0f8ff',
     antiquewhite: '#faebd7',
@@ -220,13 +228,21 @@ export const getReactDependenciesFromPreferences = (
     preferences = {},
     id = '',
 ) => {
-    const react = [];
-    const searchId = get(preferences, 'searchSettings.rsConfig.componentId');
-    if (searchId) {
-        react.push(searchId);
-    } else {
-        react.push('q');
+    if (preferences.pageSettings) {
+        const componentSettings = get(
+            preferences.pageSettings,
+            `pages.${preferences.pageSettings.currentPage}.componentSettings`,
+            {},
+        );
+        return Object.keys(componentSettings).filter((i) => i !== id);
     }
+    const react = [];
+    const searchId = get(
+        preferences,
+        'searchSettings.rsConfig.componentId',
+        'search',
+    );
+    react.push(searchId);
     const staticFacets = get(preferences, 'facetSettings.staticFacets');
     if (staticFacets && Array.isArray(staticFacets)) {
         staticFacets.forEach((facet) => {
