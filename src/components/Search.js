@@ -1,17 +1,13 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-/* eslint-disable no-unused-vars */
 import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
     ReactiveBase,
     SearchBox,
-    MultiList,
     ReactiveList,
     SelectedFilters,
-    DynamicRangeSlider,
     ReactiveComponent,
-    RangeInput,
 } from '@appbaseio/reactivesearch';
 import {
     UL,
