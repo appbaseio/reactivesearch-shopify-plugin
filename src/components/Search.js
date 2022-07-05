@@ -14,12 +14,13 @@ import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
 import Suggestion from './Suggestion';
 import ResultsLayout from './ResultsLayout';
-// import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
+import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
 import Filters from './Filters';
 import {
     defaultPreferences,
     getReactDependenciesFromPreferences,
     getSearchPreferences,
+    staticFacetsIds,
 } from '../utils';
 
 const DOMPurify = createDOMPurify(window);
@@ -298,25 +299,23 @@ class Search extends Component {
         this.credentials = get(this.preferences, 'appbaseSettings.credentials');
         this.url = get(this.preferences, 'appbaseSettings.url');
         this.userId = get(this.preferences, 'appbaseSettings.userId', '');
-        this.resultSettings = get(this.preferences, 'resultSettings');
-        this.searchSettings = get(this.preferences, 'searchSettings');
         this.globalSettings = get(this.preferences, 'globalSettings', {});
         this.pageSettings = get(this.preferences, 'pageSettings', {});
-        this.dynamicFacets =
-            get(this.preferences, 'facetSettings.dynamicFacets') || [];
-        this.staticFacets =
-            get(this.preferences, 'facetSettings.staticFacets') || [];
-        this.colorFilter = this.staticFacets.find((o) => o.name === 'color');
-        this.collectionFilter = this.staticFacets.find(
-            (o) => o.name === 'collection',
+        this.componentSettings = get(
+            this.pageSettings,
+            `pages.${this.pageSettings.currentPage}.componentSettings`,
+            {},
         );
-        this.productTypeFilter = this.staticFacets.find(
-            (o) => o.name === 'productType',
+        this.resultSettings = get(
+            this.componentSettings,
+            'result',
+            get(this.preferences, 'resultSettings', {}),
         );
-
-        this.sizeFilter = this.staticFacets.find((o) => o.name === 'size');
-        this.priceFilter = this.staticFacets.find((o) => o.name === 'price');
-
+        this.searchSettings = get(
+            this.componentSettings,
+            'search',
+            get(this.preferences, 'searchSettings', {}),
+        );
         this.exportType = get(
             this.preferences,
             'exportSettings.type',
@@ -507,6 +506,13 @@ class Search extends Component {
             'mapsAPIkey',
             'AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU',
         );
+        const dynamicFacets = Object.keys(this.componentSettings).filter(
+            (i) =>
+                i !== 'search' &&
+                i !== 'result' &&
+                !staticFacetsIds.includes(i),
+        );
+
         console.log(this.pageSettings);
         return (
             <ReactiveBase
@@ -557,7 +563,7 @@ class Search extends Component {
                         ${get(this.themeSettings, 'customCss', '')}
                     `}
                 />
-                {isMobile && this.dynamicFacets.length ? (
+                {isMobile && dynamicFacets.length ? (
                     <Affix
                         style={{
                             position: 'fixed',
@@ -619,15 +625,9 @@ class Search extends Component {
                             currency={this.currency}
                             themeType={this.themeType}
                             exportType={this.exportType}
-                            sizeFilter={this.sizeFilter}
-                            colorFilter={this.colorFilter}
-                            priceFilter={this.priceFilter}
                             preferences={this.preferences}
                             toggleFilters={toggleFilters}
-                            dynamicFacets={this.dynamicFacets}
                             getFontFamily={this.getFontFamily()}
-                            collectionFilter={this.collectionFilter}
-                            productTypeFilter={this.productTypeFilter}
                             pageSettings={this.pageSettings}
                         />
 
@@ -662,12 +662,8 @@ class Search extends Component {
                             /> */}
 
                             {this.themeType === 'geo' ? (
-                                <>Geo Results</>
+                                <GeoResultsLayout isPreview={isPreview} />
                             ) : (
-                                // <GeoResultsLayout
-                                //     isPreview={isPreview}
-                                // />
-
                                 <ReactiveComponent
                                     preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}
                                     dataField="title"

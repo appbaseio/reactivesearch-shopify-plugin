@@ -10,7 +10,11 @@ import {
 import { Collapse, Tooltip } from 'antd';
 import { ReactiveComponent } from '@appbaseio/reactivesearch';
 import createDOMPurify from 'dompurify';
-import { getReactDependenciesFromPreferences, browserColors } from '../utils';
+import {
+    getReactDependenciesFromPreferences,
+    browserColors,
+    staticFacetsIds,
+} from '../utils';
 import { mediaMax } from '../utils/media';
 
 const DOMPurify = createDOMPurify(window);
@@ -748,17 +752,11 @@ const Filters = ({
         `pages.${pageSettings.currentPage}.componentSettings`,
         {},
     );
-    const staticFacets = [
-        'productType',
-        'collection',
-        'color',
-        'size',
-        'price',
-    ];
+
     let filters = Object.keys(componentSettings).filter(
-        (i) => i !== 'search' && i !== 'result' && !staticFacets.includes(i),
+        (i) => i !== 'search' && i !== 'result' && !staticFacetsIds.includes(i),
     );
-    filters = [...staticFacets, ...filters];
+    filters = [...staticFacetsIds, ...filters];
 
     return (
         <div
