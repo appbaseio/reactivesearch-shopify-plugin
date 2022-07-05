@@ -9,32 +9,22 @@ import {
     SelectedFilters,
     ReactiveComponent,
 } from '@appbaseio/reactivesearch';
-import {
-    UL,
-    Checkbox,
-} from '@appbaseio/reactivesearch/lib/styles/FormControlList';
 import get from 'lodash.get';
 import { string, bool } from 'prop-types';
-import strip from 'striptags';
-import Truncate from 'react-truncate';
-import { Card, Collapse, Button, Icon, Affix, Tooltip, List } from 'antd';
+import { Card, Collapse, Button, Icon, Affix } from 'antd';
 import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
 import Suggestion from './Suggestion';
-import LayoutSwitch from './LayoutSwitch';
 import ResultsLayout from './ResultsLayout';
 import {
     defaultPreferences,
     getReactDependenciesFromPreferences,
     getSearchPreferences,
-    shopifyDefaultFields,
 } from '../utils';
 import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
 import Filters from './Filters';
 
 const DOMPurify = createDOMPurify(window);
-const { Meta } = Card;
-const { Panel } = Collapse;
 
 const resultRef = React.createRef();
 
@@ -52,11 +42,6 @@ const minimalSearchStyles = ({ titleColor }) => css`
         color: ${titleColor};
         box-shadow: 0px 0px 4px ${titleColor}1a;
     }
-`;
-
-const loaderStyle = css`
-    margin: 10px 0;
-    position: relative;
 `;
 
 export const listLayoutStyles = css`
@@ -279,13 +264,6 @@ const mobileButtonStyles = css`
     border: 0;
 `;
 
-const colorContainer = css`
-    display: grid;
-    grid-gap: 5px;
-    grid-template-columns: repeat(auto-fill, 30px);
-    justify-content: center;
-`;
-
 const searchRef = React.createRef();
 
 let userIdObj = {};
@@ -295,7 +273,6 @@ class Search extends Component {
         this.state = {
             toggleFilters: false,
             isMobile: window.innerWidth <= 768,
-            blur: false,
             value: '',
         };
         this.preferences = getSearchPreferences();
@@ -439,7 +416,7 @@ class Search extends Component {
     }
 
     renderCategorySearch = (categorySearchProps) => {
-        const { toggleFilters, blur } = this.state;
+        const { toggleFilters, value } = this.state;
         const { isPreview } = this.props;
         const searchIcon = get(this.searchSettings, 'searchButton.icon', '');
         const searchText = get(
@@ -447,8 +424,6 @@ class Search extends Component {
             'searchButton.text',
             'Search for products...',
         );
-
-        const { value } = this.state;
 
         return (
             <SearchBox
@@ -488,8 +463,6 @@ class Search extends Component {
                     size: 3,
                 }}
                 size={6}
-                onFocus={(e) => { this.setState({ blur: false })}}
-                onBlur={(e) => { this.setState({ blur: true })}}
                 onChange={(val) => {
                     this.setState({ value: val });
                 }}
