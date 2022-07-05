@@ -4,8 +4,6 @@ import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
     ReactiveBase,
-    SearchBox,
-
     SelectedFilters,
     ReactiveComponent,
 } from '@appbaseio/reactivesearch';
@@ -331,10 +329,10 @@ class Search extends Component {
         try {
             const inputRef = get(searchRef, 'current._inputRef', null);
 
-            if(this.userId) {
+            if (this.userId) {
                 userIdObj = {
-                    userId: this.userId
-                }
+                    userId: this.userId,
+                };
             }
             if (inputRef) {
                 const param = new URLSearchParams(window.location.search).get(
@@ -413,8 +411,8 @@ class Search extends Component {
     };
 
     isMobile = () => {
-        return window.innerWidth <= 768 ;
-    }
+        return window.innerWidth <= 768;
+    };
 
     renderCategorySearch = (categorySearchProps) => {
         const { toggleFilters, value } = this.state;
@@ -426,7 +424,7 @@ class Search extends Component {
         );
 
         return (
-            <SearchBox
+            <ReactiveComponent
                 preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.search`}
                 componentId="search"
                 filterLabel="Search"
@@ -434,7 +432,18 @@ class Search extends Component {
                 debounce={100}
                 placeholder={searchText}
                 iconPosition="right"
-                icon={searchIcon ? <img src={searchIcon} alt="Search Icon" width="20px" height="20px"/> : searchIcon}
+                icon={
+                    searchIcon ? (
+                        <img
+                            src={searchIcon}
+                            alt="Search Icon"
+                            width="20px"
+                            height="20px"
+                        />
+                    ) : (
+                        searchIcon
+                    )
+                }
                 ref={searchRef}
                 URLParams
                 style={{
@@ -487,14 +496,18 @@ class Search extends Component {
         const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
         let newProps = {};
-        if(get(this.resultSettings, 'sortOptionSelector', []).length) {
+        if (get(this.resultSettings, 'sortOptionSelector', []).length) {
             newProps = {
-                sortOptions: get(this.resultSettings, 'sortOptionSelector')
-            }
+                sortOptions: get(this.resultSettings, 'sortOptionSelector'),
+            };
         }
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
-        const mapsAPIkey = get(this.resultSettings, 'mapsAPIkey', 'AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU');
-
+        const mapsAPIkey = get(
+            this.resultSettings,
+            'mapsAPIkey',
+            'AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU',
+        );
+        console.log(this.pageSettings);
         return (
             <ReactiveBase
                 app={this.index}
@@ -504,7 +517,7 @@ class Search extends Component {
                 enableAppbase
                 appbaseConfig={{
                     recordAnalytics: true,
-                    ...userIdObj
+                    ...userIdObj,
                 }}
                 mapKey={mapsAPIkey}
                 mapLibraries={['visualization', 'places']}
@@ -568,23 +581,26 @@ class Search extends Component {
                 ) : null}
 
                 <div style={{ maxWidth: '90%', margin: '25px auto' }}>
+                    {Object.keys(logoSettings).length &&
+                    logoSettings.logoUrl ? (
+                        <div>
+                            <img
+                                src={`${logoSettings.logoUrl}/tr:w-${
+                                    logoSettings.logoWidth * 2
+                                }`}
+                                alt="logo-url"
+                                style={{
+                                    width: `${logoSettings.logoWidth}px`,
+                                    height: `50px`,
+                                    float: `${logoSettings.logoAlignment}`,
+                                    margin: '10px 0px',
+                                }}
+                            />
+                        </div>
+                    ) : null}
 
-                {Object.keys(logoSettings).length && logoSettings.logoUrl ? (
-                    <div>
-                        <img
-                            src={`${logoSettings.logoUrl}/tr:w-${logoSettings.logoWidth*2}`}
-                            alt="logo-url"
-                            style={{
-                                width: `${logoSettings.logoWidth}px`,
-                                height: `50px`,
-                                float: `${logoSettings.logoAlignment}`,
-                                margin: '10px 0px',
-                            }}
-                        />
-                    </div>
-                ): null}
-
-                    {(this.themeType === 'classic' || this.themeType === 'geo') &&
+                    {(this.themeType === 'classic' ||
+                        this.themeType === 'geo') &&
                         this.renderCategorySearch()}
 
                     <div
@@ -597,7 +613,6 @@ class Search extends Component {
                             gridGap: 20,
                         }}
                     >
-
                         <Filters
                             theme={this.theme}
                             isMobile={this.isMobile}
@@ -648,14 +663,15 @@ class Search extends Component {
 
                             {this.themeType === 'geo' ? (
                                 <>Geo Results</>
+                            ) : (
                                 // <GeoResultsLayout
                                 //     isPreview={isPreview}
                                 // />
 
-                            ) : (
                                 <ReactiveComponent
                                     preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}
-                                    componentId="results"
+                                    dataField="title"
+                                    componentId="result"
                                     ref={resultRef}
                                     defaultQuery={() => ({
                                         track_total_hits: true,
@@ -665,11 +681,13 @@ class Search extends Component {
                                             style={{ textAlign: 'right' }}
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(get(
-                                                    this.resultSettings,
-                                                    'customMessages.noResults',
-                                                    'No Results Found',
-                                                )),
+                                                __html: DOMPurify.sanitize(
+                                                    get(
+                                                        this.resultSettings,
+                                                        'customMessages.noResults',
+                                                        'No Results Found',
+                                                    ),
+                                                ),
                                             }}
                                         />
                                     )}
@@ -680,22 +698,30 @@ class Search extends Component {
                                         <div
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(get(
-                                                    this.resultSettings,
-                                                    'customMessages.resultStats',
-                                                    '[count] products found in [time] ms',
-                                                )
-                                                    .replace(
-                                                        '[count]',
-                                                        numberOfResults,
+                                                __html: DOMPurify.sanitize(
+                                                    get(
+                                                        this.resultSettings,
+                                                        'customMessages.resultStats',
+                                                        '[count] products found in [time] ms',
                                                     )
-                                                    .replace('[time]', time)),
+                                                        .replace(
+                                                            '[count]',
+                                                            numberOfResults,
+                                                        )
+                                                        .replace(
+                                                            '[time]',
+                                                            time,
+                                                        ),
+                                                ),
                                             }}
                                         />
                                     )}
                                     size={9}
                                     infiniteScroll
-                                    render={({ data, triggerClickAnalytics }) => {
+                                    render={({
+                                        data,
+                                        triggerClickAnalytics,
+                                    }) => {
                                         return !toggleFilters ? (
                                             <ResultsLayout
                                                 data={data}
@@ -715,8 +741,10 @@ class Search extends Component {
                                         noResults: 'custom-no-results',
                                         pagination: 'custom-pagination',
                                     }}
-
-                                    css={reactiveListCls(toggleFilters, this.theme)}
+                                    css={reactiveListCls(
+                                        toggleFilters,
+                                        this.theme,
+                                    )}
                                     react={{
                                         and: [
                                             'filter_by_product',

@@ -894,6 +894,7 @@ const Filters = ({
                             }}
                             className="filter"
                         >
+                            {/* eslint-disable-next-line no-nested-ternary */}
                             {facet.enabled ? (
                                 // eslint-disable-next-line no-nested-ternary
                                 type === 'list' ? (
