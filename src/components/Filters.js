@@ -1,16 +1,16 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-import React from "react";
+import React from 'react';
 import { css, jsx } from '@emotion/core';
 import get from 'lodash.get';
 import {
     UL,
     Checkbox,
 } from '@appbaseio/reactivesearch/lib/styles/FormControlList';
-import { Collapse, Tooltip } from "antd";
-import { MultiList, RangeInput, DynamicRangeSlider, ReactiveComponent } from "@appbaseio/reactivesearch";
+import { Collapse, Tooltip } from 'antd';
+import { ReactiveComponent } from '@appbaseio/reactivesearch';
 import createDOMPurify from 'dompurify';
-import { getReactDependenciesFromPreferences, shopifyDefaultFields, browserColors } from "../utils";
+import { getReactDependenciesFromPreferences, browserColors } from '../utils';
 import { mediaMax } from '../utils/media';
 
 const DOMPurify = createDOMPurify(window);
@@ -34,24 +34,18 @@ const Filters = ({
     currency,
     themeType,
     exportType,
-    sizeFilter,
-    colorFilter,
-    priceFilter,
     preferences,
     toggleFilters,
-    dynamicFacets,
     getFontFamily,
-    collectionFilter,
-    productTypeFilter,
+    pageSettings,
 }) => {
-
-    const renderCollectionFilter = (font) => {
-        if (!collectionFilter) {
+    const renderCollectionFilter = (font, collectionFilter) => {
+        if (!collectionFilter.enabled) {
             return null;
         }
 
         const type = get(collectionFilter, 'rsConfig.filterType', '');
-        if(type === 'list') {
+        if (type === 'list') {
             return (
                 <React.Fragment>
                     <ReactiveComponent
@@ -60,20 +54,20 @@ const Filters = ({
                             exportType === 'shopify'
                                 ? {
                                       query: {
-                                          term: { 'type.keyword': ['collection'] },
+                                          term: {
+                                              'type.keyword': ['collection'],
+                                          },
                                       },
                                   }
                                 : null
                         }
                     />
-                    <MultiList
-                        innerClass={{
-                            input: 'list-input'
-                        }}
+                    <ReactiveComponent
                         componentId="collection"
+                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.collection`}
                         dataField="collection"
-                        style={{
-
+                        innerClass={{
+                            input: 'list-input',
                         }}
                         defaultQuery={() => ({
                             aggs: {
@@ -106,8 +100,6 @@ const Filters = ({
                                 },
                             },
                         })}
-                        size={50}
-                        showCheckbox={themeType !== 'minimal'}
                         react={{
                             and: [
                                 'filter_by_collection',
@@ -127,26 +119,33 @@ const Filters = ({
                                         css={loaderStyle}
                                         // eslint-disable-next-line
                                         dangerouslySetInnerHTML={{
-                                            __html: DOMPurify.sanitize(get(
-                                                collectionFilter,
-                                                'customMessages.loading',
-                                                'Loading collections',
-                                            )),
+                                            __html: DOMPurify.sanitize(
+                                                get(
+                                                    collectionFilter,
+                                                    'customMessages.loading',
+                                                    'Loading collections',
+                                                ),
+                                            ),
                                         }}
                                     />
                                 );
                             }
                             return (
-                                <UL role="listbox" aria-label="collection-items">
+                                <UL
+                                    role="listbox"
+                                    aria-label="collection-items"
+                                >
                                     {data.length ? null : (
                                         <div
                                             // eslint-disable-next-line
                                             dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(get(
-                                                    collectionFilter,
-                                                    'customMessages.noResults',
-                                                    'No items Found',
-                                                )),
+                                                __html: DOMPurify.sanitize(
+                                                    get(
+                                                        collectionFilter,
+                                                        'customMessages.noResults',
+                                                        'No items Found',
+                                                    ),
+                                                ),
                                             }}
                                         />
                                     )}
@@ -194,96 +193,73 @@ const Filters = ({
                             );
                         }}
                         URLParams
-                        {...get(collectionFilter, 'rsConfig')}
-                        title=""
                     />
                 </React.Fragment>
             );
         }
 
-        if( get(collectionFilter, 'rsConfig.startValue', '') && get(collectionFilter, 'rsConfig.endValue', '')) {
+        if (
+            get(collectionFilter, 'rsConfig.startValue', '') &&
+            get(collectionFilter, 'rsConfig.endValue', '')
+        ) {
             return (
-                <RangeInput
-                    key="filter_by_collection"
-                    componentId="filter_by_collection"
-                    dataField={get(
-                        collectionFilter,
-                        'rsConfig.dataField',
-                        shopifyDefaultFields.size,
-                    )}
+                <ReactiveComponent
+                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.collection`}
+                    componentId="collection"
                     range={{
-                        start: parseInt(get(
-                            collectionFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            collectionFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
+                        start: parseInt(
+                            get(collectionFilter, 'rsConfig.startValue', ''),
+                            10,
+                        ),
+                        end: parseInt(
+                            get(collectionFilter, 'rsConfig.endValue', ''),
+                            10,
+                        ),
                     }}
                     rangeLabels={{
-                        start: get(
-                            collectionFilter,
-                            'rsConfig.startLabel',
-                            ''
-                        ),
-                        end: get(
-                            collectionFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
+                        start: get(collectionFilter, 'rsConfig.startLabel', ''),
+                        end: get(collectionFilter, 'rsConfig.endLabel', ''),
                     }}
-                    showHistogram={get(
+                    filterLabel={get(
                         collectionFilter,
-                        'rsConfig.showHistogram',
-                        false
+                        'rsConfig.title',
+                        'Collection',
                     )}
-                    filterLabel={get(collectionFilter, 'rsConfig.title', 'Collection')}
                     URLParams
                     css={font}
                 />
             );
         }
         return (
-            <DynamicRangeSlider
-                key="filter_by_collection"
-                componentId="filter_by_collection"
-                dataField={get(
+            <ReactiveComponent
+                componentId="collection"
+                preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.collection`}
+                filterLabel={get(
                     collectionFilter,
-                    'rsConfig.dataField',
-                    shopifyDefaultFields.size,
+                    'rsConfig.title',
+                    'Collection',
                 )}
-                showHistogram={get(
-                    collectionFilter,
-                    'rsConfig.showHistogram',
-                    false
-                )}
-                filterLabel={get(collectionFilter, 'rsConfig.title', 'Collection')}
                 URLParams
                 css={font}
             />
-        )
-
+        );
     };
 
-    const renderProductTypeFilter = (font) => {
-        if (!productTypeFilter) {
+    const renderProductTypeFilter = (font, productTypeFilter) => {
+        if (!productTypeFilter.enabled) {
             return null;
         }
 
         const type = get(productTypeFilter, 'rsConfig.filterType', '');
-        if(type === 'list') {
+        if (type === 'list') {
             return (
-                <MultiList
+                <ReactiveComponent
                     componentId="productType"
-                    dataField="product_type.keyword"
+                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.productType`}
                     innerClass={{
-                        input: 'list-input'
+                        input: 'list-input',
                     }}
                     css={font}
-                    showCheckbox={themeType !== 'minimal'}
                     react={{
                         and: [
                             ...getReactDependenciesFromPreferences(
@@ -292,88 +268,80 @@ const Filters = ({
                             ),
                         ],
                     }}
-                    filterLabel="Product Type"
-                    URLParams
-                    aggregationSize={get(
+                    filterLabel={get(
                         productTypeFilter,
-                        'rsConfig.size',
+                        'rsConfig.title',
+                        'Product Type',
                     )}
-                    {...get(productTypeFilter, 'rsConfig')}
-                    title=""
+                    URLParams
                 />
             );
         }
 
-        if( get(productTypeFilter, 'rsConfig.startValue', '') && get(productTypeFilter, 'rsConfig.endValue', '')) {
+        if (
+            get(productTypeFilter, 'rsConfig.startValue', '') &&
+            get(productTypeFilter, 'rsConfig.endValue', '')
+        ) {
             return (
-                <RangeInput
-                    key="productType"
+                <ReactiveComponent
+                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.productType`}
                     componentId="productType"
-                    dataField="product_type"
                     range={{
-                        start: parseInt(get(
-                            productTypeFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            productTypeFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
+                        start: parseInt(
+                            get(productTypeFilter, 'rsConfig.startValue', ''),
+                            10,
+                        ),
+                        end: parseInt(
+                            get(productTypeFilter, 'rsConfig.endValue', ''),
+                            10,
+                        ),
                     }}
                     rangeLabels={{
                         start: get(
                             productTypeFilter,
                             'rsConfig.startLabel',
-                            ''
+                            '',
                         ),
-                        end: get(
-                            productTypeFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
+                        end: get(productTypeFilter, 'rsConfig.endLabel', ''),
                     }}
-                    showHistogram={get(
-                        productTypeFilter,
-                        'rsConfig.showHistogram',
-                        false
-                    )}
                     URLParams
-                    filterLabel={get(productTypeFilter, 'rsConfig.title', 'productType')}
+                    filterLabel={get(
+                        productTypeFilter,
+                        'rsConfig.title',
+                        'productType',
+                    )}
                     css={font}
                 />
             );
         }
         return (
-            <DynamicRangeSlider
-                key="productType"
+            <ReactiveComponent
+                preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.productType`}
                 componentId="productType"
-                dataField={get(
-                    productTypeFilter,
-                    'rsConfig.dataField',
-                    shopifyDefaultFields.size,
-                )}
-                showHistogram={get(
-                    productTypeFilter,
-                    'rsConfig.showHistogram',
-                    false
-                )}
                 URLParams
                 css={font}
-                filterLabel={get(productTypeFilter, 'rsConfig.title', 'productType')}
+                filterLabel={get(
+                    productTypeFilter,
+                    'rsConfig.title',
+                    'productType',
+                )}
             />
-        )
+        );
     };
 
-    const renderColorFilter = (font) => {
+    const renderColorFilter = (font, colorFilter) => {
+        if (!colorFilter.enabled) {
+            return null;
+        }
+
         const type = get(colorFilter, 'rsConfig.filterType', '');
-        if(type === 'list') {
+        if (type === 'list') {
             return (
-                <MultiList
+                <ReactiveComponent
                     componentId="color"
+                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.color`}
                     innerClass={{
-                        input: 'list-input'
+                        input: 'list-input',
                     }}
                     react={{
                         and: [
@@ -384,9 +352,7 @@ const Filters = ({
                             ),
                         ],
                     }}
-                    showSearch={false}
                     css={font}
-                    showCheckbox={themeType !== 'minimal'}
                     render={({ loading, error, data, handleChange, value }) => {
                         const values = [...new Set(Object.keys(value))];
                         const browserStringColors = Object.keys(browserColors);
@@ -396,32 +362,32 @@ const Filters = ({
                                     css={loaderStyle}
                                     // eslint-disable-next-line
                                     dangerouslySetInnerHTML={{
-                                        __html: DOMPurify.sanitize(get(
-                                            colorFilter,
-                                            'customMessages.noResults',
-                                            'Fetching Colors',
-                                        )),
+                                        __html: DOMPurify.sanitize(
+                                            get(
+                                                colorFilter,
+                                                'customMessages.noResults',
+                                                'Fetching Colors',
+                                            ),
+                                        ),
                                     }}
                                 />
                             );
                         }
                         if (error) {
-                            return (
-                                <div>
-                                    No colors found!
-                                </div>
-                            );
+                            return <div>No colors found!</div>;
                         }
                         if (data.length === 0) {
                             return (
                                 <div
                                     // eslint-disable-next-line
                                     dangerouslySetInnerHTML={{
-                                        __html: DOMPurify.sanitize(get(
-                                            colorFilter,
-                                            'customMessages.noResults',
-                                            'Fetching Colors',
-                                        )),
+                                        __html: DOMPurify.sanitize(
+                                            get(
+                                                colorFilter,
+                                                'customMessages.noResults',
+                                                'Fetching Colors',
+                                            ),
+                                        ),
                                     }}
                                 />
                             );
@@ -454,7 +420,9 @@ const Filters = ({
                                         >
                                             {/* eslint-disable-next-line */}
                                             <div
-                                                onClick={() => handleChange(item.key)}
+                                                onClick={() =>
+                                                    handleChange(item.key)
+                                                }
                                                 style={{
                                                     width: '100%',
                                                     height: 30,
@@ -463,7 +431,9 @@ const Filters = ({
                                                     cursor: 'pointer',
                                                     border:
                                                         values &&
-                                                        values.includes(item.key)
+                                                        values.includes(
+                                                            item.key,
+                                                        )
                                                             ? `2px solid ${primaryColor}`
                                                             : `1px solid #ccc`,
                                                 }}
@@ -479,107 +449,75 @@ const Filters = ({
                             css={loaderStyle}
                             // eslint-disable-next-line
                             dangerouslySetInnerHTML={{
-                                __html: DOMPurify.sanitize(get(
-                                    colorFilter,
-                                    'customMessages.loading',
-                                    'Loading colors',
-                                )),
+                                __html: DOMPurify.sanitize(
+                                    get(
+                                        colorFilter,
+                                        'customMessages.loading',
+                                        'Loading colors',
+                                    ),
+                                ),
                             }}
                         />
                     }
                     URLParams
-                    aggregationSize={get(
-                        colorFilter,
-                        'rsConfig.size',
-                    )}
-                    {...get(colorFilter, 'rsConfig')}
-                    dataField={get(
-                        colorFilter,
-                        'rsConfig.dataField',
-                        shopifyDefaultFields.color,
-                    )}
-                    title=""
                 />
             );
         }
 
-        if( get(colorFilter, 'rsConfig.startValue', '') && get(colorFilter, 'rsConfig.endValue', '')) {
+        if (
+            get(colorFilter, 'rsConfig.startValue', '') &&
+            get(colorFilter, 'rsConfig.endValue', '')
+        ) {
             return (
-                <RangeInput
-                    key="color"
+                <ReactiveComponent
                     componentId="color"
-                    dataField={get(
-                        colorFilter,
-                        'rsConfig.dataField',
-                        shopifyDefaultFields.size,
-                    )}
+                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.color`}
                     range={{
-                        start: parseInt(get(
-                            colorFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            colorFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
+                        start: parseInt(
+                            get(colorFilter, 'rsConfig.startValue', ''),
+                            10,
+                        ),
+                        end: parseInt(
+                            get(colorFilter, 'rsConfig.endValue', ''),
+                            10,
+                        ),
                     }}
                     rangeLabels={{
-                        start: get(
-                            colorFilter,
-                            'rsConfig.startLabel',
-                            ''
-                        ),
-                        end: get(
-                            colorFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
+                        start: get(colorFilter, 'rsConfig.startLabel', ''),
+                        end: get(colorFilter, 'rsConfig.endLabel', ''),
                     }}
-                    showHistogram={get(
-                        colorFilter,
-                        'rsConfig.showHistogram',
-                        false
-                    )}
                     URLParams
                     css={font}
                     filterLabel={get(colorFilter, 'rsConfig.title', 'color')}
                 />
-            )
+            );
         }
         return (
-            <DynamicRangeSlider
-                key="color"
+            <ReactiveComponent
+                preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.color`}
                 componentId="color"
-                dataField={get(
-                    colorFilter,
-                    'rsConfig.dataField',
-                    shopifyDefaultFields.size,
-                )}
-                showHistogram={get(
-                    colorFilter,
-                    'rsConfig.showHistogram',
-                    false
-                )}
                 URLParams
                 filterLabel={get(colorFilter, 'rsConfig.title', 'color')}
                 css={font}
             />
-        )
+        );
+    };
 
-    }
+    const renderSizeFilter = (font, sizeFilter) => {
+        if (!sizeFilter.enabled) {
+            return null;
+        }
 
-    const renderSizeFilter = (font) => {
         const type = get(sizeFilter, 'rsConfig.filterType', '');
 
-        if(type === 'list') {
+        if (type === 'list') {
             return (
                 <React.Fragment>
-                    <MultiList
+                    <ReactiveComponent
                         componentId="size"
+                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.size`}
                         innerClass={{
-                            input: 'list-input'
+                            input: 'list-input',
                         }}
                         react={{
                             and: [
@@ -596,11 +534,13 @@ const Filters = ({
                                 css={loaderStyle}
                                 // eslint-disable-next-line
                                 dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(get(
-                                        sizeFilter,
-                                        'customMessages.loading',
-                                        'Loading sizes',
-                                    )),
+                                    __html: DOMPurify.sanitize(
+                                        get(
+                                            sizeFilter,
+                                            'customMessages.loading',
+                                            'Loading sizes',
+                                        ),
+                                    ),
                                 }}
                             />
                         }
@@ -608,177 +548,123 @@ const Filters = ({
                             <div
                                 // eslint-disable-next-line
                                 dangerouslySetInnerHTML={{
-                                    __html: DOMPurify.sanitize(get(
-                                        sizeFilter,
-                                        'customMessages.noResults',
-                                        'No sizes Found',
-                                    )),
+                                    __html: DOMPurify.sanitize(
+                                        get(
+                                            sizeFilter,
+                                            'customMessages.noResults',
+                                            'No sizes Found',
+                                        ),
+                                    ),
                                 }}
                             />
                         )}
-                        showCheckbox={themeType !== 'minimal'}
                         URLParams
-                        aggregationSize={get(
-                            sizeFilter,
-                            'rsConfig.size',
-                        )}
-                        {...get(sizeFilter, 'rsConfig')}
-                        dataField={get(
-                            sizeFilter,
-                            'rsConfig.dataField',
-                            shopifyDefaultFields.size,
-                        )}
-                        title=""
                     />
                 </React.Fragment>
             );
         }
         let dateProps = {};
-        if(type === 'date') {
+        if (type === 'date') {
             dateProps = {
                 queryFormat: 'date',
-            }
+            };
         }
-        if( get(sizeFilter, 'rsConfig.startValue', '') && get(sizeFilter, 'rsConfig.endValue', '')) {
+        if (
+            get(sizeFilter, 'rsConfig.startValue', '') &&
+            get(sizeFilter, 'rsConfig.endValue', '')
+        ) {
             return (
-                <RangeInput
-                    key="size"
+                <ReactiveComponent
+                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.size`}
                     componentId="size"
-                    dataField={get(
-                        sizeFilter,
-                        'rsConfig.dataField',
-                        shopifyDefaultFields.size,
-                    )}
                     range={{
-                        start: type === 'date' ?
-                            new Date(get(
-                                sizeFilter,
-                                'rsConfig.startValue',
-                                ''
-                            )) :
-                            parseInt(get(
-                                sizeFilter,
-                                'rsConfig.startValue',
-                                ''
-                            ), 10),
-                        end: type === 'date' ?
-                            new Date(get(
-                                sizeFilter,
-                                'rsConfig.endValue',
-                                ''
-                            )) :
-                            parseInt(get(
-                                sizeFilter,
-                                'rsConfig.endValue',
-                                ''
-                            ), 10),
+                        start:
+                            type === 'date'
+                                ? new Date(
+                                      get(
+                                          sizeFilter,
+                                          'rsConfig.startValue',
+                                          '',
+                                      ),
+                                  )
+                                : parseInt(
+                                      get(
+                                          sizeFilter,
+                                          'rsConfig.startValue',
+                                          '',
+                                      ),
+                                      10,
+                                  ),
+                        end:
+                            type === 'date'
+                                ? new Date(
+                                      get(sizeFilter, 'rsConfig.endValue', ''),
+                                  )
+                                : parseInt(
+                                      get(sizeFilter, 'rsConfig.endValue', ''),
+                                      10,
+                                  ),
                     }}
                     rangeLabels={{
-                        start: get(
-                            sizeFilter,
-                            'rsConfig.startLabel',
-                            ''
-                        ),
-                        end: get(
-                            sizeFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
+                        start: get(sizeFilter, 'rsConfig.startLabel', ''),
+                        end: get(sizeFilter, 'rsConfig.endLabel', ''),
                     }}
-                    showHistogram={get(
-                        sizeFilter,
-                        'rsConfig.showHistogram',
-                        false
-                    )}
                     URLParams
                     css={font}
                     filterLabel={get(sizeFilter, 'rsConfig.title', 'size')}
-                    {...dateProps}
                 />
             );
         }
         return (
-            <DynamicRangeSlider
-                key="size"
+            <ReactiveComponent
+                preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.size`}
                 componentId="size"
-                dataField={get(
-                    sizeFilter,
-                    'rsConfig.dataField',
-                    shopifyDefaultFields.size,
-                )}
-                showHistogram={get(
-                    sizeFilter,
-                    'rsConfig.showHistogram',
-                    false
-                )}
                 URLParams
                 css={font}
                 filterLabel={get(sizeFilter, 'rsConfig.title', 'size')}
                 {...dateProps}
             />
-        )
+        );
+    };
 
-    }
+    const renderPriceFilter = (font, priceFilter) => {
+        if (!priceFilter.enabled) {
+            return null;
+        }
 
-    const renderPriceFilter = (font) => {
-        if( get(priceFilter, 'rsConfig.startValue', '') && get(priceFilter, 'rsConfig.endValue', '')) {
+        if (
+            get(priceFilter, 'rsConfig.startValue', '') &&
+            get(priceFilter, 'rsConfig.endValue', '')
+        ) {
             return (
-                <RangeInput
+                <ReactiveComponent
                     componentId="price"
-                    dataField={get(
-                        priceFilter,
-                        'rsConfig.dataField',
-                        'variants.price',
-                    )}
+                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.price`}
                     range={{
-                        start: parseInt(get(
-                            priceFilter,
-                            'rsConfig.startValue',
-                            ''
-                        ), 10),
-                        end: parseInt(get(
-                            priceFilter,
-                            'rsConfig.endValue',
-                            ''
-                        ), 10),
+                        start: parseInt(
+                            get(priceFilter, 'rsConfig.startValue', ''),
+                            10,
+                        ),
+                        end: parseInt(
+                            get(priceFilter, 'rsConfig.endValue', ''),
+                            10,
+                        ),
                     }}
                     rangeLabels={{
-                        start: get(
-                            priceFilter,
-                            'rsConfig.startLabel',
-                            ''
-                        ),
-                        end: get(
-                            priceFilter,
-                            'rsConfig.endLabel',
-                            ''
-                        ),
+                        start: get(priceFilter, 'rsConfig.startLabel', ''),
+                        end: get(priceFilter, 'rsConfig.endLabel', ''),
                     }}
-                    showHistogram={get(
-                        priceFilter,
-                        'rsConfig.showHistogram',
-                        false
-                    )}
                     URLParams
                     css={font}
                     filterLabel={get(priceFilter, 'rsConfig.title', 'size')}
                 />
-            )
+            );
         }
 
         return (
-            <DynamicRangeSlider
+            <ReactiveComponent
                 componentId="price"
-                dataField={get(
-                    priceFilter,
-                    'rsConfig.dataField',
-                    'variants.price',
-                )}
-                showHistogram={get(
-                    priceFilter,
-                    'rsConfig.showHistogram',
-                    false
-                )}
+                preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.price`}
                 URLParams
                 css={font}
                 style={{
@@ -789,27 +675,19 @@ const Filters = ({
                         css={loaderStyle}
                         // eslint-disable-next-line
                         dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(get(
-                                priceFilter,
-                                'customMessages.loading',
-                                '',
-                            )),
+                            __html: DOMPurify.sanitize(
+                                get(priceFilter, 'customMessages.loading', ''),
+                            ),
                         }}
                     />
                 }
                 rangeLabels={(min, max) => ({
-                    start: `${
-                        currency
-                    } ${min.toFixed(2)}`,
-                    end: `${
-                        currency
-                    } ${max.toFixed(2)}`,
+                    start: `${currency} ${min.toFixed(2)}`,
+                    end: `${currency} ${max.toFixed(2)}`,
                 })}
-                {...priceFilter.rsConfig}
-                title=""
             />
-        )
-    }
+        );
+    };
 
     const queryFormatMillisecondsMap = {
         // the below are arranged in asscending order
@@ -821,11 +699,18 @@ const Filters = ({
         month: 2629746000,
         quarter: 7889238000,
         year: 31556952000,
-    }
+    };
 
-    const getCalendarIntervalErrorMessage = (totalRange, calendarInterval = 'minute') => {
-        const queryFormatMillisecondsMapKeys = Object.keys(queryFormatMillisecondsMap);
-        const indexOfCurrentCalendarInterval = queryFormatMillisecondsMapKeys.indexOf(calendarInterval);
+    const getCalendarIntervalErrorMessage = (
+        totalRange,
+        calendarInterval = 'minute',
+    ) => {
+        const queryFormatMillisecondsMapKeys = Object.keys(
+            queryFormatMillisecondsMap,
+        );
+        const indexOfCurrentCalendarInterval = queryFormatMillisecondsMapKeys.indexOf(
+            calendarInterval,
+        );
         if (indexOfCurrentCalendarInterval === -1) {
             console.error('Invalid calendarInterval Passed');
         }
@@ -839,8 +724,12 @@ const Filters = ({
             index < queryFormatMillisecondsMapKeys.length;
             index += 1
         ) {
-            if (totalRange / Object.values(queryFormatMillisecondsMap)[index] <= 100) {
-                const calendarIntervalKey = queryFormatMillisecondsMapKeys[index];
+            if (
+                totalRange / Object.values(queryFormatMillisecondsMap)[index] <=
+                100
+            ) {
+                const calendarIntervalKey =
+                    queryFormatMillisecondsMapKeys[index];
                 return {
                     errorMessage: `Please pass calendarInterval prop with value greater than or equal to a \`${calendarIntervalKey}\` for a meaningful resolution of histogram.`,
                     calculatedCalendarInterval: calendarIntervalKey,
@@ -854,28 +743,38 @@ const Filters = ({
         }; // we return the highest possible interval to shorten then interval value
     };
 
+    const componentSettings = get(
+        pageSettings,
+        `pages.${pageSettings.currentPage}.componentSettings`,
+        {},
+    );
+    const staticFacets = [
+        'productType',
+        'collection',
+        'color',
+        'size',
+        'price',
+    ];
+    let filters = Object.keys(componentSettings).filter(
+        (i) => i !== 'search' && i !== 'result' && !staticFacets.includes(i),
+    );
+    filters = [...staticFacets, ...filters];
+
     return (
         <div
             css={{
                 display: 'grid',
-                gridTemplateColumns:
-                    'repeat(auto-fit, minmax (250px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax (250px, 1fr))',
                 gridGap: 0,
                 alignSelf: 'start',
-                border:
-                    themeType === 'classic'
-                        ? '1px solid #eee'
-                        : 0,
+                border: themeType === 'classic' ? '1px solid #eee' : 0,
                 [mediaMax.medium]: {
                     display: toggleFilters ? 'grid' : 'none',
                     gridTemplateColumns: '1fr',
                 },
                 boxShadow:
                     themeType === 'minimal'
-                        ? `0 0 4px ${get(
-                            theme,
-                            'colors.titleColor',
-                        )}1a`
+                        ? `0 0 4px ${get(theme, 'colors.titleColor')}1a`
                         : 0,
                 [mediaMax.medium]: {
                     display: toggleFilters ? 'grid' : 'none',
@@ -888,241 +787,135 @@ const Filters = ({
                     preferences,
                 )}
             >
-                {productTypeFilter ? (
-                    <Panel
-                        header={
-                            <span
-                                style={{
-                                    color: get(
-                                        theme,
-                                        'colors.titleColor',
-                                    ),
-                                    fontWeight: 'bold',
-                                    fontSize: '15px',
-                                }}
-                            >
-                                {get(
-                                    productTypeFilter,
-                                    'rsConfig.title',
-                                    'Product Type',
-                                )}
-                            </span>
-                        }
-                        showArrow={themeType !== 'minimal'}
-                        key="productType"
-                        css={getFontFamily}
-                        className="filter"
-                    >
-                        {renderProductTypeFilter(
-                            getFontFamily,
-                        )}
-                    </Panel>
-                ) : null}
-                {collectionFilter ? (
-                    <Panel
-                        header={
-                            <span
-                                style={{
-                                    color: get(
-                                        theme,
-                                        'colors.titleColor',
-                                    ),
-                                    fontWeight: 'bold',
-                                    fontSize: '15px',
-                                }}
-                            >
-                                {get(
-                                    collectionFilter,
-                                    'rsConfig.title',
-                                    'Collections',
-                                )}
-                            </span>
-                        }
-                        showArrow={themeType !== 'minimal'}
-                        key="collection"
-                        css={getFontFamily}
-                        className="filter"
-                    >
-                        {renderCollectionFilter(
-                            getFontFamily,
-                        )}
-                    </Panel>
-                ) : null}
-                {colorFilter ? (
-                    <Panel
-                        className="filter"
-                        header={
-                            <span
-                                style={{
-                                    color: get(
-                                        theme,
-                                        'colors.titleColor',
-                                    ),
-                                    fontWeight: 'bold',
-                                    fontSize: '15px',
-                                }}
-                            >
-                                {get(
-                                    colorFilter,
-                                    'rsConfig.title',
-                                    'Color',
-                                )}
-                            </span>
-                        }
-                        showArrow={themeType !== 'minimal'}
-                        key="color"
-                        css={getFontFamily}
-                    >
-                        {renderColorFilter(
-                            getFontFamily,
-                        )}
-                    </Panel>
-                ) : null}
-                {sizeFilter ? (
-                    <Panel
-                        className="filter"
-                        header={
-                            <span
-                                style={{
-                                    color: get(
-                                        theme,
-                                        'colors.titleColor',
-                                    ),
-                                    fontWeight: 'bold',
-                                    fontSize: '15px',
-                                }}
-                            >
-                                {get(
-                                    sizeFilter,
-                                    'rsConfig.title',
-                                    'Size',
-                                )}
-                            </span>
-                        }
-                        showArrow={themeType !== 'minimal'}
-                        key="size"
-                        css={getFontFamily}
-                    >
-                        {renderSizeFilter(
-                            getFontFamily,
-                        )}
-                    </Panel>
-                ) : null}
-                {priceFilter ? (
-                    <Panel
-                        header={
-                            <span
-                                style={{
-                                    color: get(
-                                        theme,
-                                        'colors.titleColor',
-                                    ),
-                                    fontWeight: 'bold',
-                                    fontSize: '15px',
-                                }}
-                            >
-                                {get(
-                                    priceFilter,
-                                    'rsConfig.title',
-                                    'Price',
-                                )}
-                            </span>
-                        }
-                        showArrow={themeType !== 'minimal'}
-                        key="price"
-                        css={getFontFamily}
-                        className="filter"
-                    >
-                        {renderPriceFilter(
-                            getFontFamily,
-                        )}
-                    </Panel>
-                ) : null}
-                {dynamicFacets.map((listComponent) => {
-                    const type = listComponent?.rsConfig?.filterType;
+                {filters.map((filter) => {
+                    const facet = componentSettings[filter];
+                    const type = get(facet, 'rsConfig.filterType', '');
                     let dateProps = {};
-                    const calendarInterval = get(
-                        listComponent,
-                        'rsConfig.calendarInterval',
-                        'year'
-                    )
-                    if(type === 'date') {
+
+                    if (type === 'date') {
+                        const calendarInterval = get(
+                            facet,
+                            'rsConfig.calendarInterval',
+                            'year',
+                        );
                         dateProps = {
                             queryFormat: 'date',
                             // eslint-disable-next-line
-                            calendarInterval: calendarInterval ? calendarInterval : getCalendarIntervalErrorMessage(
-                                new Date(get(
-                                    listComponent,
-                                    'rsConfig.startValue',
-                                    ''
-                                ))
-                                -
-                                new Date(get(
-                                    listComponent,
-                                    'rsConfig.endValue',
-                                    ''
-                                ))
-                            ).calculatedCalendarInterval
-                        }
+                            calendarInterval: calendarInterval
+                                ? calendarInterval
+                                : getCalendarIntervalErrorMessage(
+                                      new Date(
+                                          get(facet, 'rsConfig.startValue', ''),
+                                      ) -
+                                          new Date(
+                                              get(
+                                                  facet,
+                                                  'rsConfig.endValue',
+                                                  '',
+                                              ),
+                                          ),
+                                  ).calculatedCalendarInterval,
+                        };
                     }
+                    if (!facet.enabled) return null;
+
+                    if (filter === 'productType') {
+                        return (
+                            <Panel
+                                showArrow={themeType !== 'minimal'}
+                                key="productType"
+                                css={getFontFamily}
+                                className="filter"
+                            >
+                                {renderProductTypeFilter(getFontFamily, facet)}
+                            </Panel>
+                        );
+                    }
+
+                    if (filter === 'collection') {
+                        return (
+                            <Panel
+                                showArrow={themeType !== 'minimal'}
+                                key="collection"
+                                css={getFontFamily}
+                                className="filter"
+                            >
+                                {renderCollectionFilter(getFontFamily, facet)}
+                            </Panel>
+                        );
+                    }
+
+                    if (filter === 'color') {
+                        return (
+                            <Panel
+                                className="filter"
+                                showArrow={themeType !== 'minimal'}
+                                key="color"
+                                css={getFontFamily}
+                            >
+                                {renderColorFilter(getFontFamily, facet)}
+                            </Panel>
+                        );
+                    }
+
+                    if (filter === 'size') {
+                        return (
+                            <Panel
+                                className="filter"
+                                showArrow={themeType !== 'minimal'}
+                                key="size"
+                                css={getFontFamily}
+                            >
+                                {renderSizeFilter(getFontFamily, facet)}
+                            </Panel>
+                        );
+                    }
+
+                    if (filter === 'price') {
+                        return (
+                            <Panel
+                                showArrow={themeType !== 'minimal'}
+                                key="price"
+                                css={getFontFamily}
+                                className="filter"
+                            >
+                                {renderPriceFilter(getFontFamily, facet)}
+                            </Panel>
+                        );
+                    }
+
                     return (
                         <Panel
-                            header={
-                                <span
-                                    style={{
-                                        color: get(
-                                            theme,
-                                            'colors.titleColor',
-                                        ),
-                                        fontWeight: 'bold',
-                                        fontSize: '15px',
-                                    }}
-                                >
-                                    {get(
-                                        listComponent,
-                                        'rsConfig.title',
-                                    )}
-                                </span>
-                            }
                             showArrow={themeType !== 'minimal'}
-                            key={get(
-                                listComponent,
-                                'rsConfig.componentId',
-                            )}
+                            key={filter}
                             css={{
                                 ...getFontFamily,
-                                maxWidth: isMobile
-                                    ? 'none'
-                                    : '298px',
+                                maxWidth: isMobile ? 'none' : '298px',
                             }}
                             className="filter"
                         >
-                            {
+                            {facet.enabled ? (
                                 // eslint-disable-next-line no-nested-ternary
                                 type === 'list' ? (
-                                    <MultiList
-                                        key={get(
-                                            listComponent,
-                                            'rsConfig.componentId',
-                                        )}
+                                    <ReactiveComponent
+                                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
+                                        componentId={filter}
                                         innerClass={{
-                                            input: 'list-input'
+                                            input: 'list-input',
                                         }}
-                                        componentId={get(
-                                            listComponent,
-                                            'rsConfig.componentId',
-                                        )}
                                         URLParams
                                         loader={
                                             <div
                                                 css={loaderStyle}
                                                 // eslint-disable-next-line
                                                 dangerouslySetInnerHTML={{
-                                                    __html: DOMPurify.sanitize(get(
-                                                        listComponent,
-                                                        'customMessages.loading',
-                                                        'Loading options',
-                                                    )),
+                                                    __html: DOMPurify.sanitize(
+                                                        get(
+                                                            facet,
+                                                            'customMessages.loading',
+                                                            'Loading options',
+                                                        ),
+                                                    ),
                                                 }}
                                             />
                                         }
@@ -1130,167 +923,116 @@ const Filters = ({
                                             <div
                                                 // eslint-disable-next-line
                                                 dangerouslySetInnerHTML={{
-                                                    __html: DOMPurify.sanitize(get(
-                                                        listComponent,
-                                                        'customMessages.noResults',
-                                                        'No items Found',
-                                                    )),
+                                                    __html: DOMPurify.sanitize(
+                                                        get(
+                                                            facet,
+                                                            'customMessages.noResults',
+                                                            'No items Found',
+                                                        ),
+                                                    ),
                                                 }}
                                             />
-                                        )}
-                                        showCount={
-                                            themeType !== 'minimal'
-                                        }
-                                        showCheckbox={
-                                            themeType !== 'minimal'
-                                        }
-                                        aggregationSize={get(
-                                            listComponent,
-                                            'rsConfig.size',
-                                        )}
-                                        {...listComponent.rsConfig}
-                                        dataField={get(
-                                            listComponent,
-                                            'rsConfig.dataField',
                                         )}
                                         css={getFontFamily}
                                         react={{
                                             and: getReactDependenciesFromPreferences(
                                                 preferences,
-                                                get(
-                                                    listComponent,
-                                                    'rsConfig.componentId',
-                                                ),
+                                                filter,
                                             ),
                                         }}
                                         filterLabel={get(
-                                            listComponent,
-                                            'rsConfig.filterLabel',
-                                            ''
-                                            ) || get(
-                                                listComponent,
-                                                'rsConfig.title',
-                                                ''
-                                            )
-                                        }
-                                        title=""
+                                            facet,
+                                            'rsConfig.title',
+                                            '',
+                                        )}
+                                    />
+                                ) : facet?.rsConfig?.startValue &&
+                                  facet?.rsConfig?.endValue ? (
+                                    <ReactiveComponent
+                                        componentId={get(
+                                            facet,
+                                            'rsConfig.componentId',
+                                            '',
+                                        )}
+                                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
+                                        URLParams
+                                        css={getFontFamily}
+                                        filterLabel={get(
+                                            facet,
+                                            'rsConfig.title',
+                                            '',
+                                        )}
+                                        range={{
+                                            start:
+                                                type === 'date'
+                                                    ? new Date(
+                                                          get(
+                                                              facet,
+                                                              'rsConfig.startValue',
+                                                              '',
+                                                          ),
+                                                      )
+                                                    : parseInt(
+                                                          get(
+                                                              facet,
+                                                              'rsConfig.startValue',
+                                                              '',
+                                                          ),
+                                                          10,
+                                                      ),
+                                            end:
+                                                type === 'date'
+                                                    ? new Date(
+                                                          get(
+                                                              facet,
+                                                              'rsConfig.endValue',
+                                                              '',
+                                                          ),
+                                                      )
+                                                    : parseInt(
+                                                          get(
+                                                              facet,
+                                                              'rsConfig.endValue',
+                                                              '',
+                                                          ),
+                                                          10,
+                                                      ),
+                                        }}
+                                        rangeLabels={{
+                                            start: get(
+                                                facet,
+                                                'rsConfig.startLabel',
+                                                '',
+                                            ),
+                                            end: get(
+                                                facet,
+                                                'rsConfig.endLabel',
+                                                '',
+                                            ),
+                                        }}
+                                        {...dateProps}
                                     />
                                 ) : (
-                                    (listComponent?.rsConfig?.startValue && listComponent?.rsConfig?.endValue) ? (
-                                        <RangeInput
-                                            key={get(
-                                                listComponent,
-                                                'rsConfig.componentId',
-                                                ''
-                                            )}
-                                            componentId={get(
-                                                listComponent,
-                                                'rsConfig.componentId',
-                                                ''
-                                            )}
-                                            dataField={get(
-                                                listComponent,
-                                                'rsConfig.dataField',
-                                                ''
-                                            )}
-                                            range={{
-                                                start: type === 'date' ?
-                                                new Date(get(
-                                                    listComponent,
-                                                    'rsConfig.startValue',
-                                                    ''
-                                                )) : parseInt(get(
-                                                    listComponent,
-                                                    'rsConfig.startValue',
-                                                    ''
-                                                ), 10),
-                                                end: type === 'date' ?
-                                                new Date(get(
-                                                    listComponent,
-                                                    'rsConfig.endValue',
-                                                    ''
-                                                )) : parseInt(get(
-                                                    listComponent,
-                                                    'rsConfig.endValue',
-                                                    ''
-                                                ), 10),
-                                            }}
-                                            rangeLabels={{
-                                                start: get(
-                                                    listComponent,
-                                                    'rsConfig.startLabel',
-                                                    ''
-                                                ),
-                                                end: get(
-                                                    listComponent,
-                                                    'rsConfig.endLabel',
-                                                    ''
-                                                ),
-                                            }}
-                                            showHistogram={get(
-                                                listComponent,
-                                                'rsConfig.showHistogram',
-                                                false
-                                            )}
-                                            URLParams
-                                            css={getFontFamily}
-                                            filterLabel={get(
-                                                    listComponent,
-                                                    'rsConfig.filterLabel',
-                                                    ''
-                                                ) || get(
-                                                    listComponent,
-                                                    'rsConfig.title',
-                                                    ''
-                                                )
-                                            }
-                                            {...dateProps}
-                                        />
-                                    ) : (
-                                        <DynamicRangeSlider
-                                            key={get(
-                                                listComponent,
-                                                'rsConfig.componentId',
-                                                ''
-                                            )}
-                                            componentId={get(
-                                                listComponent,
-                                                'rsConfig.componentId',
-                                                ''
-                                            )}
-                                            dataField={get(
-                                                listComponent,
-                                                'rsConfig.dataField',
-                                                ''
-                                            )}
-                                            showHistogram={get(
-                                                listComponent,
-                                                'rsConfig.showHistogram',
-                                                false
-                                            )}
-                                            URLParams
-                                            css={getFontFamily}
-                                            filterLabel={get(
-                                                listComponent,
-                                                'rsConfig.filterLabel',
-                                                ''
-                                                ) || get(
-                                                    listComponent,
-                                                    'rsConfig.title',
-                                                    ''
-                                                )
-                                            }
-                                            {...dateProps}
-                                        />
-                                    )
+                                    <ReactiveComponent
+                                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
+                                        componentId={filter}
+                                        URLParams
+                                        css={getFontFamily}
+                                        filterLabel={get(
+                                            facet,
+                                            'rsConfig.title',
+                                            '',
+                                        )}
+                                        {...dateProps}
+                                    />
                                 )
-                            }
+                            ) : null}
                         </Panel>
-                    )}
-                )}
+                    );
+                })}
             </Collapse>
         </div>
-    )
-}
+    );
+};
 
 export default Filters;

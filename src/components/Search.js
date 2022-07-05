@@ -5,30 +5,30 @@ import React, { Component } from 'react';
 import {
     ReactiveBase,
     SearchBox,
-    ReactiveList,
+
     SelectedFilters,
     ReactiveComponent,
 } from '@appbaseio/reactivesearch';
 import get from 'lodash.get';
 import { string, bool } from 'prop-types';
-import { Card, Collapse, Button, Icon, Affix } from 'antd';
+import { Button, Icon, Affix } from 'antd';
 import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
 import Suggestion from './Suggestion';
 import ResultsLayout from './ResultsLayout';
+// import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
+import Filters from './Filters';
 import {
     defaultPreferences,
     getReactDependenciesFromPreferences,
     getSearchPreferences,
 } from '../utils';
-import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
-import Filters from './Filters';
 
 const DOMPurify = createDOMPurify(window);
 
 const resultRef = React.createRef();
 
-const searchStyles = ({ titleColor, primaryColor }) => css`
+const searchStyles = ({ titleColor }) => css`
     .section-header > h3 {
         margin: 8px 0;
         color: ${titleColor};
@@ -303,6 +303,7 @@ class Search extends Component {
         this.resultSettings = get(this.preferences, 'resultSettings');
         this.searchSettings = get(this.preferences, 'searchSettings');
         this.globalSettings = get(this.preferences, 'globalSettings', {});
+        this.pageSettings = get(this.preferences, 'pageSettings', {});
         this.dynamicFacets =
             get(this.preferences, 'facetSettings.dynamicFacets') || [];
         this.staticFacets =
@@ -417,7 +418,6 @@ class Search extends Component {
 
     renderCategorySearch = (categorySearchProps) => {
         const { toggleFilters, value } = this.state;
-        const { isPreview } = this.props;
         const searchIcon = get(this.searchSettings, 'searchButton.icon', '');
         const searchText = get(
             this.searchSettings,
@@ -427,8 +427,8 @@ class Search extends Component {
 
         return (
             <SearchBox
-                // Don't change the component id it is tied to shopify
-                componentId="q"
+                preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.search`}
+                componentId="search"
                 filterLabel="Search"
                 className="search"
                 debounce={100}
@@ -477,10 +477,8 @@ class Search extends Component {
                         />
                     );
                 }}
-                {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
                 showDistinctSuggestions
-                highlight={get(this.resultSettings, 'resultHighlight', false)}
             />
         );
     };
@@ -510,6 +508,7 @@ class Search extends Component {
                 }}
                 mapKey={mapsAPIkey}
                 mapLibraries={['visualization', 'places']}
+                preferences={this.preferences}
                 setSearchParams={
                     isPreview
                         ? () => {}
@@ -598,6 +597,7 @@ class Search extends Component {
                             gridGap: 20,
                         }}
                     >
+
                         <Filters
                             theme={this.theme}
                             isMobile={this.isMobile}
@@ -613,6 +613,7 @@ class Search extends Component {
                             getFontFamily={this.getFontFamily()}
                             collectionFilter={this.collectionFilter}
                             productTypeFilter={this.productTypeFilter}
+                            pageSettings={this.pageSettings}
                         />
 
                         <div>
@@ -630,7 +631,7 @@ class Search extends Component {
                                     <SelectedFilters showClearAll="default" />
                                 </div>
                             ) : null}
-                            <ReactiveComponent
+                            {/* <ReactiveComponent
                                 componentId="filter_by_product"
                                 customQuery={() =>
                                     this.exportType === 'shopify'
@@ -643,16 +644,18 @@ class Search extends Component {
                                           }
                                         : null
                                 }
-                            />
+                            /> */}
+
                             {this.themeType === 'geo' ? (
-                                <GeoResultsLayout
-                                    isPreview={isPreview}
-                                />
+                                <>Geo Results</>
+                                // <GeoResultsLayout
+                                //     isPreview={isPreview}
+                                // />
 
                             ) : (
-                                <ReactiveList
+                                <ReactiveComponent
+                                    preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}
                                     componentId="results"
-                                    dataField="title"
                                     ref={resultRef}
                                     defaultQuery={() => ({
                                         track_total_hits: true,
@@ -712,7 +715,7 @@ class Search extends Component {
                                         noResults: 'custom-no-results',
                                         pagination: 'custom-pagination',
                                     }}
-                                    {...this.resultSettings.rsConfig}
+
                                     css={reactiveListCls(toggleFilters, this.theme)}
                                     react={{
                                         and: [
