@@ -24,7 +24,6 @@ import Suggestion from './Suggestion';
 import LayoutSwitch from './LayoutSwitch';
 import ResultsLayout from './ResultsLayout';
 import {
-    browserColors,
     defaultPreferences,
     getReactDependenciesFromPreferences,
     getSearchPreferences,
