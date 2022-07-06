@@ -726,6 +726,16 @@ class Search extends Component {
                                                     triggerClickAnalytics
                                                 }
                                                 isPreview={isPreview}
+                                                resultSettings={
+                                                    this.resultSettings
+                                                }
+                                                searchSettings={
+                                                    this.searchSettings
+                                                }
+                                                themeSettings={
+                                                    this.themeSettings
+                                                }
+                                                currency={this.currency}
                                                 getFontFamily={this.getFontFamily()}
                                             />
                                         ) : null;

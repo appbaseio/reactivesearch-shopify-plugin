@@ -8,8 +8,8 @@ import get from 'lodash.get';
 import strip from 'striptags';
 import Truncate from 'react-truncate';
 import {
-    ReactiveGoogleMap,
     ReactiveOpenStreetMap,
+    ReactiveComponent,
 } from '@appbaseio/reactivemaps';
 import { mediaMax } from '../../utils/media';
 import ListLayout from './ListLayout';
@@ -19,7 +19,6 @@ import {
     defaultPreferences,
     getReactDependenciesFromPreferences,
 } from '../../utils';
-import { ReactiveComponent } from '@appbaseio/reactivesearch';
 
 export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
