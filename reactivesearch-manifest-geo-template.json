@@ -1,0 +1,25 @@
+{
+    "image": "https://imgur.com/eU7nrhX.png",
+    "name": "geo",
+    "description": "Theme appropriate for a geo/ map search UI",
+    "section": "geo",
+    "section_label": "<h3>Geo Search</h3>",
+    "excludePaths": [
+        "/.eslintignore",
+        "/.eslintrc.js",
+        "/.gitignore",
+        "/.nvmrc",
+        "/.prettierrc.js",
+        "/.vscode",
+        "/README.md",
+        "/build",
+        "/config-overrides.js",
+        "/yarn.lock"
+    ],
+    "pages": {
+        "home": "/",
+        "dashboard": "/dashboard",
+        "search": "/search"
+    },
+    "preferences_path": "src/utils/constant.js"
+}
