@@ -82,17 +82,17 @@ class App extends Component {
 
         const preferences = getSearchPreferences();
         this.themeSettings = get(
-            this.preferences,
+            preferences,
             'themeSettings',
             defaultPreferences.themeSettings,
         );
         this.theme = get(
-            themeSettings,
+            this.themeSettings,
             'rsConfig',
             defaultPreferences.themeSettings.rsConfig,
         );
         this.themeType = get(
-            themeSettings,
+            this.themeSettings,
             'type',
             defaultPreferences.themeSettings.type,
         );

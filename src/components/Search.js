@@ -16,6 +16,7 @@ import Suggestion from './Suggestion';
 import ResultsLayout from './ResultsLayout';
 import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
 import Filters from './Filters';
+import FiltersN from './FIltersN';
 import {
     defaultPreferences,
     getReactDependenciesFromPreferences,
@@ -619,17 +620,31 @@ class Search extends Component {
                             gridGap: 20,
                         }}
                     >
-                        <Filters
-                            theme={this.theme}
-                            isMobile={this.isMobile}
-                            currency={this.currency}
-                            themeType={this.themeType}
-                            exportType={this.exportType}
-                            preferences={this.preferences}
-                            toggleFilters={toggleFilters}
-                            getFontFamily={this.getFontFamily()}
-                            pageSettings={this.pageSettings}
-                        />
+                        {Object.keys(this.pageSettings).length ? (
+                            <Filters
+                                theme={this.theme}
+                                isMobile={this.isMobile}
+                                currency={this.currency}
+                                themeType={this.themeType}
+                                exportType={this.exportType}
+                                preferences={this.preferences}
+                                toggleFilters={toggleFilters}
+                                getFontFamily={this.getFontFamily()}
+                                pageSettings={this.pageSettings}
+                            />
+                        ) : (
+                            <FiltersN
+                                theme={this.theme}
+                                isMobile={this.isMobile}
+                                currency={this.currency}
+                                themeType={this.themeType}
+                                exportType={this.exportType}
+                                preferences={this.preferences}
+                                toggleFilters={toggleFilters}
+                                // dynamicFacets={this.dynamicFacets}
+                                getFontFamily={this.getFontFamily()}
+                            />
+                        )}
 
                         <div>
                             {this.themeType === 'minimal' &&

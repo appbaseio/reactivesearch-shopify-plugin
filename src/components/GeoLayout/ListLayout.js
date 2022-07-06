@@ -8,7 +8,6 @@ import strip from 'striptags';
 import Truncate from 'react-truncate';
 import createDOMPurify from 'dompurify';
 import { mediaMax } from '../../utils/media';
-import { defaultPreferences } from '../../utils';
 
 const DOMPurify = createDOMPurify(window);
 
@@ -166,6 +165,7 @@ export default function ListLayout({
                                                     width="100%"
                                                     alt={title}
                                                     onError={(event) => {
+                                                        // eslint-disable-next-line
                                                         event.target.src =
                                                             'https://www.houseoftara.com/shop/wp-content/uploads/2019/05/placeholder.jpg'; // eslint-disable-line
                                                     }}
