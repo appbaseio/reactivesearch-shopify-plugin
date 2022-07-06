@@ -514,7 +514,6 @@ class Search extends Component {
                 !staticFacetsIds.includes(i),
         );
 
-        console.log(this.pageSettings);
         return (
             <ReactiveBase
                 app={this.index}
