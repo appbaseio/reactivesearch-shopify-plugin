@@ -81,61 +81,44 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     }
 `;
 
-function GeoResultsLayout({ isPreview }) {
+function GeoResultsLayout({
+    isPreview,
+    theme,
+    themeType,
+    currency,
+    resultSettings,
+    searchSettings,
+}) {
     const preferences = getSearchPreferences();
 
-    const theme = get(
-        preferences,
-        'themeSettings.rsConfig',
-        defaultPreferences.themeSettings.rsConfig,
-    );
-
-    const themeType = get(
-        preferences,
-        'themeSettings.type',
-        defaultPreferences.themeSettings.type,
-    );
-
-    const currency = get(
-        preferences,
-        'globalSettings.currency',
-        defaultPreferences.globalSettings.currency,
-    );
-
     const mapComponent = get(
-        preferences,
-        'resultSettings.mapComponent',
+        resultSettings,
+        'mapComponent',
         defaultPreferences.resultSettings.mapComponent,
     );
 
     const defaultZoom = get(
-        preferences,
-        'resultSettings.defaultZoom',
+        resultSettings,
+        'defaultZoom',
         defaultPreferences.resultSettings.defaultZoom,
     );
     const showSearchAsMove = get(
-        preferences,
-        'resultSettings.showSearchAsMove',
+        resultSettings,
+        'showSearchAsMove',
         defaultPreferences.resultSettings.showSearchAsMove,
     );
     const showMarkerClusters = get(
-        preferences,
-        'resultSettings.showMarkerClusters',
+        resultSettings,
+        'showMarkerClusters',
         defaultPreferences.resultSettings.showMarkerClusters,
     );
 
-    const resultSettings = get(preferences, 'resultSettings');
-
     const redirectUrlText = get(
-        preferences,
-        'searchSettings.redirectUrlText',
+        searchSettings,
+        'redirectUrlText',
         'View Product',
     );
-    const redirectUrlIcon = get(
-        preferences,
-        'searchSettings.redirectUrlIcon',
-        '',
-    );
+    const redirectUrlIcon = get(searchSettings, 'redirectUrlIcon', '');
 
     function getFontFamily() {
         const receivedFont = get(theme, 'typography.fontFamily', '');

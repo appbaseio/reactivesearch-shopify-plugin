@@ -662,7 +662,14 @@ class Search extends Component {
                             /> */}
 
                             {this.themeType === 'geo' ? (
-                                <GeoResultsLayout isPreview={isPreview} />
+                                <GeoResultsLayout
+                                    isPreview={isPreview}
+                                    resultSettings={this.resultSettings}
+                                    searchSettings={this.searchSettings}
+                                    theme={this.theme}
+                                    themeType={this.themeType}
+                                    currency={this.currency}
+                                />
                             ) : (
                                 <ReactiveComponent
                                     preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}

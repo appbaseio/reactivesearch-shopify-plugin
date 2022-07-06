@@ -81,17 +81,33 @@ class App extends Component {
         };
 
         const preferences = getSearchPreferences();
+        this.themeSettings = get(
+            this.preferences,
+            'themeSettings',
+            defaultPreferences.themeSettings,
+        );
         this.theme = get(
-            preferences,
-            'themeSettings.rsConfig',
+            themeSettings,
+            'rsConfig',
             defaultPreferences.themeSettings.rsConfig,
         );
         this.themeType = get(
-            preferences,
-            'themeSettings.type',
+            themeSettings,
+            'type',
             defaultPreferences.themeSettings.type,
         );
-        this.searchButton = get(preferences, 'searchSettings.searchButton');
+        this.pageSettings = get(this.preferences, 'pageSettings', {});
+        this.componentSettings = get(
+            this.pageSettings,
+            `pages.${this.pageSettings.currentPage}.componentSettings`,
+            {},
+        );
+        this.searchSettings = get(
+            this.componentSettings,
+            'search',
+            get(this.preferences, 'searchSettings', {}),
+        );
+        this.searchButton = get(this.searchSettings, 'searchButton');
         this.index = get(preferences, 'appbaseSettings.index');
         this.credentials = get(preferences, 'appbaseSettings.credentials');
         this.url = get(preferences, 'appbaseSettings.url');
