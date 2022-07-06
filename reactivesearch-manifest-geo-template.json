@@ -17,9 +17,7 @@
         "/yarn.lock"
     ],
     "pages": {
-        "home": "/",
-        "dashboard": "/dashboard",
-        "search": "/search"
+        "home": "/"
     },
     "preferences_path": "src/utils/constant.js"
 }
