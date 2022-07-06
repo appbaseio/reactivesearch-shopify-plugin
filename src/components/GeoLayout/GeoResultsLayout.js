@@ -19,6 +19,7 @@ import {
     defaultPreferences,
     getReactDependenciesFromPreferences,
 } from '../../utils';
+import { ReactiveComponent } from '@appbaseio/reactivesearch';
 
 export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
@@ -149,8 +150,8 @@ function GeoResultsLayout({ isPreview }) {
     return (
         <div>
             {mapComponent === 'googleMap' ? (
-                <ReactiveGoogleMap
-                    componentId="map"
+                <ReactiveComponent
+                    componentId="result"
                     dataField={get(
                         'locationDatafield',
                         resultSettings,
