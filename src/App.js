@@ -34,11 +34,11 @@ const App = ({ id }) => {
     return Object.keys(pageSettings).length ? (
         <Router>
             <Switch>
-                <Redirect
+                {/* <Redirect
                     exact
                     from="/"
                     to={`${pageSettings.cuurentRoute} ? ${pageSettings.cuurentRoute} : '/`}
-                />
+                /> */}
                 <Route path="/dashboard">
                     <div>Dashboard Page</div>
                 </Route>

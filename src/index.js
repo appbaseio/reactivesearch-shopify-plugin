@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import ProductSuggestions from './components/ProductSuggestions';
 import App from './App';
@@ -68,9 +67,7 @@ const renderById = (id, mode) => {
                 {mode === 'suggestions' ? (
                     <ProductSuggestions {...getPropsById(id)} />
                 ) : (
-                    <BrowserRouter basename="/search">
-                        <App id={id} />
-                    </BrowserRouter>
+                    <App id={id} />
                 )}
             </div>,
             document.getElementById(id),
