@@ -1,31 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import SearchPlugin from './components/SearchPlugin';
 import ProductSuggestions from './components/ProductSuggestions';
+import App from './App';
 import 'antd/dist/antd.css';
 import './index.css';
 
-const isIdAvailble = (id) => document.getElementById(id);
-
-const getPropsById = (id) => {
-    const container = isIdAvailble(id);
-    if (container) {
-        return {
-            widgetId: container.getAttribute('widget-id'),
-            currentProduct: container.getAttribute('current-product'),
-            isOpen: container.getAttribute('isOpen') === 'true',
-            openAsPage: container.getAttribute('openaspage') === 'true',
-            isPreview: container.getAttribute('isPreview') === 'true',
-            disableSearchText:
-                container.getAttribute('disableSearchText') === 'true',
-        };
-    }
-    return null;
-};
-
 const renderById = (id, mode) => {
+    const isIdAvailble = (elemId) => document.getElementById(elemId);
+    const getPropsById = (elemId) => {
+        const container = isIdAvailble(elemId);
+        if (container) {
+            return {
+                widgetId: container.getAttribute('widget-id'),
+                currentProduct: container.getAttribute('current-product'),
+                isOpen: container.getAttribute('isOpen') === 'true',
+                openAsPage: container.getAttribute('openaspage') === 'true',
+                isPreview: container.getAttribute('isPreview') === 'true',
+                disableSearchText:
+                    container.getAttribute('disableSearchText') === 'true',
+            };
+        }
+        return null;
+    };
     const container = isIdAvailble(id);
+
     if (container) {
         ReactDOM.render(
             <div>
@@ -68,7 +68,9 @@ const renderById = (id, mode) => {
                 {mode === 'suggestions' ? (
                     <ProductSuggestions {...getPropsById(id)} />
                 ) : (
-                    <SearchPlugin {...getPropsById(id)} />
+                    <BrowserRouter basename="/search">
+                        <App id={id} />
+                    </BrowserRouter>
                 )}
             </div>,
             document.getElementById(id),
