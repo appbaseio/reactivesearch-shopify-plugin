@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import get from 'lodash.get';
 import SearchPlugin from './components/SearchPlugin';
+import SearchPage from './pages/SearchPage';
 import { getSearchPreferences } from './utils';
 
 const App = ({ id }) => {
@@ -33,7 +34,7 @@ const App = ({ id }) => {
                     <div>Dashboard Page</div>
                 </Route>
                 <Route path="/search">
-                    <div>Search Page</div>
+                    <SearchPage />
                 </Route>
                 <Route path="/">
                     <SearchPlugin {...getPropsById(id)} />
