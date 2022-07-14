@@ -197,6 +197,7 @@ const Filters = ({
                             );
                         }}
                         URLParams
+                        title=""
                     />
                 </React.Fragment>
             );
@@ -231,6 +232,7 @@ const Filters = ({
                     )}
                     URLParams
                     css={font}
+                    title=""
                 />
             );
         }
@@ -464,6 +466,7 @@ const Filters = ({
                         />
                     }
                     URLParams
+                    title=""
                 />
             );
         }
@@ -493,6 +496,7 @@ const Filters = ({
                     URLParams
                     css={font}
                     filterLabel={get(colorFilter, 'rsConfig.title', 'color')}
+                    title=""
                 />
             );
         }
@@ -503,6 +507,7 @@ const Filters = ({
                 URLParams
                 filterLabel={get(colorFilter, 'rsConfig.title', 'color')}
                 css={font}
+                title=""
             />
         );
     };
@@ -563,6 +568,7 @@ const Filters = ({
                             />
                         )}
                         URLParams
+                        title=""
                     />
                 </React.Fragment>
             );
@@ -616,6 +622,7 @@ const Filters = ({
                     URLParams
                     css={font}
                     filterLabel={get(sizeFilter, 'rsConfig.title', 'size')}
+                    title=""
                 />
             );
         }
@@ -627,6 +634,7 @@ const Filters = ({
                 css={font}
                 filterLabel={get(sizeFilter, 'rsConfig.title', 'size')}
                 {...dateProps}
+                title=""
             />
         );
     };
@@ -661,6 +669,7 @@ const Filters = ({
                     URLParams
                     css={font}
                     filterLabel={get(priceFilter, 'rsConfig.title', 'size')}
+                    title=""
                 />
             );
         }
@@ -689,6 +698,7 @@ const Filters = ({
                     start: `${currency} ${min.toFixed(2)}`,
                     end: `${currency} ${max.toFixed(2)}`,
                 })}
+                title=""
             />
         );
     };
@@ -820,6 +830,24 @@ const Filters = ({
                     if (filter === 'productType') {
                         return (
                             <Panel
+                                header={
+                                    <span
+                                        style={{
+                                            color: get(
+                                                theme,
+                                                'colors.titleColor',
+                                            ),
+                                            fontWeight: 'bold',
+                                            fontSize: '15px',
+                                        }}
+                                    >
+                                        {get(
+                                            facet,
+                                            'rsConfig.title',
+                                            'Product Type',
+                                        )}
+                                    </span>
+                                }
                                 showArrow={themeType !== 'minimal'}
                                 key="productType"
                                 css={getFontFamily}
@@ -833,6 +861,24 @@ const Filters = ({
                     if (filter === 'collection') {
                         return (
                             <Panel
+                                header={
+                                    <span
+                                        style={{
+                                            color: get(
+                                                theme,
+                                                'colors.titleColor',
+                                            ),
+                                            fontWeight: 'bold',
+                                            fontSize: '15px',
+                                        }}
+                                    >
+                                        {get(
+                                            facet,
+                                            'rsConfig.title',
+                                            'Collections',
+                                        )}
+                                    </span>
+                                }
                                 showArrow={themeType !== 'minimal'}
                                 key="collection"
                                 css={getFontFamily}
@@ -846,6 +892,20 @@ const Filters = ({
                     if (filter === 'color') {
                         return (
                             <Panel
+                                header={
+                                    <span
+                                        style={{
+                                            color: get(
+                                                theme,
+                                                'colors.titleColor',
+                                            ),
+                                            fontWeight: 'bold',
+                                            fontSize: '15px',
+                                        }}
+                                    >
+                                        {get(facet, 'rsConfig.title', 'Color')}
+                                    </span>
+                                }
                                 className="filter"
                                 showArrow={themeType !== 'minimal'}
                                 key="color"
@@ -859,6 +919,24 @@ const Filters = ({
                     if (filter === 'size') {
                         return (
                             <Panel
+                                header={
+                                    <span
+                                        style={{
+                                            color: get(
+                                                theme,
+                                                'colors.titleColor',
+                                            ),
+                                            fontWeight: 'bold',
+                                            fontSize: '15px',
+                                        }}
+                                    >
+                                        {get(
+                                            sizeFilter,
+                                            'rsConfig.title',
+                                            'Size',
+                                        )}
+                                    </span>
+                                }
                                 className="filter"
                                 showArrow={themeType !== 'minimal'}
                                 key="size"
@@ -872,6 +950,24 @@ const Filters = ({
                     if (filter === 'price') {
                         return (
                             <Panel
+                                header={
+                                    <span
+                                        style={{
+                                            color: get(
+                                                theme,
+                                                'colors.titleColor',
+                                            ),
+                                            fontWeight: 'bold',
+                                            fontSize: '15px',
+                                        }}
+                                    >
+                                        {get(
+                                            priceFilter,
+                                            'rsConfig.title',
+                                            'Price',
+                                        )}
+                                    </span>
+                                }
                                 showArrow={themeType !== 'minimal'}
                                 key="price"
                                 css={getFontFamily}
@@ -884,6 +980,17 @@ const Filters = ({
 
                     return (
                         <Panel
+                            header={
+                                <span
+                                    style={{
+                                        color: get(theme, 'colors.titleColor'),
+                                        fontWeight: 'bold',
+                                        fontSize: '15px',
+                                    }}
+                                >
+                                    {get(facet, 'rsConfig.title')}
+                                </span>
+                            }
                             showArrow={themeType !== 'minimal'}
                             key={filter}
                             css={{
@@ -944,6 +1051,7 @@ const Filters = ({
                                             'rsConfig.title',
                                             '',
                                         )}
+                                        title=""
                                     />
                                 ) : facet?.rsConfig?.startValue &&
                                   facet?.rsConfig?.endValue ? (
@@ -1009,6 +1117,7 @@ const Filters = ({
                                                 '',
                                             ),
                                         }}
+                                        title=""
                                         {...dateProps}
                                     />
                                 ) : (
@@ -1022,6 +1131,7 @@ const Filters = ({
                                             'rsConfig.title',
                                             '',
                                         )}
+                                        title=""
                                         {...dateProps}
                                     />
                                 )
