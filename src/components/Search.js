@@ -496,7 +496,12 @@ class Search extends Component {
         const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
         let newProps = {};
-        if (get(this.resultSettings, 'sortOptionSelector', []).length) {
+        const sortOptionSelector = get(
+            this.resultSettings,
+            'sortOptionSelector',
+            [],
+        );
+        if (sortOptionSelector && sortOptionSelector.length) {
             newProps = {
                 sortOptions: get(this.resultSettings, 'sortOptionSelector'),
             };
