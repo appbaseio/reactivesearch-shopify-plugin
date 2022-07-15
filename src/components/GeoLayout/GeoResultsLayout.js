@@ -457,6 +457,10 @@ function GeoResultsLayout({
                                 triggerClickAnalytics={triggerClickAnalytics}
                                 renderMap={renderMap}
                                 renderPagination={renderPagination}
+                                resultSettings={resultSettings}
+                                searchSettings={searchSettings}
+                                theme={theme}
+                                currency={currency}
                             />
                         );
                     }}
