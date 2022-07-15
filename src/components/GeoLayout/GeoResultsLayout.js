@@ -9,7 +9,7 @@ import strip from 'striptags';
 import Truncate from 'react-truncate';
 import {
     ReactiveOpenStreetMap,
-    ReactiveComponent,
+    ReactiveGoogleMap,
 } from '@appbaseio/reactivemaps';
 import { mediaMax } from '../../utils/media';
 import ListLayout from './ListLayout';
@@ -132,7 +132,7 @@ function GeoResultsLayout({
     return (
         <div>
             {mapComponent === 'googleMap' ? (
-                <ReactiveComponent
+                <ReactiveGoogleMap
                     componentId="result"
                     dataField={get(
                         'locationDatafield',

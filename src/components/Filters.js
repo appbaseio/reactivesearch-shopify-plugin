@@ -930,11 +930,7 @@ const Filters = ({
                                             fontSize: '15px',
                                         }}
                                     >
-                                        {get(
-                                            sizeFilter,
-                                            'rsConfig.title',
-                                            'Size',
-                                        )}
+                                        {get(facet, 'rsConfig.title', 'Size')}
                                     </span>
                                 }
                                 className="filter"
@@ -961,11 +957,7 @@ const Filters = ({
                                             fontSize: '15px',
                                         }}
                                     >
-                                        {get(
-                                            priceFilter,
-                                            'rsConfig.title',
-                                            'Price',
-                                        )}
+                                        {get(facet, 'rsConfig.title', 'Price')}
                                     </span>
                                 }
                                 showArrow={themeType !== 'minimal'}
