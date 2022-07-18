@@ -4,6 +4,7 @@
 import { jsx } from '@emotion/core';
 import get from 'lodash.get';
 import appbasePrefs from './constants';
+import defaultTemplatePreferences from '../../reactivesearchPreferences.json';
 
 export const staticFacetsIds = [
     'productType',
@@ -270,19 +271,19 @@ export const getReactDependenciesFromPreferences = (
 };
 
 export const getSearchPreferences = () => {
-    let preferences = {};
     if (window.APPBASE_SEARCH_PREFERENCES || appbasePrefs) {
         try {
-            preferences = JSON.parse(
+            return JSON.parse(
                 window.APPBASE_SEARCH_PREFERENCES || appbasePrefs,
             );
         } catch (e) {
             console.warn(
                 'Appbase: Error encountered while parsing the search preferences, fall-backing to the default preferences',
             );
+            return defaultTemplatePreferences;
         }
     }
-    return preferences;
+    return defaultTemplatePreferences;
 };
 
 export const getRecommendationsPreferences = () => {
