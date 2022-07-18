@@ -1,8 +1,8 @@
 {
-    "name": "Search good-books-ds",
+    "name": "Search geo1-demo-app",
     "description": "",
-    "pipeline": "good-books-ds",
-    "id": "d8a8ca48-f021-4750-ad35-ec11a8f09020",
+    "pipeline": "geo1-demo-app",
+    "id": "2f6ad2d5-f627-4151-bb64-13eb2b0ae3e6",
     "pageSettings": {
         "currentPage": "home",
         "pages": {
@@ -20,11 +20,11 @@
                         "redirectUrlText": "View Product",
                         "redirectUrlIcon": "",
                         "fields": {
-                            "title": "original_title",
-                            "description": "authors",
-                            "price": "monthly_price",
+                            "title": "place",
+                            "description": "magnitude",
+                            "price": "year",
                             "priceUnit": null,
-                            "image": "image",
+                            "image": "",
                             "handle": ""
                         },
                         "rsConfig": {
@@ -39,11 +39,11 @@
                     "result": {
                         "componentType": "REACTIVELIST",
                         "fields": {
-                            "title": "original_title",
-                            "description": "authors",
-                            "price": "monthly_price",
+                            "title": "place",
+                            "description": "magnitude",
+                            "price": "year",
                             "priceUnit": null,
-                            "image": "image",
+                            "image": "",
                             "handle": ""
                         },
                         "customMessages": {
@@ -53,68 +53,19 @@
                         "rsConfig": {
                             "pagination": false,
                             "infiniteScroll": true,
-                            "componentType": "REACTIVELIST"
+                            "componentType": "REACTIVE_MAP"
                         },
                         "sortOptionSelector": [],
                         "resultHighlight": false,
                         "layout": "grid",
-                        "viewSwitcher": true
-                    },
-                    "Books_Count_2": {
-                        "enabled": true,
-                        "customMessages": {
-                            "loading": "Fetching Options",
-                            "noResults": "No items Found"
-                        },
-                        "rsConfig": {
-                            "componentId": "Books_Count_2",
-                            "filterLabel": null,
-                            "title": "Books Count",
-                            "dataField": "books_count",
-                            "filterType": "range",
-                            "sortBy": "count",
-                            "showCount": true,
-                            "showCheckbox": true,
-                            "showSearch": true,
-                            "showMissing": false,
-                            "missingLabel": null,
-                            "multiSelect": false,
-                            "selectAllLabel": null,
-                            "componentType": "RANGEINPUT",
-                            "endLabel": "End",
-                            "endValue": "100",
-                            "showHistogram": true,
-                            "startLabel": "Start",
-                            "startValue": "10"
-                        },
-                        "componentType": "RANGEINPUT",
-                        "facetType": "dynamic"
-                    },
-                    "Test_0": {
-                        "enabled": true,
-                        "customMessages": {
-                            "loading": "Fetching Options",
-                            "noResults": "No items Found"
-                        },
-                        "rsConfig": {
-                            "componentId": "Test_0",
-                            "filterLabel": null,
-                            "title": "Authors",
-                            "dataField": "authors.keyword",
-                            "filterType": "list",
-                            "queryFormat": "or",
-                            "sortBy": "count",
-                            "showCount": true,
-                            "showCheckbox": true,
-                            "showSearch": true,
-                            "showMissing": false,
-                            "missingLabel": null,
-                            "multiSelect": false,
-                            "selectAllLabel": null,
-                            "componentType": "MULTILIST"
-                        },
-                        "componentType": "MULTILIST",
-                        "facetType": "dynamic"
+                        "viewSwitcher": true,
+                        "mapLayout": "map",
+                        "locationDataField": "location",
+                        "mapComponent": "openStreetMap",
+                        "defaultZoom": 5,
+                        "showSearchAsMove": true,
+                        "showMarkerClusters": false,
+                        "mapsAPIkey": "AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU"
                     },
                     "productType": {
                         "name": "productType",
@@ -253,16 +204,16 @@
             }
         },
         "fields": {
-            "description": "",
+            "description": "magnitude",
             "handle": "",
             "image": "",
-            "price": "",
+            "price": "year",
             "priceUnit": null,
-            "title": "original_title"
+            "title": "place"
         }
     },
     "themeSettings": {
-        "type": "classic",
+        "type": "geo",
         "customCss": "",
         "rsConfig": {
             "colors": {
@@ -286,23 +237,23 @@
                 "logoAlignment": "left"
             },
             "deploySettings": {
-                "versionId": "jTJgQS3AV1tZu_e.2_bzgvaJzyQ_5UFQ"
+                "versionId": "R9nyNxTPgupdgEazzo3ULVjhrkAGRQo8"
             }
         }
     },
     "exportSettings": {
         "exportAs": "embed",
-        "credentials": "a03a1cb71321:75b6603d-9456-4a5a-af6b-a487b309eb61",
+        "credentials": "03f653924eff:122f0386-6b34-4da7-a7db-4f9633f26b85",
         "openAsPage": false,
         "type": "other"
     },
     "resultSettings": {
         "fields": {
-            "title": "original_title",
-            "description": "authors",
-            "price": "monthly_price",
+            "title": "place",
+            "description": "magnitude",
+            "price": "year",
             "priceUnit": null,
-            "image": "image",
+            "image": "",
             "handle": ""
         },
         "customMessages": {
@@ -312,12 +263,19 @@
         "rsConfig": {
             "pagination": false,
             "infiniteScroll": true,
-            "componentType": "REACTIVELIST"
+            "componentType": "REACTIVE_MAP"
         },
         "sortOptionSelector": [],
         "resultHighlight": false,
         "layout": "grid",
-        "viewSwitcher": true
+        "viewSwitcher": true,
+        "mapLayout": "map",
+        "locationDataField": "location",
+        "mapComponent": "openStreetMap",
+        "defaultZoom": 5,
+        "showSearchAsMove": true,
+        "showMarkerClusters": false,
+        "mapsAPIkey": "AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU"
     },
     "searchSettings": {
         "customMessages": {
@@ -330,11 +288,11 @@
         "redirectUrlText": "View Product",
         "redirectUrlIcon": "",
         "fields": {
-            "title": "original_title",
-            "description": "authors",
-            "price": "monthly_price",
+            "title": "place",
+            "description": "magnitude",
+            "price": "year",
             "priceUnit": null,
-            "image": "image",
+            "image": "",
             "handle": ""
         },
         "rsConfig": {
@@ -472,66 +430,12 @@
                 }
             }
         ],
-        "dynamicFacets": [
-            {
-                "enabled": true,
-                "customMessages": {
-                    "loading": "Fetching Options",
-                    "noResults": "No items Found"
-                },
-                "rsConfig": {
-                    "componentId": "Books_Count_2",
-                    "filterLabel": null,
-                    "title": "Books Count",
-                    "dataField": "books_count",
-                    "filterType": "range",
-                    "queryFormat": "or",
-                    "sortBy": "count",
-                    "showCount": true,
-                    "showCheckbox": true,
-                    "showSearch": true,
-                    "showMissing": false,
-                    "missingLabel": null,
-                    "multiSelect": false,
-                    "selectAllLabel": null,
-                    "componentType": "RANGEINPUT",
-                    "endLabel": "End",
-                    "endValue": "100",
-                    "showHistogram": true,
-                    "startLabel": "Start",
-                    "startValue": "10"
-                }
-            },
-            {
-                "enabled": true,
-                "customMessages": {
-                    "loading": "Fetching Options",
-                    "noResults": "No items Found"
-                },
-                "rsConfig": {
-                    "componentId": "Test_0",
-                    "filterLabel": null,
-                    "title": "Authors",
-                    "dataField": "authors.keyword",
-                    "filterType": "list",
-                    "queryFormat": "or",
-                    "sortBy": "count",
-                    "showCount": true,
-                    "showCheckbox": true,
-                    "showSearch": true,
-                    "showMissing": false,
-                    "missingLabel": null,
-                    "multiSelect": false,
-                    "selectAllLabel": null,
-                    "componentType": "MULTILIST"
-                }
-            }
-        ]
+        "dynamicFacets": []
     },
     "syncSettings": null,
     "appbaseSettings": {
-        "index": "good-books-ds",
-        "credentials": "a03a1cb71321:75b6603d-9456-4a5a-af6b-a487b309eb61",
+        "index": "geo1-demo-app",
+        "credentials": "03f653924eff:122f0386-6b34-4da7-a7db-4f9633f26b85",
         "url": "https://appbase-demo-ansible-abxiydt-arc.searchbase.io"
     }
 }

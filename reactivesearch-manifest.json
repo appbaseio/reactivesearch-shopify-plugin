@@ -1,9 +1,9 @@
 {
-    "image": "https://imgur.com/QlYvx1i.png",
-    "name": "classic",
-    "description": "Theme appropriate for a ecommerce search UI with the support of pageSettings",
-    "section": "e-commerce",
-    "section_label": "<h3>E-commerce Search</h3>",
+    "image": "https://imgur.com/eU7nrhX.png",
+    "name": "geo",
+    "description": "Theme appropriate for a geo/ map search UI",
+    "section": "geo",
+    "section_label": "<h3>Geo Search</h3>",
     "excludePaths": [
         "/.eslintignore",
         "/.eslintrc.js",
