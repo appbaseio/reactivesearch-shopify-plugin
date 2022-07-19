@@ -67,6 +67,62 @@
                         "showMarkerClusters": false,
                         "mapsAPIkey": "AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU"
                     },
+                    "Place_0": {
+                        "enabled": true,
+                        "customMessages": {
+                            "loading": "Fetching Options",
+                            "noResults": "No items Found"
+                        },
+                        "rsConfig": {
+                            "componentId": "Place_0",
+                            "filterLabel": null,
+                            "title": "Place",
+                            "dataField": "place.keyword",
+                            "filterType": "list",
+                            "queryFormat": "or",
+                            "sortBy": "count",
+                            "showCount": true,
+                            "showCheckbox": true,
+                            "showSearch": true,
+                            "showMissing": false,
+                            "missingLabel": null,
+                            "multiSelect": false,
+                            "selectAllLabel": null,
+                            "componentType": "MULTILIST"
+                        },
+                        "componentType": "MULTILIST",
+                        "facetType": "dynamic"
+                    },
+                    "Year_1": {
+                        "enabled": true,
+                        "customMessages": {
+                            "loading": "Fetching Options",
+                            "noResults": "No items Found"
+                        },
+                        "rsConfig": {
+                            "componentId": "Year_1",
+                            "filterLabel": null,
+                            "title": "Year",
+                            "dataField": "year",
+                            "filterType": "range",
+                            "sortBy": "count",
+                            "showCount": true,
+                            "showCheckbox": true,
+                            "showSearch": true,
+                            "showMissing": false,
+                            "missingLabel": null,
+                            "multiSelect": false,
+                            "selectAllLabel": null,
+                            "componentType": "RANGEINPUT",
+                            "endLabel": "End Year",
+                            "endValue": "2017",
+                            "showHistogram": true,
+                            "startLabel": "Start Year",
+                            "startValue": "2000"
+                        },
+                        "componentType": "RANGEINPUT",
+                        "facetType": "dynamic"
+                    },
                     "productType": {
                         "name": "productType",
                         "enabled": false,
@@ -237,7 +293,7 @@
                 "logoAlignment": "left"
             },
             "deploySettings": {
-                "versionId": "R9nyNxTPgupdgEazzo3ULVjhrkAGRQo8"
+                "versionId": "SY2MUCaQ9Juu1.oOxEH7.ITd0Sm5Zk7f"
             }
         }
     },
@@ -430,7 +486,61 @@
                 }
             }
         ],
-        "dynamicFacets": []
+        "dynamicFacets": [
+            {
+                "enabled": true,
+                "customMessages": {
+                    "loading": "Fetching Options",
+                    "noResults": "No items Found"
+                },
+                "rsConfig": {
+                    "componentId": "Place_0",
+                    "filterLabel": null,
+                    "title": "Place",
+                    "dataField": "place.keyword",
+                    "filterType": "list",
+                    "queryFormat": "or",
+                    "sortBy": "count",
+                    "showCount": true,
+                    "showCheckbox": true,
+                    "showSearch": true,
+                    "showMissing": false,
+                    "missingLabel": null,
+                    "multiSelect": false,
+                    "selectAllLabel": null,
+                    "componentType": "MULTILIST"
+                }
+            },
+            {
+                "enabled": true,
+                "customMessages": {
+                    "loading": "Fetching Options",
+                    "noResults": "No items Found"
+                },
+                "rsConfig": {
+                    "componentId": "Year_1",
+                    "filterLabel": null,
+                    "title": "Year",
+                    "dataField": "year",
+                    "filterType": "range",
+                    "queryFormat": "or",
+                    "sortBy": "count",
+                    "showCount": true,
+                    "showCheckbox": true,
+                    "showSearch": true,
+                    "showMissing": false,
+                    "missingLabel": null,
+                    "multiSelect": false,
+                    "selectAllLabel": null,
+                    "componentType": "RANGEINPUT",
+                    "endLabel": "End Year",
+                    "endValue": "2017",
+                    "showHistogram": true,
+                    "startLabel": "Start Year",
+                    "startValue": "2000"
+                }
+            }
+        ]
     },
     "syncSettings": null,
     "appbaseSettings": {
