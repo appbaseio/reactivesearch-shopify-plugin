@@ -69,7 +69,7 @@
                         "rsConfig": {
                             "componentId": "Books_Count_2",
                             "filterLabel": null,
-                            "title": "Books Count 77",
+                            "title": "Books Count",
                             "dataField": "books_count",
                             "filterType": "range",
                             "sortBy": "count",
