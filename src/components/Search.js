@@ -1,49 +1,34 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
-/* eslint-disable no-unused-vars */
 import { css, jsx, Global } from '@emotion/core';
 import React, { Component } from 'react';
 import {
     ReactiveBase,
-    SearchBox,
-    MultiList,
-    ReactiveList,
     SelectedFilters,
-    DynamicRangeSlider,
     ReactiveComponent,
-    RangeInput,
 } from '@appbaseio/reactivesearch';
-import {
-    UL,
-    Checkbox,
-} from '@appbaseio/reactivesearch/lib/styles/FormControlList';
 import get from 'lodash.get';
 import { string, bool } from 'prop-types';
-import strip from 'striptags';
-import Truncate from 'react-truncate';
-import { Card, Collapse, Button, Icon, Affix, Tooltip, List } from 'antd';
+import { Button, Icon, Affix } from 'antd';
 import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
 import Suggestion from './Suggestion';
-import LayoutSwitch from './LayoutSwitch';
 import ResultsLayout from './ResultsLayout';
+import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
+import Filters from './Filters';
+import FiltersN from './FIltersN';
 import {
-    browserColors,
     defaultPreferences,
     getReactDependenciesFromPreferences,
     getSearchPreferences,
-    shopifyDefaultFields,
+    staticFacetsIds,
 } from '../utils';
-import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
-import Filters from './Filters';
 
 const DOMPurify = createDOMPurify(window);
-const { Meta } = Card;
-const { Panel } = Collapse;
 
 const resultRef = React.createRef();
 
-const searchStyles = ({ titleColor, primaryColor }) => css`
+const searchStyles = ({ titleColor }) => css`
     .section-header > h3 {
         margin: 8px 0;
         color: ${titleColor};
@@ -57,11 +42,6 @@ const minimalSearchStyles = ({ titleColor }) => css`
         color: ${titleColor};
         box-shadow: 0px 0px 4px ${titleColor}1a;
     }
-`;
-
-const loaderStyle = css`
-    margin: 10px 0;
-    position: relative;
 `;
 
 export const listLayoutStyles = css`
@@ -284,13 +264,6 @@ const mobileButtonStyles = css`
     border: 0;
 `;
 
-const colorContainer = css`
-    display: grid;
-    grid-gap: 5px;
-    grid-template-columns: repeat(auto-fill, 30px);
-    justify-content: center;
-`;
-
 const searchRef = React.createRef();
 
 let userIdObj = {};
@@ -300,7 +273,6 @@ class Search extends Component {
         this.state = {
             toggleFilters: false,
             isMobile: window.innerWidth <= 768,
-            blur: false,
             value: '',
         };
         this.preferences = getSearchPreferences();
@@ -328,24 +300,23 @@ class Search extends Component {
         this.credentials = get(this.preferences, 'appbaseSettings.credentials');
         this.url = get(this.preferences, 'appbaseSettings.url');
         this.userId = get(this.preferences, 'appbaseSettings.userId', '');
-        this.resultSettings = get(this.preferences, 'resultSettings');
-        this.searchSettings = get(this.preferences, 'searchSettings');
         this.globalSettings = get(this.preferences, 'globalSettings', {});
-        this.dynamicFacets =
-            get(this.preferences, 'facetSettings.dynamicFacets') || [];
-        this.staticFacets =
-            get(this.preferences, 'facetSettings.staticFacets') || [];
-        this.colorFilter = this.staticFacets.find((o) => o.name === 'color');
-        this.collectionFilter = this.staticFacets.find(
-            (o) => o.name === 'collection',
+        this.pageSettings = get(this.preferences, 'pageSettings', {});
+        this.componentSettings = get(
+            this.pageSettings,
+            `pages.${this.pageSettings.currentPage}.componentSettings`,
+            {},
         );
-        this.productTypeFilter = this.staticFacets.find(
-            (o) => o.name === 'productType',
+        this.resultSettings = get(
+            this.componentSettings,
+            'result',
+            get(this.preferences, 'resultSettings', {}),
         );
-
-        this.sizeFilter = this.staticFacets.find((o) => o.name === 'size');
-        this.priceFilter = this.staticFacets.find((o) => o.name === 'price');
-
+        this.searchSettings = get(
+            this.componentSettings,
+            'search',
+            get(this.preferences, 'searchSettings', {}),
+        );
         this.exportType = get(
             this.preferences,
             'exportSettings.type',
@@ -444,8 +415,7 @@ class Search extends Component {
     };
 
     renderCategorySearch = (categorySearchProps) => {
-        const { toggleFilters, blur } = this.state;
-        const { isPreview } = this.props;
+        const { toggleFilters, value } = this.state;
         const searchIcon = get(this.searchSettings, 'searchButton.icon', '');
         const searchText = get(
             this.searchSettings,
@@ -453,12 +423,10 @@ class Search extends Component {
             'Search for products...',
         );
 
-        const { value } = this.state;
-
         return (
-            <SearchBox
-                // Don't change the component id it is tied to shopify
-                componentId="q"
+            <ReactiveComponent
+                preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.search`}
+                componentId="search"
                 filterLabel="Search"
                 className="search"
                 debounce={100}
@@ -504,12 +472,6 @@ class Search extends Component {
                     size: 3,
                 }}
                 size={6}
-                onFocus={(e) => {
-                    this.setState({ blur: false });
-                }}
-                onBlur={(e) => {
-                    this.setState({ blur: true });
-                }}
                 onChange={(val) => {
                     this.setState({ value: val });
                 }}
@@ -524,10 +486,8 @@ class Search extends Component {
                         />
                     );
                 }}
-                {...this.searchSettings.rsConfig}
                 {...categorySearchProps}
                 showDistinctSuggestions
-                highlight={get(this.resultSettings, 'resultHighlight', false)}
             />
         );
     };
@@ -536,7 +496,12 @@ class Search extends Component {
         const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
         let newProps = {};
-        if (get(this.resultSettings, 'sortOptionSelector', []).length) {
+        const sortOptionSelector = get(
+            this.resultSettings,
+            'sortOptionSelector',
+            [],
+        );
+        if (sortOptionSelector && sortOptionSelector.length) {
             newProps = {
                 sortOptions: get(this.resultSettings, 'sortOptionSelector'),
             };
@@ -547,6 +512,12 @@ class Search extends Component {
             this.resultSettings,
             'mapsAPIkey',
             'AIzaSyA9JzjtHeXg_C_hh_GdTBdLxREWdj3nsOU',
+        );
+        const dynamicFacets = Object.keys(this.componentSettings).filter(
+            (i) =>
+                i !== 'search' &&
+                i !== 'result' &&
+                !staticFacetsIds.includes(i),
         );
 
         return (
@@ -562,6 +533,7 @@ class Search extends Component {
                 }}
                 mapKey={mapsAPIkey}
                 mapLibraries={['visualization', 'places']}
+                preferences={this.preferences}
                 setSearchParams={
                     isPreview
                         ? () => {}
@@ -610,7 +582,7 @@ class Search extends Component {
                         ${get(this.themeSettings, 'customCss', '')}
                     `}
                 />
-                {isMobile && this.dynamicFacets.length ? (
+                {isMobile && dynamicFacets.length ? (
                     <Affix
                         style={{
                             position: 'fixed',
@@ -666,22 +638,31 @@ class Search extends Component {
                             gridGap: 20,
                         }}
                     >
-                        <Filters
-                            theme={this.theme}
-                            isMobile={this.isMobile}
-                            currency={this.currency}
-                            themeType={this.themeType}
-                            exportType={this.exportType}
-                            sizeFilter={this.sizeFilter}
-                            colorFilter={this.colorFilter}
-                            priceFilter={this.priceFilter}
-                            preferences={this.preferences}
-                            toggleFilters={toggleFilters}
-                            dynamicFacets={this.dynamicFacets}
-                            getFontFamily={this.getFontFamily()}
-                            collectionFilter={this.collectionFilter}
-                            productTypeFilter={this.productTypeFilter}
-                        />
+                        {Object.keys(this.pageSettings).length ? (
+                            <Filters
+                                theme={this.theme}
+                                isMobile={this.isMobile}
+                                currency={this.currency}
+                                themeType={this.themeType}
+                                exportType={this.exportType}
+                                preferences={this.preferences}
+                                toggleFilters={toggleFilters}
+                                getFontFamily={this.getFontFamily()}
+                                pageSettings={this.pageSettings}
+                            />
+                        ) : (
+                            <FiltersN
+                                theme={this.theme}
+                                isMobile={this.isMobile}
+                                currency={this.currency}
+                                themeType={this.themeType}
+                                exportType={this.exportType}
+                                preferences={this.preferences}
+                                toggleFilters={toggleFilters}
+                                // dynamicFacets={this.dynamicFacets}
+                                getFontFamily={this.getFontFamily()}
+                            />
+                        )}
 
                         <div>
                             {this.themeType === 'minimal' &&
@@ -712,12 +693,21 @@ class Search extends Component {
                                         : null
                                 }
                             /> */}
+
                             {this.themeType === 'geo' ? (
-                                <GeoResultsLayout isPreview={isPreview} />
+                                <GeoResultsLayout
+                                    isPreview={isPreview}
+                                    resultSettings={this.resultSettings}
+                                    searchSettings={this.searchSettings}
+                                    theme={this.theme}
+                                    themeType={this.themeType}
+                                    currency={this.currency}
+                                />
                             ) : (
-                                <ReactiveList
-                                    componentId="results"
-                                    dataField={get(this.resultSettings, 'fields.title', 'title')}
+                                <ReactiveComponent
+                                    preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}
+                                    dataField="title"
+                                    componentId="result"
                                     ref={resultRef}
                                     defaultQuery={() => ({
                                         track_total_hits: true,
@@ -776,6 +766,16 @@ class Search extends Component {
                                                     triggerClickAnalytics
                                                 }
                                                 isPreview={isPreview}
+                                                resultSettings={
+                                                    this.resultSettings
+                                                }
+                                                searchSettings={
+                                                    this.searchSettings
+                                                }
+                                                themeSettings={
+                                                    this.themeSettings
+                                                }
+                                                currency={this.currency}
                                                 getFontFamily={this.getFontFamily()}
                                             />
                                         ) : null;
@@ -787,7 +787,6 @@ class Search extends Component {
                                         noResults: 'custom-no-results',
                                         pagination: 'custom-pagination',
                                     }}
-                                    {...this.resultSettings.rsConfig}
                                     css={reactiveListCls(
                                         toggleFilters,
                                         this.theme,

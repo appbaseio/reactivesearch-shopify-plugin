@@ -8,12 +8,17 @@ import {
     Checkbox,
 } from '@appbaseio/reactivesearch/lib/styles/FormControlList';
 import { Collapse, Tooltip } from 'antd';
-import { ReactiveComponent } from '@appbaseio/reactivesearch';
+import {
+    MultiList,
+    RangeInput,
+    DynamicRangeSlider,
+    ReactiveComponent,
+} from '@appbaseio/reactivesearch';
 import createDOMPurify from 'dompurify';
 import {
     getReactDependenciesFromPreferences,
+    shopifyDefaultFields,
     browserColors,
-    staticFacetsIds,
 } from '../utils';
 import { mediaMax } from '../utils/media';
 
@@ -32,7 +37,7 @@ const colorContainer = css`
     justify-content: center;
 `;
 
-const Filters = ({
+const FiltersN = ({
     theme,
     isMobile,
     currency,
@@ -41,10 +46,19 @@ const Filters = ({
     preferences,
     toggleFilters,
     getFontFamily,
-    pageSettings,
 }) => {
-    const renderCollectionFilter = (font, collectionFilter) => {
-        if (!collectionFilter.enabled) {
+    const dynamicFacets = get(preferences, 'facetSettings.dynamicFacets') || [];
+    const staticFacets = get(preferences, 'facetSettings.staticFacets') || [];
+    const colorFilter = staticFacets.find((o) => o.name === 'color');
+    const collectionFilter = staticFacets.find((o) => o.name === 'collection');
+    const productTypeFilter = staticFacets.find(
+        (o) => o.name === 'productType',
+    );
+    const sizeFilter = staticFacets.find((o) => o.name === 'size');
+    const priceFilter = staticFacets.find((o) => o.name === 'price');
+
+    const renderCollectionFilter = (font) => {
+        if (!collectionFilter) {
             return null;
         }
 
@@ -66,13 +80,13 @@ const Filters = ({
                                 : null
                         }
                     />
-                    <ReactiveComponent
-                        componentId="collection"
-                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.collection`}
-                        dataField="collection"
+                    <MultiList
                         innerClass={{
                             input: 'list-input',
                         }}
+                        componentId="collection"
+                        dataField="collection"
+                        style={{}}
                         defaultQuery={() => ({
                             aggs: {
                                 collections: {
@@ -104,6 +118,8 @@ const Filters = ({
                                 },
                             },
                         })}
+                        size={50}
+                        showCheckbox={themeType !== 'minimal'}
                         react={{
                             and: [
                                 'filter_by_collection',
@@ -197,6 +213,7 @@ const Filters = ({
                             );
                         }}
                         URLParams
+                        {...get(collectionFilter, 'rsConfig')}
                         title=""
                     />
                 </React.Fragment>
@@ -208,9 +225,14 @@ const Filters = ({
             get(collectionFilter, 'rsConfig.endValue', '')
         ) {
             return (
-                <ReactiveComponent
-                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.collection`}
-                    componentId="collection"
+                <RangeInput
+                    key="filter_by_collection"
+                    componentId="filter_by_collection"
+                    dataField={get(
+                        collectionFilter,
+                        'rsConfig.dataField',
+                        shopifyDefaultFields.size,
+                    )}
                     range={{
                         start: parseInt(
                             get(collectionFilter, 'rsConfig.startValue', ''),
@@ -225,6 +247,11 @@ const Filters = ({
                         start: get(collectionFilter, 'rsConfig.startLabel', ''),
                         end: get(collectionFilter, 'rsConfig.endLabel', ''),
                     }}
+                    showHistogram={get(
+                        collectionFilter,
+                        'rsConfig.showHistogram',
+                        false,
+                    )}
                     filterLabel={get(
                         collectionFilter,
                         'rsConfig.title',
@@ -232,14 +259,23 @@ const Filters = ({
                     )}
                     URLParams
                     css={font}
-                    title=""
                 />
             );
         }
         return (
-            <ReactiveComponent
-                componentId="collection"
-                preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.collection`}
+            <DynamicRangeSlider
+                key="filter_by_collection"
+                componentId="filter_by_collection"
+                dataField={get(
+                    collectionFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
+                )}
+                showHistogram={get(
+                    collectionFilter,
+                    'rsConfig.showHistogram',
+                    false,
+                )}
                 filterLabel={get(
                     collectionFilter,
                     'rsConfig.title',
@@ -251,21 +287,22 @@ const Filters = ({
         );
     };
 
-    const renderProductTypeFilter = (font, productTypeFilter) => {
-        if (!productTypeFilter.enabled) {
+    const renderProductTypeFilter = (font) => {
+        if (!productTypeFilter) {
             return null;
         }
 
         const type = get(productTypeFilter, 'rsConfig.filterType', '');
         if (type === 'list') {
             return (
-                <ReactiveComponent
+                <MultiList
                     componentId="productType"
-                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.productType`}
+                    dataField="product_type.keyword"
                     innerClass={{
                         input: 'list-input',
                     }}
                     css={font}
+                    showCheckbox={themeType !== 'minimal'}
                     react={{
                         and: [
                             ...getReactDependenciesFromPreferences(
@@ -274,12 +311,11 @@ const Filters = ({
                             ),
                         ],
                     }}
-                    filterLabel={get(
-                        productTypeFilter,
-                        'rsConfig.title',
-                        'Product Type',
-                    )}
+                    filterLabel="Product Type"
                     URLParams
+                    aggregationSize={get(productTypeFilter, 'rsConfig.size')}
+                    {...get(productTypeFilter, 'rsConfig')}
+                    title=""
                 />
             );
         }
@@ -289,9 +325,10 @@ const Filters = ({
             get(productTypeFilter, 'rsConfig.endValue', '')
         ) {
             return (
-                <ReactiveComponent
-                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.productType`}
+                <RangeInput
+                    key="productType"
                     componentId="productType"
+                    dataField="product_type"
                     range={{
                         start: parseInt(
                             get(productTypeFilter, 'rsConfig.startValue', ''),
@@ -310,6 +347,11 @@ const Filters = ({
                         ),
                         end: get(productTypeFilter, 'rsConfig.endLabel', ''),
                     }}
+                    showHistogram={get(
+                        productTypeFilter,
+                        'rsConfig.showHistogram',
+                        false,
+                    )}
                     URLParams
                     filterLabel={get(
                         productTypeFilter,
@@ -321,9 +363,19 @@ const Filters = ({
             );
         }
         return (
-            <ReactiveComponent
-                preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.productType`}
+            <DynamicRangeSlider
+                key="productType"
                 componentId="productType"
+                dataField={get(
+                    productTypeFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
+                )}
+                showHistogram={get(
+                    productTypeFilter,
+                    'rsConfig.showHistogram',
+                    false,
+                )}
                 URLParams
                 css={font}
                 filterLabel={get(
@@ -335,17 +387,12 @@ const Filters = ({
         );
     };
 
-    const renderColorFilter = (font, colorFilter) => {
-        if (!colorFilter.enabled) {
-            return null;
-        }
-
+    const renderColorFilter = (font) => {
         const type = get(colorFilter, 'rsConfig.filterType', '');
         if (type === 'list') {
             return (
-                <ReactiveComponent
+                <MultiList
                     componentId="color"
-                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.color`}
                     innerClass={{
                         input: 'list-input',
                     }}
@@ -358,7 +405,9 @@ const Filters = ({
                             ),
                         ],
                     }}
+                    showSearch={false}
                     css={font}
+                    showCheckbox={themeType !== 'minimal'}
                     render={({ loading, error, data, handleChange, value }) => {
                         const values = [...new Set(Object.keys(value))];
                         const browserStringColors = Object.keys(browserColors);
@@ -466,6 +515,13 @@ const Filters = ({
                         />
                     }
                     URLParams
+                    aggregationSize={get(colorFilter, 'rsConfig.size')}
+                    {...get(colorFilter, 'rsConfig')}
+                    dataField={get(
+                        colorFilter,
+                        'rsConfig.dataField',
+                        shopifyDefaultFields.color,
+                    )}
                     title=""
                 />
             );
@@ -476,9 +532,14 @@ const Filters = ({
             get(colorFilter, 'rsConfig.endValue', '')
         ) {
             return (
-                <ReactiveComponent
+                <RangeInput
+                    key="color"
                     componentId="color"
-                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.color`}
+                    dataField={get(
+                        colorFilter,
+                        'rsConfig.dataField',
+                        shopifyDefaultFields.size,
+                    )}
                     range={{
                         start: parseInt(
                             get(colorFilter, 'rsConfig.startValue', ''),
@@ -493,38 +554,46 @@ const Filters = ({
                         start: get(colorFilter, 'rsConfig.startLabel', ''),
                         end: get(colorFilter, 'rsConfig.endLabel', ''),
                     }}
+                    showHistogram={get(
+                        colorFilter,
+                        'rsConfig.showHistogram',
+                        false,
+                    )}
                     URLParams
                     css={font}
                     filterLabel={get(colorFilter, 'rsConfig.title', 'color')}
-                    title=""
                 />
             );
         }
         return (
-            <ReactiveComponent
-                preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.color`}
+            <DynamicRangeSlider
+                key="color"
                 componentId="color"
+                dataField={get(
+                    colorFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
+                )}
+                showHistogram={get(
+                    colorFilter,
+                    'rsConfig.showHistogram',
+                    false,
+                )}
                 URLParams
                 filterLabel={get(colorFilter, 'rsConfig.title', 'color')}
                 css={font}
-                title=""
             />
         );
     };
 
-    const renderSizeFilter = (font, sizeFilter) => {
-        if (!sizeFilter.enabled) {
-            return null;
-        }
-
+    const renderSizeFilter = (font) => {
         const type = get(sizeFilter, 'rsConfig.filterType', '');
 
         if (type === 'list') {
             return (
                 <React.Fragment>
-                    <ReactiveComponent
+                    <MultiList
                         componentId="size"
-                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.size`}
                         innerClass={{
                             input: 'list-input',
                         }}
@@ -567,7 +636,15 @@ const Filters = ({
                                 }}
                             />
                         )}
+                        showCheckbox={themeType !== 'minimal'}
                         URLParams
+                        aggregationSize={get(sizeFilter, 'rsConfig.size')}
+                        {...get(sizeFilter, 'rsConfig')}
+                        dataField={get(
+                            sizeFilter,
+                            'rsConfig.dataField',
+                            shopifyDefaultFields.size,
+                        )}
                         title=""
                     />
                 </React.Fragment>
@@ -584,9 +661,14 @@ const Filters = ({
             get(sizeFilter, 'rsConfig.endValue', '')
         ) {
             return (
-                <ReactiveComponent
-                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.size`}
+                <RangeInput
+                    key="size"
                     componentId="size"
+                    dataField={get(
+                        sizeFilter,
+                        'rsConfig.dataField',
+                        shopifyDefaultFields.size,
+                    )}
                     range={{
                         start:
                             type === 'date'
@@ -619,39 +701,49 @@ const Filters = ({
                         start: get(sizeFilter, 'rsConfig.startLabel', ''),
                         end: get(sizeFilter, 'rsConfig.endLabel', ''),
                     }}
+                    showHistogram={get(
+                        sizeFilter,
+                        'rsConfig.showHistogram',
+                        false,
+                    )}
                     URLParams
                     css={font}
                     filterLabel={get(sizeFilter, 'rsConfig.title', 'size')}
-                    title=""
+                    {...dateProps}
                 />
             );
         }
         return (
-            <ReactiveComponent
-                preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.size`}
+            <DynamicRangeSlider
+                key="size"
                 componentId="size"
+                dataField={get(
+                    sizeFilter,
+                    'rsConfig.dataField',
+                    shopifyDefaultFields.size,
+                )}
+                showHistogram={get(sizeFilter, 'rsConfig.showHistogram', false)}
                 URLParams
                 css={font}
                 filterLabel={get(sizeFilter, 'rsConfig.title', 'size')}
                 {...dateProps}
-                title=""
             />
         );
     };
 
-    const renderPriceFilter = (font, priceFilter) => {
-        if (!priceFilter.enabled) {
-            return null;
-        }
-
+    const renderPriceFilter = (font) => {
         if (
             get(priceFilter, 'rsConfig.startValue', '') &&
             get(priceFilter, 'rsConfig.endValue', '')
         ) {
             return (
-                <ReactiveComponent
+                <RangeInput
                     componentId="price"
-                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.price`}
+                    dataField={get(
+                        priceFilter,
+                        'rsConfig.dataField',
+                        'variants.price',
+                    )}
                     range={{
                         start: parseInt(
                             get(priceFilter, 'rsConfig.startValue', ''),
@@ -666,18 +758,31 @@ const Filters = ({
                         start: get(priceFilter, 'rsConfig.startLabel', ''),
                         end: get(priceFilter, 'rsConfig.endLabel', ''),
                     }}
+                    showHistogram={get(
+                        priceFilter,
+                        'rsConfig.showHistogram',
+                        false,
+                    )}
                     URLParams
                     css={font}
                     filterLabel={get(priceFilter, 'rsConfig.title', 'size')}
-                    title=""
                 />
             );
         }
 
         return (
-            <ReactiveComponent
+            <DynamicRangeSlider
                 componentId="price"
-                preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.price`}
+                dataField={get(
+                    priceFilter,
+                    'rsConfig.dataField',
+                    'variants.price',
+                )}
+                showHistogram={get(
+                    priceFilter,
+                    'rsConfig.showHistogram',
+                    false,
+                )}
                 URLParams
                 css={font}
                 style={{
@@ -698,6 +803,7 @@ const Filters = ({
                     start: `${currency} ${min.toFixed(2)}`,
                     end: `${currency} ${max.toFixed(2)}`,
                 })}
+                {...priceFilter.rsConfig}
                 title=""
             />
         );
@@ -757,17 +863,6 @@ const Filters = ({
         }; // we return the highest possible interval to shorten then interval value
     };
 
-    const componentSettings = get(
-        pageSettings,
-        `pages.${pageSettings.currentPage}.componentSettings`,
-        {},
-    );
-
-    let filters = Object.keys(componentSettings).filter(
-        (i) => i !== 'search' && i !== 'result' && !staticFacetsIds.includes(i),
-    );
-    filters = [...staticFacetsIds, ...filters];
-
     return (
         <div
             css={{
@@ -795,17 +890,128 @@ const Filters = ({
                     preferences,
                 )}
             >
-                {filters.map((filter) => {
-                    const facet = componentSettings[filter];
-                    const type = get(facet, 'rsConfig.filterType', '');
+                {productTypeFilter ? (
+                    <Panel
+                        header={
+                            <span
+                                style={{
+                                    color: get(theme, 'colors.titleColor'),
+                                    fontWeight: 'bold',
+                                    fontSize: '15px',
+                                }}
+                            >
+                                {get(
+                                    productTypeFilter,
+                                    'rsConfig.title',
+                                    'Product Type',
+                                )}
+                            </span>
+                        }
+                        showArrow={themeType !== 'minimal'}
+                        key="productType"
+                        css={getFontFamily}
+                        className="filter"
+                    >
+                        {renderProductTypeFilter(getFontFamily)}
+                    </Panel>
+                ) : null}
+                {collectionFilter ? (
+                    <Panel
+                        header={
+                            <span
+                                style={{
+                                    color: get(theme, 'colors.titleColor'),
+                                    fontWeight: 'bold',
+                                    fontSize: '15px',
+                                }}
+                            >
+                                {get(
+                                    collectionFilter,
+                                    'rsConfig.title',
+                                    'Collections',
+                                )}
+                            </span>
+                        }
+                        showArrow={themeType !== 'minimal'}
+                        key="collection"
+                        css={getFontFamily}
+                        className="filter"
+                    >
+                        {renderCollectionFilter(getFontFamily)}
+                    </Panel>
+                ) : null}
+                {colorFilter ? (
+                    <Panel
+                        className="filter"
+                        header={
+                            <span
+                                style={{
+                                    color: get(theme, 'colors.titleColor'),
+                                    fontWeight: 'bold',
+                                    fontSize: '15px',
+                                }}
+                            >
+                                {get(colorFilter, 'rsConfig.title', 'Color')}
+                            </span>
+                        }
+                        showArrow={themeType !== 'minimal'}
+                        key="color"
+                        css={getFontFamily}
+                    >
+                        {renderColorFilter(getFontFamily)}
+                    </Panel>
+                ) : null}
+                {sizeFilter ? (
+                    <Panel
+                        className="filter"
+                        header={
+                            <span
+                                style={{
+                                    color: get(theme, 'colors.titleColor'),
+                                    fontWeight: 'bold',
+                                    fontSize: '15px',
+                                }}
+                            >
+                                {get(sizeFilter, 'rsConfig.title', 'Size')}
+                            </span>
+                        }
+                        showArrow={themeType !== 'minimal'}
+                        key="size"
+                        css={getFontFamily}
+                    >
+                        {renderSizeFilter(getFontFamily)}
+                    </Panel>
+                ) : null}
+                {priceFilter ? (
+                    <Panel
+                        header={
+                            <span
+                                style={{
+                                    color: get(theme, 'colors.titleColor'),
+                                    fontWeight: 'bold',
+                                    fontSize: '15px',
+                                }}
+                            >
+                                {get(priceFilter, 'rsConfig.title', 'Price')}
+                            </span>
+                        }
+                        showArrow={themeType !== 'minimal'}
+                        key="price"
+                        css={getFontFamily}
+                        className="filter"
+                    >
+                        {renderPriceFilter(getFontFamily)}
+                    </Panel>
+                ) : null}
+                {dynamicFacets.map((listComponent) => {
+                    const type = listComponent?.rsConfig?.filterType;
                     let dateProps = {};
-
+                    const calendarInterval = get(
+                        listComponent,
+                        'rsConfig.calendarInterval',
+                        'year',
+                    );
                     if (type === 'date') {
-                        const calendarInterval = get(
-                            facet,
-                            'rsConfig.calendarInterval',
-                            'year',
-                        );
                         dateProps = {
                             queryFormat: 'date',
                             // eslint-disable-next-line
@@ -813,11 +1019,15 @@ const Filters = ({
                                 ? calendarInterval
                                 : getCalendarIntervalErrorMessage(
                                       new Date(
-                                          get(facet, 'rsConfig.startValue', ''),
+                                          get(
+                                              listComponent,
+                                              'rsConfig.startValue',
+                                              '',
+                                          ),
                                       ) -
                                           new Date(
                                               get(
-                                                  facet,
+                                                  listComponent,
                                                   'rsConfig.endValue',
                                                   '',
                                               ),
@@ -825,151 +1035,6 @@ const Filters = ({
                                   ).calculatedCalendarInterval,
                         };
                     }
-                    if (!facet.enabled) return null;
-
-                    if (filter === 'productType') {
-                        return (
-                            <Panel
-                                header={
-                                    <span
-                                        style={{
-                                            color: get(
-                                                theme,
-                                                'colors.titleColor',
-                                            ),
-                                            fontWeight: 'bold',
-                                            fontSize: '15px',
-                                        }}
-                                    >
-                                        {get(
-                                            facet,
-                                            'rsConfig.title',
-                                            'Product Type',
-                                        )}
-                                    </span>
-                                }
-                                showArrow={themeType !== 'minimal'}
-                                key="productType"
-                                css={getFontFamily}
-                                className="filter"
-                            >
-                                {renderProductTypeFilter(getFontFamily, facet)}
-                            </Panel>
-                        );
-                    }
-
-                    if (filter === 'collection') {
-                        return (
-                            <Panel
-                                header={
-                                    <span
-                                        style={{
-                                            color: get(
-                                                theme,
-                                                'colors.titleColor',
-                                            ),
-                                            fontWeight: 'bold',
-                                            fontSize: '15px',
-                                        }}
-                                    >
-                                        {get(
-                                            facet,
-                                            'rsConfig.title',
-                                            'Collections',
-                                        )}
-                                    </span>
-                                }
-                                showArrow={themeType !== 'minimal'}
-                                key="collection"
-                                css={getFontFamily}
-                                className="filter"
-                            >
-                                {renderCollectionFilter(getFontFamily, facet)}
-                            </Panel>
-                        );
-                    }
-
-                    if (filter === 'color') {
-                        return (
-                            <Panel
-                                header={
-                                    <span
-                                        style={{
-                                            color: get(
-                                                theme,
-                                                'colors.titleColor',
-                                            ),
-                                            fontWeight: 'bold',
-                                            fontSize: '15px',
-                                        }}
-                                    >
-                                        {get(facet, 'rsConfig.title', 'Color')}
-                                    </span>
-                                }
-                                className="filter"
-                                showArrow={themeType !== 'minimal'}
-                                key="color"
-                                css={getFontFamily}
-                            >
-                                {renderColorFilter(getFontFamily, facet)}
-                            </Panel>
-                        );
-                    }
-
-                    if (filter === 'size') {
-                        return (
-                            <Panel
-                                header={
-                                    <span
-                                        style={{
-                                            color: get(
-                                                theme,
-                                                'colors.titleColor',
-                                            ),
-                                            fontWeight: 'bold',
-                                            fontSize: '15px',
-                                        }}
-                                    >
-                                        {get(facet, 'rsConfig.title', 'Size')}
-                                    </span>
-                                }
-                                className="filter"
-                                showArrow={themeType !== 'minimal'}
-                                key="size"
-                                css={getFontFamily}
-                            >
-                                {renderSizeFilter(getFontFamily, facet)}
-                            </Panel>
-                        );
-                    }
-
-                    if (filter === 'price') {
-                        return (
-                            <Panel
-                                header={
-                                    <span
-                                        style={{
-                                            color: get(
-                                                theme,
-                                                'colors.titleColor',
-                                            ),
-                                            fontWeight: 'bold',
-                                            fontSize: '15px',
-                                        }}
-                                    >
-                                        {get(facet, 'rsConfig.title', 'Price')}
-                                    </span>
-                                }
-                                showArrow={themeType !== 'minimal'}
-                                key="price"
-                                css={getFontFamily}
-                                className="filter"
-                            >
-                                {renderPriceFilter(getFontFamily, facet)}
-                            </Panel>
-                        );
-                    }
-
                     return (
                         <Panel
                             header={
@@ -980,27 +1045,32 @@ const Filters = ({
                                         fontSize: '15px',
                                     }}
                                 >
-                                    {get(facet, 'rsConfig.title')}
+                                    {get(listComponent, 'rsConfig.title')}
                                 </span>
                             }
                             showArrow={themeType !== 'minimal'}
-                            key={filter}
+                            key={get(listComponent, 'rsConfig.componentId')}
                             css={{
                                 ...getFontFamily,
                                 maxWidth: isMobile ? 'none' : '298px',
                             }}
                             className="filter"
                         >
-                            {/* eslint-disable-next-line no-nested-ternary */}
-                            {facet.enabled ? (
+                            {
                                 // eslint-disable-next-line no-nested-ternary
                                 type === 'list' ? (
-                                    <ReactiveComponent
-                                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
-                                        componentId={filter}
+                                    <MultiList
+                                        key={get(
+                                            listComponent,
+                                            'rsConfig.componentId',
+                                        )}
                                         innerClass={{
                                             input: 'list-input',
                                         }}
+                                        componentId={get(
+                                            listComponent,
+                                            'rsConfig.componentId',
+                                        )}
                                         URLParams
                                         loader={
                                             <div
@@ -1009,7 +1079,7 @@ const Filters = ({
                                                 dangerouslySetInnerHTML={{
                                                     __html: DOMPurify.sanitize(
                                                         get(
-                                                            facet,
+                                                            listComponent,
                                                             'customMessages.loading',
                                                             'Loading options',
                                                         ),
@@ -1023,7 +1093,7 @@ const Filters = ({
                                                 dangerouslySetInnerHTML={{
                                                     __html: DOMPurify.sanitize(
                                                         get(
-                                                            facet,
+                                                            listComponent,
                                                             'customMessages.noResults',
                                                             'No items Found',
                                                         ),
@@ -1031,34 +1101,57 @@ const Filters = ({
                                                 }}
                                             />
                                         )}
+                                        showCount={themeType !== 'minimal'}
+                                        showCheckbox={themeType !== 'minimal'}
+                                        aggregationSize={get(
+                                            listComponent,
+                                            'rsConfig.size',
+                                        )}
+                                        {...listComponent.rsConfig}
+                                        dataField={get(
+                                            listComponent,
+                                            'rsConfig.dataField',
+                                        )}
                                         css={getFontFamily}
                                         react={{
                                             and: getReactDependenciesFromPreferences(
                                                 preferences,
-                                                filter,
+                                                get(
+                                                    listComponent,
+                                                    'rsConfig.componentId',
+                                                ),
                                             ),
                                         }}
-                                        filterLabel={get(
-                                            facet,
-                                            'rsConfig.title',
-                                            '',
-                                        )}
+                                        filterLabel={
+                                            get(
+                                                listComponent,
+                                                'rsConfig.filterLabel',
+                                                '',
+                                            ) ||
+                                            get(
+                                                listComponent,
+                                                'rsConfig.title',
+                                                '',
+                                            )
+                                        }
                                         title=""
                                     />
-                                ) : facet?.rsConfig?.startValue &&
-                                  facet?.rsConfig?.endValue ? (
-                                    <ReactiveComponent
-                                        componentId={get(
-                                            facet,
+                                ) : listComponent?.rsConfig?.startValue &&
+                                  listComponent?.rsConfig?.endValue ? (
+                                    <RangeInput
+                                        key={get(
+                                            listComponent,
                                             'rsConfig.componentId',
                                             '',
                                         )}
-                                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
-                                        URLParams
-                                        css={getFontFamily}
-                                        filterLabel={get(
-                                            facet,
-                                            'rsConfig.title',
+                                        componentId={get(
+                                            listComponent,
+                                            'rsConfig.componentId',
+                                            '',
+                                        )}
+                                        dataField={get(
+                                            listComponent,
+                                            'rsConfig.dataField',
                                             '',
                                         )}
                                         range={{
@@ -1066,14 +1159,14 @@ const Filters = ({
                                                 type === 'date'
                                                     ? new Date(
                                                           get(
-                                                              facet,
+                                                              listComponent,
                                                               'rsConfig.startValue',
                                                               '',
                                                           ),
                                                       )
                                                     : parseInt(
                                                           get(
-                                                              facet,
+                                                              listComponent,
                                                               'rsConfig.startValue',
                                                               '',
                                                           ),
@@ -1083,14 +1176,14 @@ const Filters = ({
                                                 type === 'date'
                                                     ? new Date(
                                                           get(
-                                                              facet,
+                                                              listComponent,
                                                               'rsConfig.endValue',
                                                               '',
                                                           ),
                                                       )
                                                     : parseInt(
                                                           get(
-                                                              facet,
+                                                              listComponent,
                                                               'rsConfig.endValue',
                                                               '',
                                                           ),
@@ -1099,35 +1192,77 @@ const Filters = ({
                                         }}
                                         rangeLabels={{
                                             start: get(
-                                                facet,
+                                                listComponent,
                                                 'rsConfig.startLabel',
                                                 '',
                                             ),
                                             end: get(
-                                                facet,
+                                                listComponent,
                                                 'rsConfig.endLabel',
                                                 '',
                                             ),
                                         }}
-                                        title=""
+                                        showHistogram={get(
+                                            listComponent,
+                                            'rsConfig.showHistogram',
+                                            false,
+                                        )}
+                                        URLParams
+                                        css={getFontFamily}
+                                        filterLabel={
+                                            get(
+                                                listComponent,
+                                                'rsConfig.filterLabel',
+                                                '',
+                                            ) ||
+                                            get(
+                                                listComponent,
+                                                'rsConfig.title',
+                                                '',
+                                            )
+                                        }
                                         {...dateProps}
                                     />
                                 ) : (
-                                    <ReactiveComponent
-                                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
-                                        componentId={filter}
-                                        URLParams
-                                        css={getFontFamily}
-                                        filterLabel={get(
-                                            facet,
-                                            'rsConfig.title',
+                                    <DynamicRangeSlider
+                                        key={get(
+                                            listComponent,
+                                            'rsConfig.componentId',
                                             '',
                                         )}
-                                        title=""
+                                        componentId={get(
+                                            listComponent,
+                                            'rsConfig.componentId',
+                                            '',
+                                        )}
+                                        dataField={get(
+                                            listComponent,
+                                            'rsConfig.dataField',
+                                            '',
+                                        )}
+                                        showHistogram={get(
+                                            listComponent,
+                                            'rsConfig.showHistogram',
+                                            false,
+                                        )}
+                                        URLParams
+                                        css={getFontFamily}
+                                        filterLabel={
+                                            get(
+                                                listComponent,
+                                                'rsConfig.filterLabel',
+                                                '',
+                                            ) ||
+                                            get(
+                                                listComponent,
+                                                'rsConfig.title',
+                                                '',
+                                            )
+                                        }
                                         {...dateProps}
                                     />
                                 )
-                            ) : null}
+                            }
                         </Panel>
                     );
                 })}
@@ -1136,4 +1271,4 @@ const Filters = ({
     );
 };
 
-export default Filters;
+export default FiltersN;

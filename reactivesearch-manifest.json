@@ -1,0 +1,24 @@
+{
+    "image": "https://imgur.com/eU7nrhX.png",
+    "name": "geo",
+    "description": "Theme appropriate for a geo/ map search UI",
+    "section": "geo",
+    "section_label": "<h3>Geo Search</h3>",
+    "excludePaths": [
+        "/.eslintignore",
+        "/.eslintrc.js",
+        "/.gitignore",
+        "/.nvmrc",
+        "/.prettierrc.js",
+        "/.vscode",
+        "/README.md",
+        "/build",
+        "/config-overrides.js",
+        "/yarn.lock"
+    ],
+    "pages": {
+        "home": "/"
+    },
+    "preferences_path": "src/utils/constant.js",
+    "netlifyURL": "https://62d70f51451de60009d7ceb0--appbase-ecomm.netlify.app/"
+}
