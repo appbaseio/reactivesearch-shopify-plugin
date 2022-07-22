@@ -1,0 +1,24 @@
+{
+    "image": "https://imgur.com/QlYvx1i.png",
+    "name": "classic",
+    "description": "Theme appropriate for a ecommerce search UI with the support of pageSettings",
+    "section": "e-commerce",
+    "section_label": "<h3>E-commerce Search</h3>",
+    "excludePaths": [
+        "/.eslintignore",
+        "/.eslintrc.js",
+        "/.gitignore",
+        "/.nvmrc",
+        "/.prettierrc.js",
+        "/.vscode",
+        "/README.md",
+        "/build",
+        "/config-overrides.js",
+        "/yarn.lock"
+    ],
+    "pages": {
+        "home": "/"
+    },
+    "preferences_path": "src/utils/constant.js",
+    "netlifyURL": "https://62d710e43feb950008f9af43--appbase-ecomm.netlify.app/"
+}

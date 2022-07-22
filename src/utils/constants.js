@@ -1,3 +1,3 @@
 const appbasePrefs = '{{APPBASE_PREFERENCES}}';
 
-export default appbasePrefs;
+export default JSON.stringify(appbasePrefs);

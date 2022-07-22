@@ -1,0 +1,537 @@
+{
+    "name": "Search good-books-ds",
+    "description": "",
+    "pipeline": "good-books-ds",
+    "id": "",
+    "pageSettings": {
+        "currentPage": "home",
+        "pages": {
+            "home": {
+                "componentSettings": {
+                    "search": {
+                        "componentType": "SEARCHBOX",
+                        "customMessages": {
+                            "noResults": "No suggestions found for <mark>[term]</mark>"
+                        },
+                        "searchButton": {
+                            "icon": "",
+                            "text": "Click here to search"
+                        },
+                        "redirectUrlText": "View Product",
+                        "redirectUrlIcon": "",
+                        "fields": {
+                            "title": "original_title",
+                            "description": "authors",
+                            "price": "monthly_price",
+                            "priceUnit": null,
+                            "image": "image",
+                            "handle": ""
+                        },
+                        "rsConfig": {
+                            "autosuggest": true,
+                            "enablePopularSuggestions": false,
+                            "enableRecentSearches": false,
+                            "highlight": false,
+                            "showVoiceSearch": true,
+                            "componentType": "SEARCHBOX"
+                        }
+                    },
+                    "result": {
+                        "componentType": "REACTIVELIST",
+                        "fields": {
+                            "title": "original_title",
+                            "description": "authors",
+                            "price": "monthly_price",
+                            "priceUnit": null,
+                            "image": "image",
+                            "handle": ""
+                        },
+                        "customMessages": {
+                            "resultStats": "[count] products found in [time] ms",
+                            "noResults": "No Results Found!"
+                        },
+                        "rsConfig": {
+                            "pagination": false,
+                            "infiniteScroll": true,
+                            "componentType": "REACTIVELIST"
+                        },
+                        "sortOptionSelector": [],
+                        "resultHighlight": false,
+                        "layout": "grid",
+                        "viewSwitcher": true
+                    },
+                    "Books_Count_2": {
+                        "enabled": true,
+                        "customMessages": {
+                            "loading": "Fetching Options",
+                            "noResults": "No items Found"
+                        },
+                        "rsConfig": {
+                            "componentId": "Books_Count_2",
+                            "filterLabel": null,
+                            "title": "Books Count",
+                            "dataField": "books_count",
+                            "filterType": "range",
+                            "sortBy": "count",
+                            "showCount": true,
+                            "showCheckbox": true,
+                            "showSearch": true,
+                            "showMissing": false,
+                            "missingLabel": null,
+                            "multiSelect": false,
+                            "selectAllLabel": null,
+                            "componentType": "RANGEINPUT",
+                            "endLabel": "End",
+                            "endValue": "100",
+                            "showHistogram": true,
+                            "startLabel": "Start",
+                            "startValue": "10"
+                        },
+                        "componentType": "RANGEINPUT",
+                        "facetType": "dynamic"
+                    },
+                    "Test_0": {
+                        "enabled": true,
+                        "customMessages": {
+                            "loading": "Fetching Options",
+                            "noResults": "No items Found"
+                        },
+                        "rsConfig": {
+                            "componentId": "Test_0",
+                            "filterLabel": null,
+                            "title": "Authors",
+                            "dataField": "authors.keyword",
+                            "filterType": "list",
+                            "queryFormat": "or",
+                            "sortBy": "count",
+                            "showCount": true,
+                            "showCheckbox": true,
+                            "showSearch": true,
+                            "showMissing": false,
+                            "missingLabel": null,
+                            "multiSelect": false,
+                            "selectAllLabel": null,
+                            "componentType": "MULTILIST"
+                        },
+                        "componentType": "MULTILIST",
+                        "facetType": "dynamic"
+                    },
+                    "productType": {
+                        "name": "productType",
+                        "enabled": false,
+                        "isCollapsible": true,
+                        "customMessages": {
+                            "loading": "Fetching Options",
+                            "noResults": "No items Found"
+                        },
+                        "rsConfig": {
+                            "title": null,
+                            "filterType": "list",
+                            "queryFormat": "or",
+                            "sortBy": "count",
+                            "filterLabel": null,
+                            "showCount": true,
+                            "showCheckbox": true,
+                            "showSearch": true,
+                            "showMissing": false,
+                            "missingLabel": null,
+                            "multiSelect": false,
+                            "selectAllLabel": null,
+                            "componentType": "MULTILIST"
+                        },
+                        "componentType": "MULTILIST",
+                        "facetType": "static"
+                    },
+                    "collection": {
+                        "name": "collection",
+                        "enabled": false,
+                        "isCollapsible": true,
+                        "customMessages": {
+                            "loading": "Fetching Options",
+                            "noResults": "No items Found"
+                        },
+                        "rsConfig": {
+                            "title": null,
+                            "filterType": "list",
+                            "queryFormat": "or",
+                            "sortBy": "count",
+                            "filterLabel": null,
+                            "showCount": true,
+                            "showCheckbox": true,
+                            "showSearch": true,
+                            "showMissing": false,
+                            "missingLabel": null,
+                            "multiSelect": false,
+                            "selectAllLabel": null,
+                            "componentType": "MULTILIST"
+                        },
+                        "componentType": "MULTILIST",
+                        "facetType": "static"
+                    },
+                    "color": {
+                        "name": "color",
+                        "enabled": false,
+                        "isCollapsible": true,
+                        "customMessages": {
+                            "loading": "Fetching Options",
+                            "noResults": "No items Found"
+                        },
+                        "rsConfig": {
+                            "title": null,
+                            "dataField": null,
+                            "filterType": "list",
+                            "queryFormat": "or",
+                            "sortBy": "count",
+                            "filterLabel": null,
+                            "showCount": true,
+                            "showCheckbox": true,
+                            "showSearch": true,
+                            "showMissing": false,
+                            "missingLabel": null,
+                            "multiSelect": false,
+                            "selectAllLabel": null,
+                            "componentType": "MULTILIST"
+                        },
+                        "componentType": "MULTILIST",
+                        "facetType": "static"
+                    },
+                    "size": {
+                        "name": "size",
+                        "enabled": false,
+                        "isCollapsible": true,
+                        "customMessages": {
+                            "loading": "Fetching Options",
+                            "noResults": "No items Found"
+                        },
+                        "rsConfig": {
+                            "title": null,
+                            "dataField": null,
+                            "filterType": "list",
+                            "queryFormat": "or",
+                            "sortBy": "count",
+                            "filterLabel": null,
+                            "showCount": true,
+                            "showCheckbox": true,
+                            "showSearch": true,
+                            "showMissing": false,
+                            "missingLabel": null,
+                            "multiSelect": false,
+                            "selectAllLabel": null,
+                            "componentType": "MULTILIST",
+                            "showHistogram": false,
+                            "startValue": null,
+                            "endValue": null,
+                            "startLabel": null,
+                            "endLabel": null,
+                            "calendarInterval": null
+                        },
+                        "componentType": "MULTILIST",
+                        "facetType": "static"
+                    },
+                    "price": {
+                        "name": "price",
+                        "enabled": false,
+                        "isCollapsible": true,
+                        "customMessages": {
+                            "loading": "Fetching Options",
+                            "noResults": "No items Found"
+                        },
+                        "rsConfig": {
+                            "title": null,
+                            "dataField": null,
+                            "startValue": null,
+                            "endValue": null,
+                            "startLabel": null,
+                            "endLabel": null,
+                            "showHistogram": false,
+                            "componentType": "DYNAMICRANGESLIDER"
+                        },
+                        "componentType": "DYNAMICRANGESLIDER",
+                        "facetType": "static"
+                    }
+                }
+            }
+        },
+        "fields": {
+            "description": "",
+            "handle": "",
+            "image": "",
+            "price": "",
+            "priceUnit": null,
+            "title": "original_title"
+        }
+    },
+    "themeSettings": {
+        "type": "classic",
+        "customCss": "",
+        "rsConfig": {
+            "colors": {
+                "primaryColor": "#0B6AFF",
+                "primaryTextColor": "#fff",
+                "textColor": "#424242",
+                "titleColor": "#424242"
+            },
+            "typography": {
+                "fontFamily": "default"
+            }
+        }
+    },
+    "globalSettings": {
+        "currency": "USD",
+        "showSelectedFilters": true,
+        "meta": {
+            "branding": {
+                "logoUrl": "",
+                "logoWidth": 20,
+                "logoAlignment": "left"
+            },
+            "deploySettings": {
+                "versionId": "jTJgQS3AV1tZu_e.2_bzgvaJzyQ_5UFQ"
+            }
+        }
+    },
+    "exportSettings": {
+        "exportAs": "embed",
+        "credentials": "a03a1cb71321:75b6603d-9456-4a5a-af6b-a487b309eb61",
+        "openAsPage": false,
+        "type": "other"
+    },
+    "resultSettings": {
+        "fields": {
+            "title": "original_title",
+            "description": "authors",
+            "price": "monthly_price",
+            "priceUnit": null,
+            "image": "image",
+            "handle": ""
+        },
+        "customMessages": {
+            "resultStats": "[count] products found in [time] ms",
+            "noResults": "No Results Found!"
+        },
+        "rsConfig": {
+            "pagination": false,
+            "infiniteScroll": true,
+            "componentType": "REACTIVELIST"
+        },
+        "sortOptionSelector": [],
+        "resultHighlight": false,
+        "layout": "grid",
+        "viewSwitcher": true
+    },
+    "searchSettings": {
+        "customMessages": {
+            "noResults": "No suggestions found for <mark>[term]</mark>"
+        },
+        "searchButton": {
+            "icon": "",
+            "text": "Click here to search"
+        },
+        "redirectUrlText": "View Product",
+        "redirectUrlIcon": "",
+        "fields": {
+            "title": "original_title",
+            "description": "authors",
+            "price": "monthly_price",
+            "priceUnit": null,
+            "image": "image",
+            "handle": ""
+        },
+        "rsConfig": {
+            "autosuggest": true,
+            "enablePopularSuggestions": false,
+            "enableRecentSearches": false,
+            "highlight": false,
+            "showVoiceSearch": true,
+            "componentType": "SEARCHBOX"
+        }
+    },
+    "facetSettings": {
+        "staticFacets": [
+            {
+                "name": "productType",
+                "enabled": false,
+                "isCollapsible": true,
+                "customMessages": {
+                    "loading": "Fetching Options",
+                    "noResults": "No items Found"
+                },
+                "rsConfig": {
+                    "title": null,
+                    "filterType": "list",
+                    "queryFormat": "or",
+                    "sortBy": "count",
+                    "filterLabel": null,
+                    "showCount": true,
+                    "showCheckbox": true,
+                    "showSearch": true,
+                    "showMissing": false,
+                    "missingLabel": null,
+                    "multiSelect": false,
+                    "selectAllLabel": null,
+                    "componentType": "MULTILIST"
+                }
+            },
+            {
+                "name": "collection",
+                "enabled": false,
+                "isCollapsible": true,
+                "customMessages": {
+                    "loading": "Fetching Options",
+                    "noResults": "No items Found"
+                },
+                "rsConfig": {
+                    "title": null,
+                    "filterType": "list",
+                    "queryFormat": "or",
+                    "sortBy": "count",
+                    "filterLabel": null,
+                    "showCount": true,
+                    "showCheckbox": true,
+                    "showSearch": true,
+                    "showMissing": false,
+                    "missingLabel": null,
+                    "multiSelect": false,
+                    "selectAllLabel": null,
+                    "componentType": "MULTILIST"
+                }
+            },
+            {
+                "name": "color",
+                "enabled": false,
+                "isCollapsible": true,
+                "customMessages": {
+                    "loading": "Fetching Options",
+                    "noResults": "No items Found"
+                },
+                "rsConfig": {
+                    "title": null,
+                    "dataField": null,
+                    "filterType": "list",
+                    "queryFormat": "or",
+                    "sortBy": "count",
+                    "filterLabel": null,
+                    "showCount": true,
+                    "showCheckbox": true,
+                    "showSearch": true,
+                    "showMissing": false,
+                    "missingLabel": null,
+                    "multiSelect": false,
+                    "selectAllLabel": null,
+                    "componentType": "MULTILIST"
+                }
+            },
+            {
+                "name": "size",
+                "enabled": false,
+                "isCollapsible": true,
+                "customMessages": {
+                    "loading": "Fetching Options",
+                    "noResults": "No items Found"
+                },
+                "rsConfig": {
+                    "title": null,
+                    "dataField": null,
+                    "filterType": "list",
+                    "queryFormat": "or",
+                    "sortBy": "count",
+                    "filterLabel": null,
+                    "showCount": true,
+                    "showCheckbox": true,
+                    "showSearch": true,
+                    "showMissing": false,
+                    "missingLabel": null,
+                    "multiSelect": false,
+                    "selectAllLabel": null,
+                    "componentType": "MULTILIST",
+                    "showHistogram": false,
+                    "startValue": null,
+                    "endValue": null,
+                    "startLabel": null,
+                    "endLabel": null,
+                    "calendarInterval": null
+                }
+            },
+            {
+                "name": "price",
+                "enabled": false,
+                "isCollapsible": true,
+                "customMessages": {
+                    "loading": "Fetching Options",
+                    "noResults": "No items Found"
+                },
+                "rsConfig": {
+                    "title": null,
+                    "dataField": null,
+                    "startValue": null,
+                    "endValue": null,
+                    "startLabel": null,
+                    "endLabel": null,
+                    "showHistogram": false,
+                    "componentType": "DYNAMICRANGESLIDER"
+                }
+            }
+        ],
+        "dynamicFacets": [
+            {
+                "enabled": true,
+                "customMessages": {
+                    "loading": "Fetching Options",
+                    "noResults": "No items Found"
+                },
+                "rsConfig": {
+                    "componentId": "Books_Count_2",
+                    "filterLabel": null,
+                    "title": "Books Count",
+                    "dataField": "books_count",
+                    "filterType": "range",
+                    "queryFormat": "or",
+                    "sortBy": "count",
+                    "showCount": true,
+                    "showCheckbox": true,
+                    "showSearch": true,
+                    "showMissing": false,
+                    "missingLabel": null,
+                    "multiSelect": false,
+                    "selectAllLabel": null,
+                    "componentType": "RANGEINPUT",
+                    "endLabel": "End",
+                    "endValue": "100",
+                    "showHistogram": true,
+                    "startLabel": "Start",
+                    "startValue": "10"
+                }
+            },
+            {
+                "enabled": true,
+                "customMessages": {
+                    "loading": "Fetching Options",
+                    "noResults": "No items Found"
+                },
+                "rsConfig": {
+                    "componentId": "Test_0",
+                    "filterLabel": null,
+                    "title": "Authors",
+                    "dataField": "authors.keyword",
+                    "filterType": "list",
+                    "queryFormat": "or",
+                    "sortBy": "count",
+                    "showCount": true,
+                    "showCheckbox": true,
+                    "showSearch": true,
+                    "showMissing": false,
+                    "missingLabel": null,
+                    "multiSelect": false,
+                    "selectAllLabel": null,
+                    "componentType": "MULTILIST"
+                }
+            }
+        ]
+    },
+    "syncSettings": null,
+    "appbaseSettings": {
+        "index": "good-books-ds",
+        "credentials": "a03a1cb71321:75b6603d-9456-4a5a-af6b-a487b309eb61",
+        "url": "https://appbase-demo-ansible-abxiydt-arc.searchbase.io"
+    }
+}

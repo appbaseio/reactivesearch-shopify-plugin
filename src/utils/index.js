@@ -4,6 +4,15 @@
 import { jsx } from '@emotion/core';
 import get from 'lodash.get';
 import appbasePrefs from './constants';
+import defaultTemplatePreferences from './reactivesearchPreferences.json';
+
+export const staticFacetsIds = [
+    'productType',
+    'collection',
+    'color',
+    'size',
+    'price',
+];
 
 export const browserColors = {
     aliceblue: '#f0f8ff',
@@ -220,13 +229,21 @@ export const getReactDependenciesFromPreferences = (
     preferences = {},
     id = '',
 ) => {
-    const react = [];
-    const searchId = get(preferences, 'searchSettings.rsConfig.componentId');
-    if (searchId) {
-        react.push(searchId);
-    } else {
-        react.push('q');
+    if (preferences.pageSettings) {
+        const componentSettings = get(
+            preferences.pageSettings,
+            `pages.${preferences.pageSettings.currentPage}.componentSettings`,
+            {},
+        );
+        return Object.keys(componentSettings).filter((i) => i !== id);
     }
+    const react = [];
+    const searchId = get(
+        preferences,
+        'searchSettings.rsConfig.componentId',
+        'search',
+    );
+    react.push(searchId);
     const staticFacets = get(preferences, 'facetSettings.staticFacets');
     if (staticFacets && Array.isArray(staticFacets)) {
         staticFacets.forEach((facet) => {
@@ -254,20 +271,24 @@ export const getReactDependenciesFromPreferences = (
 };
 
 export const getSearchPreferences = () => {
-    let preferences = {};
     if (window.APPBASE_SEARCH_PREFERENCES || appbasePrefs) {
         try {
-            preferences = JSON.parse(
+            const prefs = JSON.parse(
                 window.APPBASE_SEARCH_PREFERENCES || appbasePrefs,
             );
-            delete preferences.facetSettings.staticFacets;
+
+            if (typeof prefs === 'string') return defaultTemplatePreferences;
+            delete prefs.facetSettings.staticFacets;
+            return prefs;
         } catch (e) {
+            console.log('===');
             console.warn(
                 'Appbase: Error encountered while parsing the search preferences, fall-backing to the default preferences',
             );
+            return defaultTemplatePreferences;
         }
     }
-    return preferences;
+    return defaultTemplatePreferences;
 };
 
 export const getRecommendationsPreferences = () => {

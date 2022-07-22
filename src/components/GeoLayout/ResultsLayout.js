@@ -1,40 +1,50 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 /* eslint-disable no-unused-vars */
-import React, {useState} from "react";
+import React, { useState } from 'react';
 import { jsx } from '@emotion/core';
 import get from 'lodash.get';
-import LayoutSwitch from "./LayoutSwitch";
-import ListLayout from "./ListLayout";
+import LayoutSwitch from './LayoutSwitch';
+import ListLayout from './ListLayout';
 import { getSearchPreferences, defaultPreferences } from '../../utils';
 
-
-function ResultsLayout({resultStats, data, isPreview, triggerClickAnalytics, renderMap, renderPagination}) {
-
+function ResultsLayout({
+    resultStats,
+    data,
+    isPreview,
+    triggerClickAnalytics,
+    renderMap,
+    renderPagination,
+    resultSettings,
+    searchSettings,
+    theme,
+    currency,
+}) {
     const [resultsLayout, setResultsLayout] = useState(
         get(
-            getSearchPreferences(),
-            'resultSettings.mapLayout',
+            resultSettings,
+            'mapLayout',
             defaultPreferences.resultSettings.mapLayout,
         ),
     );
 
-    const preferences = getSearchPreferences();
-
     const viewSwitcher = get(
-        preferences,
-        'resultSettings.viewSwitcher',
+        resultSettings,
+        'viewSwitcher',
         defaultPreferences.resultSettings.viewSwitcher,
     );
 
     return (
         <div>
-           <div >
+            <div>
                 {resultStats?.numberOfResults} results found in{' '}
                 {resultStats?.time}ms
             </div>
             {viewSwitcher && (
-                <LayoutSwitch switchViewLayout={setResultsLayout} resultsLayout={resultsLayout}/>
+                <LayoutSwitch
+                    switchViewLayout={setResultsLayout}
+                    resultsLayout={resultsLayout}
+                />
             )}
 
             {resultsLayout !== 'map' ? (
@@ -43,14 +53,16 @@ function ResultsLayout({resultStats, data, isPreview, triggerClickAnalytics, ren
                     isPreview={isPreview}
                     triggerClickAnalytics={triggerClickAnalytics}
                     renderPagination={renderPagination}
+                    theme={theme}
+                    currency={currency}
+                    resultSettings={resultSettings}
+                    searchSettings={searchSettings}
                 />
-            ): (
-                <div style={{height: '90vh'}}>
-                    {renderMap()}
-                </div>
+            ) : (
+                <div style={{ height: '90vh' }}>{renderMap()}</div>
             )}
         </div>
-    )
+    );
 }
 
 export default ResultsLayout;

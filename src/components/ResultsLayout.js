@@ -9,7 +9,7 @@ import get from 'lodash.get';
 import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
 import LayoutSwitch from './LayoutSwitch';
-import { getSearchPreferences, defaultPreferences } from '../utils';
+import { defaultPreferences } from '../utils';
 
 const DOMPurify = createDOMPurify(window);
 
@@ -199,51 +199,43 @@ const highlightStyle = ({ primaryColor, titleColor }) => css`
 
 const { Meta } = Card;
 
-function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
+function ResultsLayout({
+    data,
+    triggerClickAnalytics,
+    isPreview,
+    resultSettings,
+    searchSettings,
+    themeSettings,
+    currency,
+}) {
     const [resultsLayout, setResultsLayout] = useState(
-        get(
-            getSearchPreferences(),
-            'resultSettings.layout',
-            defaultPreferences.resultSettings.layout,
-        ),
+        get(resultSettings, 'layout', defaultPreferences.resultSettings.layout),
     );
-    const preferences = getSearchPreferences();
 
     const theme = get(
-        preferences,
-        'themeSettings.rsConfig',
+        themeSettings,
+        'rsConfig',
         defaultPreferences.themeSettings.rsConfig,
     );
 
     const themeType = get(
-        preferences,
-        'themeSettings.type',
+        themeSettings,
+        'type',
         defaultPreferences.themeSettings.type,
     );
 
-    const currency = get(
-        preferences,
-        'globalSettings.currency',
-        defaultPreferences.globalSettings.currency,
-    );
-
     const viewSwitcher = get(
-        preferences,
-        'resultSettings.viewSwitcher',
+        resultSettings,
+        'viewSwitcher',
         defaultPreferences.resultSettings.viewSwitcher,
     );
 
     const redirectUrlText = get(
-        preferences,
-        'searchSettings.redirectUrlText',
+        searchSettings,
+        'redirectUrlText',
         'View Product',
     );
-    const redirectUrlIcon = get(
-        preferences,
-        'searchSettings.redirectUrlIcon',
-        '',
-    );
-    const resultSettings = get(preferences, 'resultSettings');
+    const redirectUrlIcon = get(searchSettings, 'redirectUrlIcon', '');
 
     function getFontFamily() {
         const receivedFont = get(theme, 'typography.fontFamily', '');
@@ -624,8 +616,8 @@ function ResultsLayout({ data, triggerClickAnalytics, isPreview }) {
                                                         {variants?.length ||
                                                         price
                                                             ? `${
-                                                                priceUnit || currency
-
+                                                                  priceUnit ||
+                                                                  currency
                                                               } ${
                                                                   variants
                                                                       ? get(
