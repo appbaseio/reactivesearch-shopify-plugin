@@ -824,7 +824,7 @@ const Filters = ({
                                   ).calculatedCalendarInterval,
                         };
                     }
-                    if (!facet.enabled) return null;
+                    if (!facet || !facet?.enabled) return null;
 
                     if (filter === 'productType') {
                         return (
