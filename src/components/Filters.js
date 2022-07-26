@@ -763,10 +763,9 @@ const Filters = ({
         {},
     );
 
-    let filters = Object.keys(componentSettings).filter(
+    const filters = Object.keys(componentSettings).filter(
         (i) => i !== 'search' && i !== 'result' && !staticFacetsIds.includes(i),
     );
-    filters = [...staticFacetsIds, ...filters];
 
     return (
         <div
