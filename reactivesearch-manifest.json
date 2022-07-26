@@ -19,6 +19,6 @@
     "pages": {
         "home": "/"
     },
-    "preferences_path": "src/utils/constant.js",
+    "preferences_path": "src/utils/constants.js",
     "netlifyURL": "https://62d70f51451de60009d7ceb0--appbase-ecomm.netlify.app/"
 }
