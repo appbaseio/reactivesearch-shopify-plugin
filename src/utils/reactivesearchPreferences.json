@@ -299,7 +299,7 @@
     },
     "exportSettings": {
         "exportAs": "embed",
-        "credentials": "03f653924eff:122f0386-6b34-4da7-a7db-4f9633f26b85",
+        "credentials": "a03a1cb71321:75b6603d-9456-4a5a-af6b-a487b309eb61",
         "openAsPage": false,
         "type": "other"
     },
@@ -545,7 +545,7 @@
     "syncSettings": null,
     "appbaseSettings": {
         "index": "geo1-demo-app",
-        "credentials": "03f653924eff:122f0386-6b34-4da7-a7db-4f9633f26b85",
+        "credentials": "a03a1cb71321:75b6603d-9456-4a5a-af6b-a487b309eb61",
         "url": "https://appbase-demo-ansible-abxiydt-arc.searchbase.io"
     }
 }

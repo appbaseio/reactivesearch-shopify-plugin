@@ -763,10 +763,9 @@ const Filters = ({
         {},
     );
 
-    let filters = Object.keys(componentSettings).filter(
+    const filters = Object.keys(componentSettings).filter(
         (i) => i !== 'search' && i !== 'result' && !staticFacetsIds.includes(i),
     );
-    filters = [...staticFacetsIds, ...filters];
 
     return (
         <div
@@ -825,7 +824,7 @@ const Filters = ({
                                   ).calculatedCalendarInterval,
                         };
                     }
-                    if (!facet.enabled) return null;
+                    if (!facet || !facet?.enabled) return null;
 
                     if (filter === 'productType') {
                         return (
