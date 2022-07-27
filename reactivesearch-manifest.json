@@ -20,5 +20,5 @@
         "home": "/"
     },
     "preferences_path": "src/utils/constants.js",
-    "netlifyURL": "https://62d70f51451de60009d7ceb0--appbase-ecomm.netlify.app/"
+    "netlifyURL": "https://deploy-preview-134--appbase-ecomm.netlify.app/"
 }
