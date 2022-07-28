@@ -1,7 +1,8 @@
 {
     "image": "https://imgur.com/QlYvx1i.png",
     "name": "classic",
-    "description": "Theme appropriate for a ecommerce search UI with the support of pageSettings",
+    "label": "Faceted Search",
+    "description": "A single page app that displays a faceted search UI",
     "section": "e-commerce",
     "section_label": "<h3>E-commerce Search</h3>",
     "excludePaths": [
