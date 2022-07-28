@@ -1,7 +1,8 @@
 {
     "image": "https://imgur.com/eU7nrhX.png",
     "name": "geo",
-    "description": "Theme appropriate for a geo/ map search UI",
+    "label": "Geo Search",
+    "description": "A single page app that displays a geo search UI",
     "section": "geo",
     "section_label": "<h3>Geo Search</h3>",
     "excludePaths": [
@@ -20,5 +21,5 @@
         "home": "/"
     },
     "preferences_path": "src/utils/constants.js",
-    "netlifyURL": "https://62d70f51451de60009d7ceb0--appbase-ecomm.netlify.app/"
+    "netlifyURL": "https://deploy-preview-134--appbase-ecomm.netlify.app/"
 }
