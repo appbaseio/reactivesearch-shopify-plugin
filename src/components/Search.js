@@ -15,6 +15,7 @@ import { mediaMax } from '../utils/media';
 import Suggestion from './Suggestion';
 import ResultsLayout from './ResultsLayout';
 import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
+import { ResultsLayoutByCategory } from '@appbaseio/enterprise-search-ui';
 import Filters from './Filters';
 import FiltersN from './FIltersN';
 import {
@@ -690,109 +691,121 @@ class Search extends Component {
                                     currency={this.currency}
                                 />
                             ) : (
-                                <ReactiveComponent
-                                    preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}
-                                    dataField="title"
-                                    componentId="result"
-                                    ref={resultRef}
-                                    defaultQuery={() => ({
-                                        track_total_hits: true,
-                                    })}
-                                    renderNoResults={() => (
-                                        <div
-                                            style={{ textAlign: 'right' }}
-                                            // eslint-disable-next-line
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(
-                                                    get(
-                                                        this.resultSettings,
-                                                        'customMessages.noResults',
-                                                        'No Results Found',
-                                                    ),
-                                                ),
-                                            }}
-                                        />
-                                    )}
-                                    renderResultStats={({
-                                        numberOfResults,
-                                        time,
-                                    }) => (
-                                        <div
-                                            // eslint-disable-next-line
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(
-                                                    get(
-                                                        this.resultSettings,
-                                                        'customMessages.resultStats',
-                                                        '[count] products found in [time] ms',
-                                                    )
-                                                        .replace(
-                                                            '[count]',
-                                                            numberOfResults,
-                                                        )
-                                                        .replace(
-                                                            '[time]',
-                                                            time,
-                                                        ),
-                                                ),
-                                            }}
-                                        />
-                                    )}
-                                    size={9}
-                                    infiniteScroll
-                                    render={({
-                                        data,
-                                        triggerClickAnalytics,
-                                    }) => {
-                                        return !toggleFilters ? (
-                                            <ResultsLayout
-                                                data={data}
-                                                theme={this.theme}
-                                                triggerClickAnalytics={
-                                                    triggerClickAnalytics
-                                                }
-                                                isPreview={isPreview}
-                                                resultSettings={
-                                                    this.resultSettings
-                                                }
-                                                searchSettings={
-                                                    this.searchSettings
-                                                }
-                                                themeSettings={
-                                                    this.themeSettings
-                                                }
-                                                currency={this.currency}
-                                                getFontFamily={this.getFontFamily()}
-                                            />
-                                        ) : null;
-                                    }}
-                                    innerClass={{
-                                        list: 'custom-result-list',
-                                        resultsInfo: 'custom-result-info',
-                                        poweredBy: 'custom-powered-by',
-                                        noResults: 'custom-no-results',
-                                        pagination: 'custom-pagination',
-                                    }}
-                                    css={reactiveListCls(
-                                        toggleFilters,
-                                        this.theme,
-                                    )}
-                                    react={{
-                                        and: [
-                                            'filter_by_product',
-                                            ...getReactDependenciesFromPreferences(
-                                                this.preferences,
-                                                'result',
-                                            ),
-                                            'ToggleResults',
-                                            ...getReactDependenciesFromPreferences(
-                                                this.preferences,
-                                                'result',
-                                            ),
-                                        ],
-                                    }}
-                                    {...newProps}
+                                <ResultsLayoutByCategory
+                                    app="good-books-ds"
+                                    credentials="a03a1cb71321:75b6603d-9456-4a5a-af6b-a487b309eb61"
+                                    url="https://appbase-demo-ansible-abxiydt-arc.searchbase.io"
+                                    preferences={this.preferences}
+                                    isPreview={isPreview}
+                                    toggleFilters={toggleFilters}
                                 />
+                                // <ReactiveComponent
+                                //     preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}
+                                //     dataField={get(
+                                //         this.resultSettings,
+                                //         'fields.title',
+                                //         'title',
+                                //     )}
+                                //     componentId="result"
+                                //     ref={resultRef}
+                                //     defaultQuery={() => ({
+                                //         track_total_hits: true,
+                                //     })}
+                                //     renderNoResults={() => (
+                                //         <div
+                                //             style={{ textAlign: 'right' }}
+                                //             // eslint-disable-next-line
+                                //             dangerouslySetInnerHTML={{
+                                //                 __html: DOMPurify.sanitize(
+                                //                     get(
+                                //                         this.resultSettings,
+                                //                         'customMessages.noResults',
+                                //                         'No Results Found',
+                                //                     ),
+                                //                 ),
+                                //             }}
+                                //         />
+                                //     )}
+                                //     renderResultStats={({
+                                //         numberOfResults,
+                                //         time,
+                                //     }) => (
+                                //         <div
+                                //             // eslint-disable-next-line
+                                //             dangerouslySetInnerHTML={{
+                                //                 __html: DOMPurify.sanitize(
+                                //                     get(
+                                //                         this.resultSettings,
+                                //                         'customMessages.resultStats',
+                                //                         '[count] products found in [time] ms',
+                                //                     )
+                                //                         .replace(
+                                //                             '[count]',
+                                //                             numberOfResults,
+                                //                         )
+                                //                         .replace(
+                                //                             '[time]',
+                                //                             time,
+                                //                         ),
+                                //                 ),
+                                //             }}
+                                //         />
+                                //     )}
+                                //     size={9}
+                                //     infiniteScroll
+                                //     render={({
+                                //         data,
+                                //         triggerClickAnalytics,
+                                //     }) => {
+                                //         return !toggleFilters ? (
+                                //             <ResultsLayout
+                                //                 data={data}
+                                //                 theme={this.theme}
+                                //                 triggerClickAnalytics={
+                                //                     triggerClickAnalytics
+                                //                 }
+                                //                 isPreview={isPreview}
+                                //                 resultSettings={
+                                //                     this.resultSettings
+                                //                 }
+                                //                 searchSettings={
+                                //                     this.searchSettings
+                                //                 }
+                                //                 themeSettings={
+                                //                     this.themeSettings
+                                //                 }
+                                //                 currency={this.currency}
+                                //                 getFontFamily={this.getFontFamily()}
+                                //             />
+                                //         ) : null;
+                                //     }}
+                                //     innerClass={{
+                                //         list: 'custom-result-list',
+                                //         resultsInfo: 'custom-result-info',
+                                //         poweredBy: 'custom-powered-by',
+                                //         noResults: 'custom-no-results',
+                                //         pagination: 'custom-pagination',
+                                //     }}
+                                //     css={reactiveListCls(
+                                //         toggleFilters,
+                                //         this.theme,
+                                //     )}
+                                //     react={{
+                                //         and: [
+                                //             'filter_by_product',
+                                //             ...getReactDependenciesFromPreferences(
+                                //                 this.preferences,
+                                //                 'result',
+                                //             ),
+                                //             'ToggleResults',
+                                //             ...getReactDependenciesFromPreferences(
+                                //                 this.preferences,
+                                //                 'result',
+                                //             ),
+                                //         ],
+                                //     }}
+                                //     {...newProps}
+                                // />
                             )}
                         </div>
                     </div>
