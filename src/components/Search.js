@@ -10,22 +10,17 @@ import {
 import get from 'lodash.get';
 import { string, bool } from 'prop-types';
 import { Button, Icon, Affix } from 'antd';
-import createDOMPurify from 'dompurify';
+import { ResultsLayoutByCategory } from '@appbaseio/enterprise-search-ui';
 import { mediaMax } from '../utils/media';
 import Suggestion from './Suggestion';
-import ResultsLayout from './ResultsLayout';
 import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
-import { ResultsLayoutByCategory } from '@appbaseio/enterprise-search-ui';
 import Filters from './Filters';
 import FiltersN from './FIltersN';
 import {
     defaultPreferences,
-    getReactDependenciesFromPreferences,
     getSearchPreferences,
     staticFacetsIds,
 } from '../utils';
-
-const DOMPurify = createDOMPurify(window);
 
 const resultRef = React.createRef();
 
@@ -53,54 +48,6 @@ export const listLayoutStyles = css`
         flex-direction: column;
         align-items: center;
         margin-bottom: 50px;
-    }
-`;
-
-const reactiveListCls = (toggleFilters, theme) => css`
-    .custom-no-results {
-        display: flex;
-        justify-content: center;
-        padding: 25px 0;
-    }
-    .custom-pagination {
-        max-width: none;
-        padding-bottom: 50px;
-        a {
-            border-radius: 2px;
-        }
-        a.active {
-            color: ${get(theme, 'colors.textColor')};
-        }
-        @media (max-width: 768px) {
-            display: ${toggleFilters ? 'none' : 'block'};
-        }
-    }
-    .custom-powered-by {
-        margin: 15px;
-        display: none;
-        visibility: hidden;
-    }
-    .custom-result-info {
-        gap: 15px;
-        padding: 18px 0px;
-        height: 60px;
-    }
-    .custom-result-info > div {
-        @media (max-width: 768px) {
-            display: none;
-        }
-    }
-    .custom-result-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        grid-gap: 10px;
-        ${mediaMax.medium} {
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            display: ${toggleFilters ? 'none' : 'grid'};
-        }
-        ${mediaMax.small} {
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        }
     }
 `;
 
@@ -698,6 +645,9 @@ class Search extends Component {
                                     preferences={this.preferences}
                                     isPreview={isPreview}
                                     toggleFilters={toggleFilters}
+                                    componentProps={{
+                                        ...newProps,
+                                    }}
                                 />
                             )}
                         </div>
