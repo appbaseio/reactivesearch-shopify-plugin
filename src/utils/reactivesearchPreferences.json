@@ -60,14 +60,14 @@
                         "layout": "grid",
                         "viewSwitcher": true
                     },
-                    "Books_Count_2": {
+                    "Books_Count_1": {
                         "enabled": true,
                         "customMessages": {
                             "loading": "Fetching Options",
                             "noResults": "No items Found"
                         },
                         "rsConfig": {
-                            "componentId": "Books_Count_2",
+                            "componentId": "Books_Count_1",
                             "filterLabel": null,
                             "title": "Books Count",
                             "dataField": "books_count",
@@ -481,7 +481,7 @@
                     "noResults": "No items Found"
                 },
                 "rsConfig": {
-                    "componentId": "Books_Count_2",
+                    "componentId": "Books_Count_1",
                     "filterLabel": null,
                     "title": "Books Count",
                     "dataField": "books_count",
