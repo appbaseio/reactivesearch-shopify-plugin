@@ -8,7 +8,7 @@
     "url": "https://github.com/divyanshu013"
   },
   "dependencies": {
-    "@appbaseio/enterprise-search-ui": "1.0.9-alpha",
+    "@appbaseio/enterprise-search-ui": "1.0.10-alpha",
     "@appbaseio/reactivemaps": "3.0.0",
     "@appbaseio/reactivesearch": "3.36.0",
     "@emotion/core": "^10.0.35",

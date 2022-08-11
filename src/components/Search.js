@@ -639,11 +639,7 @@ class Search extends Component {
                                 />
                             ) : (
                                 <ResultsLayoutByCategory
-                                    app={this.index}
-                                    credentials={this.credentials}
-                                    url={this.url}
                                     preferences={this.preferences}
-                                    isPreview={isPreview}
                                     toggleFilters={toggleFilters}
                                     componentProps={{
                                         ...newProps,
