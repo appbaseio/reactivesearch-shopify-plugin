@@ -135,8 +135,8 @@ function GeoResultsLayout({
                 <ReactiveGoogleMap
                     componentId="result"
                     dataField={get(
-                        'locationDatafield',
                         resultSettings,
+                        'locationDataField',
                         'location',
                     )}
                     title="Maps Ui"
@@ -309,8 +309,8 @@ function GeoResultsLayout({
                 <ReactiveOpenStreetMap
                     componentId="map"
                     dataField={get(
-                        'locationDatafield',
                         resultSettings,
+                        'locationDataField',
                         'location',
                     )}
                     title="Maps Ui"
