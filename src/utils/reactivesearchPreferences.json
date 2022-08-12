@@ -112,6 +112,7 @@
                             "showMissing": false,
                             "missingLabel": null,
                             "multiSelect": false,
+                            "queryFormat": null,
                             "selectAllLabel": null,
                             "componentType": "RANGEINPUT",
                             "endLabel": "End Year",
