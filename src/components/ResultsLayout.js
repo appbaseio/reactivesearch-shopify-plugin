@@ -276,8 +276,8 @@ function ResultsLayout({
                             get(resultSettings, 'fields.price'),
                         );
                         const priceUnit = get(
-                            item,
-                            get(resultSettings, 'fields.priceUnit'),
+                            resultSettings,
+                            'fields.priceUnit',
                         );
                         const { variants } = item;
 
@@ -490,8 +490,8 @@ function ResultsLayout({
                             get(resultSettings, 'fields.price'),
                         );
                         const priceUnit = get(
-                            item,
-                            get(resultSettings, 'fields.priceUnit'),
+                            resultSettings,
+                            'fields.priceUnit',
                         );
                         const { variants } = item;
 
