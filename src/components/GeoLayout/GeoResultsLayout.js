@@ -135,8 +135,8 @@ function GeoResultsLayout({
                 <ReactiveGoogleMap
                     componentId="result"
                     dataField={get(
-                        'locationDatafield',
                         resultSettings,
+                        'locationDataField',
                         'location',
                     )}
                     title="Maps Ui"
@@ -173,8 +173,8 @@ function GeoResultsLayout({
                             get(resultSettings, 'fields.price'),
                         );
                         const priceUnit = get(
-                            item,
-                            get(resultSettings, 'fields.priceUnit'),
+                            resultSettings,
+                            'fields.priceUnit',
                         );
                         const { variants } = item;
 
@@ -309,8 +309,8 @@ function GeoResultsLayout({
                 <ReactiveOpenStreetMap
                     componentId="map"
                     dataField={get(
-                        'locationDatafield',
                         resultSettings,
+                        'locationDataField',
                         'location',
                     )}
                     title="Maps Ui"
@@ -347,8 +347,8 @@ function GeoResultsLayout({
                             get(resultSettings, 'fields.price'),
                         );
                         const priceUnit = get(
-                            item,
-                            get(resultSettings, 'fields.priceUnit'),
+                            resultSettings,
+                            'fields.priceUnit',
                         );
                         const { variants } = item;
 

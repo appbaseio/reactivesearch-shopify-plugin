@@ -116,10 +116,7 @@ export default function ListLayout({
                         item,
                         get(resultSettings, 'fields.price'),
                     );
-                    const priceUnit = get(
-                        item,
-                        get(resultSettings, 'fields.priceUnit'),
-                    );
+                    const priceUnit = get(resultSettings, 'fields.priceUnit');
                     const { variants } = item;
 
                     const redirectToProduct = !isPreview || handle;
