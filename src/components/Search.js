@@ -13,7 +13,6 @@ import { Button, Icon, Affix } from 'antd';
 import { ResultsLayoutByCategory } from '@appbaseio/enterprise-search-ui';
 import { mediaMax } from '../utils/media';
 import Suggestion from './Suggestion';
-import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
 import Filters from './Filters';
 import FiltersN from './FIltersN';
 import {
@@ -613,39 +612,14 @@ class Search extends Component {
                                     <SelectedFilters showClearAll="default" />
                                 </div>
                             ) : null}
-                            {/* <ReactiveComponent
-                                componentId="filter_by_product"
-                                customQuery={() =>
-                                    this.exportType === 'shopify'
-                                        ? {
-                                              query: {
-                                                  term: {
-                                                      type: 'products',
-                                                  },
-                                              },
-                                          }
-                                        : null
-                                }
-                            /> */}
 
-                            {this.themeType === 'geo' ? (
-                                <GeoResultsLayout
-                                    isPreview={isPreview}
-                                    resultSettings={this.resultSettings}
-                                    searchSettings={this.searchSettings}
-                                    theme={this.theme}
-                                    themeType={this.themeType}
-                                    currency={this.currency}
-                                />
-                            ) : (
-                                <ResultsLayoutByCategory
-                                    preferences={this.preferences}
-                                    toggleFilters={toggleFilters}
-                                    componentProps={{
-                                        ...newProps,
-                                    }}
-                                />
-                            )}
+                            <ResultsLayoutByCategory
+                                preferences={this.preferences}
+                                toggleFilters={toggleFilters}
+                                componentProps={{
+                                    ...newProps,
+                                }}
+                            />
                         </div>
                     </div>
                 </div>

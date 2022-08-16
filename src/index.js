@@ -1,28 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Helmet } from 'react-helmet';
-import ProductSuggestions from './components/ProductSuggestions';
 import App from './App';
 import 'antd/dist/antd.css';
 import './index.css';
 
 const renderById = (id, mode) => {
     const isIdAvailble = (elemId) => document.getElementById(elemId);
-    const getPropsById = (elemId) => {
-        const container = isIdAvailble(elemId);
-        if (container) {
-            return {
-                widgetId: container.getAttribute('widget-id'),
-                currentProduct: container.getAttribute('current-product'),
-                isOpen: container.getAttribute('isOpen') === 'true',
-                openAsPage: container.getAttribute('openaspage') === 'true',
-                isPreview: container.getAttribute('isPreview') === 'true',
-                disableSearchText:
-                    container.getAttribute('disableSearchText') === 'true',
-            };
-        }
-        return null;
-    };
     const container = isIdAvailble(id);
 
     if (container) {
@@ -64,35 +48,14 @@ const renderById = (id, mode) => {
                         rel="stylesheet"
                     />
                 </Helmet>
-                {mode === 'suggestions' ? (
-                    <ProductSuggestions {...getPropsById(id)} />
-                ) : (
-                    <App id={id} />
-                )}
+                <App id={id} />
             </div>,
             document.getElementById(id),
         );
     }
 };
-// ------------------ PRODUCT RECOMMENDATIONS ------------------
-
-// Note: Only for internal testing, below id is not available for use
-
-renderById('reactivesearch-shopify-product-recommendations', 'suggestions');
-
-// Note: These ids can be used in plugin
-renderById('reactivesearch-shopify-product-recommendations-1', 'suggestions');
-renderById('reactivesearch-shopify-product-recommendations-2', 'suggestions');
-renderById('reactivesearch-shopify-product-recommendations-2', 'suggestions');
-renderById('reactivesearch-shopify-product-recommendations-4', 'suggestions');
 
 // ------------------ SEARCH PLUGIN ------------------
 
 // Note: Only for internal testing, below id is not available for use
 renderById('reactivesearch-shopify');
-
-// Note: These ids can be used in plugin
-renderById('reactivesearch-shopify-1');
-renderById('reactivesearch-shopify-2');
-renderById('reactivesearch-shopify-3');
-renderById('reactivesearch-shopify-4');
