@@ -10,21 +10,16 @@ import {
 import get from 'lodash.get';
 import { string, bool } from 'prop-types';
 import { Button, Icon, Affix } from 'antd';
-import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
 import Suggestion from './Suggestion';
-import ResultsLayout from './ResultsLayout';
 import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
 import Filters from './Filters';
 import FiltersN from './FIltersN';
 import {
     defaultPreferences,
-    getReactDependenciesFromPreferences,
     getSearchPreferences,
     staticFacetsIds,
 } from '../utils';
-
-const DOMPurify = createDOMPurify(window);
 
 const resultRef = React.createRef();
 
@@ -52,54 +47,6 @@ export const listLayoutStyles = css`
         flex-direction: column;
         align-items: center;
         margin-bottom: 50px;
-    }
-`;
-
-const reactiveListCls = (toggleFilters, theme) => css`
-    .custom-no-results {
-        display: flex;
-        justify-content: center;
-        padding: 25px 0;
-    }
-    .custom-pagination {
-        max-width: none;
-        padding-bottom: 50px;
-        a {
-            border-radius: 2px;
-        }
-        a.active {
-            color: ${get(theme, 'colors.textColor')};
-        }
-        @media (max-width: 768px) {
-            display: ${toggleFilters ? 'none' : 'block'};
-        }
-    }
-    .custom-powered-by {
-        margin: 15px;
-        display: none;
-        visibility: hidden;
-    }
-    .custom-result-info {
-        gap: 15px;
-        padding: 18px 0px;
-        height: 60px;
-    }
-    .custom-result-info > div {
-        @media (max-width: 768px) {
-            display: none;
-        }
-    }
-    .custom-result-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        grid-gap: 10px;
-        ${mediaMax.medium} {
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            display: ${toggleFilters ? 'none' : 'grid'};
-        }
-        ${mediaMax.small} {
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        }
     }
 `;
 
@@ -495,17 +442,6 @@ class Search extends Component {
     render() {
         const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
-        let newProps = {};
-        const sortOptionSelector = get(
-            this.resultSettings,
-            'sortOptionSelector',
-            [],
-        );
-        if (sortOptionSelector && sortOptionSelector.length) {
-            newProps = {
-                sortOptions: get(this.resultSettings, 'sortOptionSelector'),
-            };
-        }
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
         const mapsAPIkey = get(
             this.resultSettings,
@@ -665,135 +601,15 @@ class Search extends Component {
                                     <SelectedFilters showClearAll="default" />
                                 </div>
                             ) : null}
-                            {/* <ReactiveComponent
-                                componentId="filter_by_product"
-                                customQuery={() =>
-                                    this.exportType === 'shopify'
-                                        ? {
-                                              query: {
-                                                  term: {
-                                                      type: 'products',
-                                                  },
-                                              },
-                                          }
-                                        : null
-                                }
-                            /> */}
 
-                            {this.themeType === 'geo' ? (
-                                <GeoResultsLayout
-                                    isPreview={isPreview}
-                                    resultSettings={this.resultSettings}
-                                    searchSettings={this.searchSettings}
-                                    theme={this.theme}
-                                    themeType={this.themeType}
-                                    currency={this.currency}
-                                />
-                            ) : (
-                                <ReactiveComponent
-                                    preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}
-                                    dataField="title"
-                                    componentId="result"
-                                    ref={resultRef}
-                                    defaultQuery={() => ({
-                                        track_total_hits: true,
-                                    })}
-                                    renderNoResults={() => (
-                                        <div
-                                            style={{ textAlign: 'right' }}
-                                            // eslint-disable-next-line
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(
-                                                    get(
-                                                        this.resultSettings,
-                                                        'customMessages.noResults',
-                                                        'No Results Found',
-                                                    ),
-                                                ),
-                                            }}
-                                        />
-                                    )}
-                                    renderResultStats={({
-                                        numberOfResults,
-                                        time,
-                                    }) => (
-                                        <div
-                                            // eslint-disable-next-line
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(
-                                                    get(
-                                                        this.resultSettings,
-                                                        'customMessages.resultStats',
-                                                        '[count] products found in [time] ms',
-                                                    )
-                                                        .replace(
-                                                            '[count]',
-                                                            numberOfResults,
-                                                        )
-                                                        .replace(
-                                                            '[time]',
-                                                            time,
-                                                        ),
-                                                ),
-                                            }}
-                                        />
-                                    )}
-                                    size={9}
-                                    infiniteScroll
-                                    render={({
-                                        data,
-                                        triggerClickAnalytics,
-                                    }) => {
-                                        return !toggleFilters ? (
-                                            <ResultsLayout
-                                                data={data}
-                                                theme={this.theme}
-                                                triggerClickAnalytics={
-                                                    triggerClickAnalytics
-                                                }
-                                                isPreview={isPreview}
-                                                resultSettings={
-                                                    this.resultSettings
-                                                }
-                                                searchSettings={
-                                                    this.searchSettings
-                                                }
-                                                themeSettings={
-                                                    this.themeSettings
-                                                }
-                                                currency={this.currency}
-                                                getFontFamily={this.getFontFamily()}
-                                            />
-                                        ) : null;
-                                    }}
-                                    innerClass={{
-                                        list: 'custom-result-list',
-                                        resultsInfo: 'custom-result-info',
-                                        poweredBy: 'custom-powered-by',
-                                        noResults: 'custom-no-results',
-                                        pagination: 'custom-pagination',
-                                    }}
-                                    css={reactiveListCls(
-                                        toggleFilters,
-                                        this.theme,
-                                    )}
-                                    react={{
-                                        and: [
-                                            'filter_by_product',
-                                            ...getReactDependenciesFromPreferences(
-                                                this.preferences,
-                                                'result',
-                                            ),
-                                            'ToggleResults',
-                                            ...getReactDependenciesFromPreferences(
-                                                this.preferences,
-                                                'result',
-                                            ),
-                                        ],
-                                    }}
-                                    {...newProps}
-                                />
-                            )}
+                            <GeoResultsLayout
+                                isPreview={isPreview}
+                                resultSettings={this.resultSettings}
+                                searchSettings={this.searchSettings}
+                                theme={this.theme}
+                                themeType={this.themeType}
+                                currency={this.currency}
+                            />
                         </div>
                     </div>
                 </div>
