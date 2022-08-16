@@ -681,7 +681,11 @@ class Search extends Component {
 
                             <ReactiveComponent
                                 preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}
-                                dataField="title"
+                                dataField={get(
+                                    this.resultSettings,
+                                    'fields.title',
+                                    'title',
+                                )}
                                 componentId="result"
                                 ref={resultRef}
                                 defaultQuery={() => ({
