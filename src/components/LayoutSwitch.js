@@ -2,7 +2,7 @@
 /** @jsx jsx */
 import { Icon } from 'antd';
 import { css, jsx } from '@emotion/core';
-import { func } from "prop-types";
+import { func } from 'prop-types';
 
 const viewSwitcherStyles = css`
     display: flex;
@@ -18,15 +18,22 @@ const viewSwitcherStyles = css`
     }
 `;
 export default function LayoutSwitch({ switchViewLayout }) {
-
     return (
         <div css={viewSwitcherStyles}>
-            <Icon type="appstore" className="icon-styles" onClick={() => switchViewLayout('grid')}/>
-            <Icon type="menu" className="icon-styles" onClick={() => switchViewLayout('list')} />
+            <Icon
+                type="appstore"
+                className="icon-styles"
+                onClick={() => switchViewLayout('grid')}
+            />
+            <Icon
+                type="menu"
+                className="icon-styles"
+                onClick={() => switchViewLayout('list')}
+            />
         </div>
-    )
+    );
 }
 
 LayoutSwitch.propTypes = {
     switchViewLayout: func,
-}
+};
