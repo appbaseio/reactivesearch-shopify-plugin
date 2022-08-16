@@ -5,7 +5,7 @@ import App from './App';
 import 'antd/dist/antd.css';
 import './index.css';
 
-const renderById = (id, mode) => {
+const renderById = (id) => {
     const isIdAvailble = (elemId) => document.getElementById(elemId);
     const container = isIdAvailble(id);
 
