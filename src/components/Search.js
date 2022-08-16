@@ -14,7 +14,6 @@ import createDOMPurify from 'dompurify';
 import { mediaMax } from '../utils/media';
 import Suggestion from './Suggestion';
 import ResultsLayout from './ResultsLayout';
-import GeoResultsLayout from './GeoLayout/GeoResultsLayout';
 import Filters from './Filters';
 import FiltersN from './FIltersN';
 import {
@@ -680,120 +679,94 @@ class Search extends Component {
                                 }
                             /> */}
 
-                            {this.themeType === 'geo' ? (
-                                <GeoResultsLayout
-                                    isPreview={isPreview}
-                                    resultSettings={this.resultSettings}
-                                    searchSettings={this.searchSettings}
-                                    theme={this.theme}
-                                    themeType={this.themeType}
-                                    currency={this.currency}
-                                />
-                            ) : (
-                                <ReactiveComponent
-                                    preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}
-                                    dataField="title"
-                                    componentId="result"
-                                    ref={resultRef}
-                                    defaultQuery={() => ({
-                                        track_total_hits: true,
-                                    })}
-                                    renderNoResults={() => (
-                                        <div
-                                            style={{ textAlign: 'right' }}
-                                            // eslint-disable-next-line
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(
-                                                    get(
-                                                        this.resultSettings,
-                                                        'customMessages.noResults',
-                                                        'No Results Found',
-                                                    ),
+                            <ReactiveComponent
+                                preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.result`}
+                                dataField="title"
+                                componentId="result"
+                                ref={resultRef}
+                                defaultQuery={() => ({
+                                    track_total_hits: true,
+                                })}
+                                renderNoResults={() => (
+                                    <div
+                                        style={{ textAlign: 'right' }}
+                                        // eslint-disable-next-line
+                                        dangerouslySetInnerHTML={{
+                                            __html: DOMPurify.sanitize(
+                                                get(
+                                                    this.resultSettings,
+                                                    'customMessages.noResults',
+                                                    'No Results Found',
                                                 ),
-                                            }}
-                                        />
-                                    )}
-                                    renderResultStats={({
-                                        numberOfResults,
-                                        time,
-                                    }) => (
-                                        <div
-                                            // eslint-disable-next-line
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(
-                                                    get(
-                                                        this.resultSettings,
-                                                        'customMessages.resultStats',
-                                                        '[count] products found in [time] ms',
+                                            ),
+                                        }}
+                                    />
+                                )}
+                                renderResultStats={({
+                                    numberOfResults,
+                                    time,
+                                }) => (
+                                    <div
+                                        // eslint-disable-next-line
+                                        dangerouslySetInnerHTML={{
+                                            __html: DOMPurify.sanitize(
+                                                get(
+                                                    this.resultSettings,
+                                                    'customMessages.resultStats',
+                                                    '[count] products found in [time] ms',
+                                                )
+                                                    .replace(
+                                                        '[count]',
+                                                        numberOfResults,
                                                     )
-                                                        .replace(
-                                                            '[count]',
-                                                            numberOfResults,
-                                                        )
-                                                        .replace(
-                                                            '[time]',
-                                                            time,
-                                                        ),
-                                                ),
-                                            }}
+                                                    .replace('[time]', time),
+                                            ),
+                                        }}
+                                    />
+                                )}
+                                size={9}
+                                infiniteScroll
+                                render={({ data, triggerClickAnalytics }) => {
+                                    return !toggleFilters ? (
+                                        <ResultsLayout
+                                            data={data}
+                                            theme={this.theme}
+                                            triggerClickAnalytics={
+                                                triggerClickAnalytics
+                                            }
+                                            isPreview={isPreview}
+                                            resultSettings={this.resultSettings}
+                                            searchSettings={this.searchSettings}
+                                            themeSettings={this.themeSettings}
+                                            currency={this.currency}
+                                            getFontFamily={this.getFontFamily()}
                                         />
-                                    )}
-                                    size={9}
-                                    infiniteScroll
-                                    render={({
-                                        data,
-                                        triggerClickAnalytics,
-                                    }) => {
-                                        return !toggleFilters ? (
-                                            <ResultsLayout
-                                                data={data}
-                                                theme={this.theme}
-                                                triggerClickAnalytics={
-                                                    triggerClickAnalytics
-                                                }
-                                                isPreview={isPreview}
-                                                resultSettings={
-                                                    this.resultSettings
-                                                }
-                                                searchSettings={
-                                                    this.searchSettings
-                                                }
-                                                themeSettings={
-                                                    this.themeSettings
-                                                }
-                                                currency={this.currency}
-                                                getFontFamily={this.getFontFamily()}
-                                            />
-                                        ) : null;
-                                    }}
-                                    innerClass={{
-                                        list: 'custom-result-list',
-                                        resultsInfo: 'custom-result-info',
-                                        poweredBy: 'custom-powered-by',
-                                        noResults: 'custom-no-results',
-                                        pagination: 'custom-pagination',
-                                    }}
-                                    css={reactiveListCls(
-                                        toggleFilters,
-                                        this.theme,
-                                    )}
-                                    react={{
-                                        and: [
-                                            'filter_by_product',
-                                            ...getReactDependenciesFromPreferences(
-                                                this.preferences,
-                                                'result',
-                                            ),
-                                            'ToggleResults',
-                                            ...getReactDependenciesFromPreferences(
-                                                this.preferences,
-                                                'result',
-                                            ),
-                                        ],
-                                    }}
-                                    {...newProps}
-                                />
-                            )}
+                                    ) : null;
+                                }}
+                                innerClass={{
+                                    list: 'custom-result-list',
+                                    resultsInfo: 'custom-result-info',
+                                    poweredBy: 'custom-powered-by',
+                                    noResults: 'custom-no-results',
+                                    pagination: 'custom-pagination',
+                                }}
+                                css={reactiveListCls(toggleFilters, this.theme)}
+                                react={{
+                                    and: [
+                                        'filter_by_product',
+                                        ...getReactDependenciesFromPreferences(
+                                            this.preferences,
+                                            'result',
+                                        ),
+                                        'ToggleResults',
+                                        ...getReactDependenciesFromPreferences(
+                                            this.preferences,
+                                            'result',
+                                        ),
+                                    ],
+                                }}
+                                {...newProps}
+                            />
                         </div>
                     </div>
                 </div>
