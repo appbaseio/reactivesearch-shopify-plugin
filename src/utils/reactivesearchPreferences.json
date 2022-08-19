@@ -68,7 +68,7 @@
                         },
                         "rsConfig": {
                             "componentId": "Books_Count_2",
-                            "filterLabel": null,
+                            "filterLabel": "Books Count",
                             "title": "Books Count",
                             "dataField": "books_count",
                             "filterType": "range",
@@ -98,7 +98,7 @@
                         },
                         "rsConfig": {
                             "componentId": "Test_0",
-                            "filterLabel": null,
+                            "filterLabel": "Authors",
                             "title": "Authors",
                             "dataField": "authors.keyword",
                             "filterType": "list",
@@ -481,7 +481,7 @@
                 },
                 "rsConfig": {
                     "componentId": "Books_Count_2",
-                    "filterLabel": null,
+                    "filterLabel": "Books Count",
                     "title": "Books Count",
                     "dataField": "books_count",
                     "filterType": "range",
@@ -510,7 +510,7 @@
                 },
                 "rsConfig": {
                     "componentId": "Test_0",
-                    "filterLabel": null,
+                    "filterLabel": "Authors",
                     "title": "Authors",
                     "dataField": "authors.keyword",
                     "filterType": "list",
