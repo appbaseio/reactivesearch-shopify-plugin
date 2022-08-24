@@ -509,6 +509,7 @@ class Search extends Component {
                               return params.toString();
                           }
                 }
+                initialQueriesSyncTime={100}
             >
                 <Global
                     styles={css`
@@ -592,7 +593,6 @@ class Search extends Component {
                                 exportType={this.exportType}
                                 preferences={this.preferences}
                                 toggleFilters={toggleFilters}
-                                // dynamicFacets={this.dynamicFacets}
                                 getFontFamily={this.getFontFamily()}
                             />
                         )}
