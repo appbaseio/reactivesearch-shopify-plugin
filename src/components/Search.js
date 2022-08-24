@@ -499,6 +499,7 @@ class Search extends Component {
                               return params.toString();
                           }
                 }
+                initialQueriesSyncTime={100}
                 transformRequest={(props) => {
                     if (Object.keys(fusionSettings).length) {
                         const newBody = JSON.parse(props.body);
