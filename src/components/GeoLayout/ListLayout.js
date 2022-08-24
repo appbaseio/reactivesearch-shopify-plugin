@@ -117,6 +117,10 @@ export default function ListLayout({
                         get(resultSettings, 'fields.price'),
                     );
                     const priceUnit = get(resultSettings, 'fields.priceUnit');
+                    const cssSelector = get(
+                        resultSettings,
+                        'fields.cssSelector',
+                    );
                     const { variants } = item;
 
                     const redirectToProduct = !isPreview || handle;
@@ -150,6 +154,7 @@ export default function ListLayout({
                                 css={listStyles({
                                     ...get(theme, 'colors'),
                                 })}
+                                className={cssSelector}
                             >
                                 <List.Item.Meta
                                     avatar={
