@@ -75,7 +75,7 @@
                         },
                         "rsConfig": {
                             "componentId": "Place_0",
-                            "filterLabel": null,
+                            "filterLabel": "Place",
                             "title": "Place",
                             "dataField": "place.keyword",
                             "filterType": "list",
@@ -101,7 +101,7 @@
                         },
                         "rsConfig": {
                             "componentId": "Year_1",
-                            "filterLabel": null,
+                            "filterLabel": "Year",
                             "title": "Year",
                             "dataField": "year",
                             "filterType": "range",
