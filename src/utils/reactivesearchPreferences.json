@@ -67,52 +67,40 @@
                             "noResults": "No items Found"
                         },
                         "rsConfig": {
-                            "componentId": "Books_Count_1",
-                            "filterLabel": "Books Count",
                             "title": "Books Count",
                             "dataField": "books_count",
+                            "filterLabel": "Books Count",
                             "filterType": "range",
-                            "sortBy": "count",
-                            "showCount": true,
-                            "showCheckbox": true,
-                            "showSearch": true,
-                            "showMissing": false,
-                            "missingLabel": null,
-                            "multiSelect": false,
-                            "queryFormat": null,
-                            "selectAllLabel": null,
-                            "componentType": "RANGEINPUT",
-                            "endLabel": "End",
-                            "endValue": "100",
-                            "showHistogram": true,
+                            "startValue": "10",
+                            "endValue": "97",
                             "startLabel": "Start",
-                            "startValue": "10"
+                            "endLabel": "End",
+                            "showHistogram": true,
+                            "componentType": "RANGEINPUT",
+                            "componentId": "Books_Count_1"
                         },
                         "componentType": "RANGEINPUT",
                         "facetType": "dynamic"
                     },
-                    "Test_0": {
+                    "Authors_0": {
                         "enabled": true,
                         "customMessages": {
                             "loading": "Fetching Options",
                             "noResults": "No items Found"
                         },
                         "rsConfig": {
-                            "componentId": "Test_0",
-                            "filterLabel": "Authors",
                             "title": "Authors",
                             "dataField": "authors.keyword",
+                            "filterLabel": "Authors",
                             "filterType": "list",
                             "queryFormat": "or",
                             "sortBy": "count",
+                            "componentType": "MULTILIST",
                             "showCount": true,
                             "showCheckbox": true,
                             "showSearch": true,
                             "showMissing": false,
-                            "missingLabel": null,
-                            "multiSelect": false,
-                            "selectAllLabel": null,
-                            "componentType": "MULTILIST"
+                            "componentId": "Authors_0"
                         },
                         "componentType": "MULTILIST",
                         "facetType": "dynamic"
