@@ -281,7 +281,6 @@ export const getSearchPreferences = () => {
             delete prefs.facetSettings.staticFacets;
             return prefs;
         } catch (e) {
-            console.log('===');
             console.warn(
                 'Appbase: Error encountered while parsing the search preferences, fall-backing to the default preferences',
             );
