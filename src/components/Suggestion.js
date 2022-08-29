@@ -25,6 +25,22 @@ const suggestionStyles = css`
         fill: rgb(112, 112, 112);
         position: relative;
     }
+
+    .description-two-lines {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .title-one-line {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 `;
 
 const Suggestion = ({
@@ -109,6 +125,7 @@ const Suggestion = ({
                                 fontSize: '1rem',
                                 color: themeConfig.colors.titleColor,
                             }}
+                            className="title-one-line"
                         />
                     ) : (
                         <div
@@ -116,6 +133,7 @@ const Suggestion = ({
                                 fontSize: '1rem',
                                 color: themeConfig.colors.titleColor,
                             }}
+                            className="title-one-line"
                         >
                             {title}
                         </div>
@@ -131,7 +149,7 @@ const Suggestion = ({
                         }}
                     />
                 )}
-                <div>{description}</div>
+                <div className="description-two-lines">{description}</div>
             </div>
         </div>
     );
