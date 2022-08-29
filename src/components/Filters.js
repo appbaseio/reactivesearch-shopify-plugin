@@ -1,9 +1,10 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
+import React from 'react';
 import { css, jsx } from '@emotion/core';
 import get from 'lodash.get';
 import { Collapse } from 'antd';
-import { ReactiveComponent } from '@appbaseio/reactivesearch';
+import { componentTypes, ReactiveComponent } from '@appbaseio/reactivesearch';
 import createDOMPurify from 'dompurify';
 import { getReactDependenciesFromPreferences, staticFacetsIds } from '../utils';
 import { mediaMax } from '../utils/media';
@@ -169,142 +170,168 @@ const Filters = ({
                             }}
                             className="filter"
                         >
-                            {/* eslint-disable-next-line no-nested-ternary */}
                             {facet.enabled ? (
-                                // eslint-disable-next-line no-nested-ternary
-                                type === 'list' ? (
-                                    <ReactiveComponent
-                                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
-                                        componentId={filter}
-                                        innerClass={{
-                                            input: 'list-input',
-                                        }}
-                                        URLParams
-                                        loader={
-                                            <div
-                                                css={loaderStyle}
-                                                // eslint-disable-next-line
-                                                dangerouslySetInnerHTML={{
-                                                    __html: DOMPurify.sanitize(
-                                                        get(
-                                                            facet,
-                                                            'customMessages.loading',
-                                                            'Loading options',
-                                                        ),
-                                                    ),
-                                                }}
-                                            />
-                                        }
-                                        renderNoResults={() => (
-                                            <div
-                                                // eslint-disable-next-line
-                                                dangerouslySetInnerHTML={{
-                                                    __html: DOMPurify.sanitize(
-                                                        get(
-                                                            facet,
-                                                            'customMessages.noResults',
-                                                            'No items Found',
-                                                        ),
-                                                    ),
-                                                }}
-                                            />
-                                        )}
-                                        css={getFontFamily}
-                                        react={{
-                                            and: getReactDependenciesFromPreferences(
-                                                preferences,
-                                                filter,
-                                            ),
-                                        }}
-                                        filterLabel={get(
-                                            facet,
-                                            'rsConfig.title',
-                                            '',
-                                        )}
-                                        title=""
-                                    />
-                                ) : facet?.rsConfig?.startValue &&
-                                  facet?.rsConfig?.endValue ? (
-                                    <ReactiveComponent
-                                        componentId={get(
-                                            facet,
-                                            'rsConfig.componentId',
-                                            '',
-                                        )}
-                                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
-                                        URLParams
-                                        css={getFontFamily}
-                                        filterLabel={get(
-                                            facet,
-                                            'rsConfig.title',
-                                            '',
-                                        )}
-                                        range={{
-                                            start:
-                                                type === 'date'
-                                                    ? new Date(
-                                                          get(
-                                                              facet,
-                                                              'rsConfig.startValue',
-                                                              '',
-                                                          ),
-                                                      )
-                                                    : parseInt(
-                                                          get(
-                                                              facet,
-                                                              'rsConfig.startValue',
-                                                              '',
-                                                          ),
-                                                          10,
-                                                      ),
-                                            end:
-                                                type === 'date'
-                                                    ? new Date(
-                                                          get(
-                                                              facet,
-                                                              'rsConfig.endValue',
-                                                              '',
-                                                          ),
-                                                      )
-                                                    : parseInt(
-                                                          get(
-                                                              facet,
-                                                              'rsConfig.endValue',
-                                                              '',
-                                                          ),
-                                                          10,
-                                                      ),
-                                        }}
-                                        rangeLabels={{
-                                            start: get(
+                                <React.Fragment>
+                                    {facet.rsConfig.componentType ===
+                                    componentTypes.reactiveChart ? (
+                                        <ReactiveComponent
+                                            preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
+                                            componentId={filter}
+                                            css={getFontFamily}
+                                            URLParams
+                                            filterLabel={get(
                                                 facet,
-                                                'rsConfig.startLabel',
+                                                'rsConfig.title',
                                                 '',
-                                            ),
-                                            end: get(
+                                            )}
+                                            title=""
+                                            react={{
+                                                and: getReactDependenciesFromPreferences(
+                                                    preferences,
+                                                    filter,
+                                                ),
+                                            }}
+                                        />
+                                    ) : null}
+                                    {type === 'list' ? (
+                                        <ReactiveComponent
+                                            preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
+                                            componentId={filter}
+                                            innerClass={{
+                                                input: 'list-input',
+                                            }}
+                                            URLParams
+                                            loader={
+                                                <div
+                                                    css={loaderStyle}
+                                                    // eslint-disable-next-line
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: DOMPurify.sanitize(
+                                                            get(
+                                                                facet,
+                                                                'customMessages.loading',
+                                                                'Loading options',
+                                                            ),
+                                                        ),
+                                                    }}
+                                                />
+                                            }
+                                            renderNoResults={() => (
+                                                <div
+                                                    // eslint-disable-next-line
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: DOMPurify.sanitize(
+                                                            get(
+                                                                facet,
+                                                                'customMessages.noResults',
+                                                                'No items Found',
+                                                            ),
+                                                        ),
+                                                    }}
+                                                />
+                                            )}
+                                            css={getFontFamily}
+                                            react={{
+                                                and: getReactDependenciesFromPreferences(
+                                                    preferences,
+                                                    filter,
+                                                ),
+                                            }}
+                                            filterLabel={get(
                                                 facet,
-                                                'rsConfig.endLabel',
+                                                'rsConfig.title',
                                                 '',
-                                            ),
-                                        }}
-                                        title=""
-                                        {...dateProps}
-                                    />
-                                ) : (
-                                    <ReactiveComponent
-                                        preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
-                                        componentId={filter}
-                                        URLParams
-                                        css={getFontFamily}
-                                        filterLabel={get(
-                                            facet,
-                                            'rsConfig.title',
-                                            '',
-                                        )}
-                                        title=""
-                                        {...dateProps}
-                                    />
-                                )
+                                            )}
+                                            title=""
+                                        />
+                                    ) : null}
+                                    {type === 'range' ? (
+                                        <>
+                                            {facet?.rsConfig?.startValue &&
+                                            facet?.rsConfig?.endValue ? (
+                                                <ReactiveComponent
+                                                    componentId={get(
+                                                        facet,
+                                                        'rsConfig.componentId',
+                                                        '',
+                                                    )}
+                                                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
+                                                    URLParams
+                                                    css={getFontFamily}
+                                                    filterLabel={get(
+                                                        facet,
+                                                        'rsConfig.title',
+                                                        '',
+                                                    )}
+                                                    range={{
+                                                        start:
+                                                            type === 'date'
+                                                                ? new Date(
+                                                                      get(
+                                                                          facet,
+                                                                          'rsConfig.startValue',
+                                                                          '',
+                                                                      ),
+                                                                  )
+                                                                : parseInt(
+                                                                      get(
+                                                                          facet,
+                                                                          'rsConfig.startValue',
+                                                                          '',
+                                                                      ),
+                                                                      10,
+                                                                  ),
+                                                        end:
+                                                            type === 'date'
+                                                                ? new Date(
+                                                                      get(
+                                                                          facet,
+                                                                          'rsConfig.endValue',
+                                                                          '',
+                                                                      ),
+                                                                  )
+                                                                : parseInt(
+                                                                      get(
+                                                                          facet,
+                                                                          'rsConfig.endValue',
+                                                                          '',
+                                                                      ),
+                                                                      10,
+                                                                  ),
+                                                    }}
+                                                    rangeLabels={{
+                                                        start: get(
+                                                            facet,
+                                                            'rsConfig.startLabel',
+                                                            '',
+                                                        ),
+                                                        end: get(
+                                                            facet,
+                                                            'rsConfig.endLabel',
+                                                            '',
+                                                        ),
+                                                    }}
+                                                    title=""
+                                                    {...dateProps}
+                                                />
+                                            ) : (
+                                                <ReactiveComponent
+                                                    preferencesPath={`pageSettings.pages.${pageSettings.currentPage}.componentSettings.${filter}`}
+                                                    componentId={filter}
+                                                    URLParams
+                                                    css={getFontFamily}
+                                                    filterLabel={get(
+                                                        facet,
+                                                        'rsConfig.title',
+                                                        '',
+                                                    )}
+                                                    title=""
+                                                    {...dateProps}
+                                                />
+                                            )}
+                                        </>
+                                    ) : null}
+                                </React.Fragment>
                             ) : null}
                         </Panel>
                     );
