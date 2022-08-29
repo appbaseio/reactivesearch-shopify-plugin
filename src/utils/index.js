@@ -278,7 +278,7 @@ export const getSearchPreferences = () => {
             );
 
             if (typeof prefs === 'string') return defaultTemplatePreferences;
-            delete prefs.facetSettings.staticFacets;
+
             return prefs;
         } catch (e) {
             console.warn(
