@@ -369,6 +369,24 @@ class Search extends Component {
             'searchButton.text',
             'Search for products...',
         );
+        let valueFieldsObj = {};
+        const defaultFields = get(this.resultSettings, 'fields', {});
+        if (defaultFields.title)
+            valueFieldsObj = {
+                ...valueFieldsObj,
+                valueFields: [
+                    ...(valueFieldsObj.valueFields || []),
+                    defaultFields.title,
+                ],
+            };
+        if (defaultFields.description)
+            valueFieldsObj = {
+                ...valueFieldsObj,
+                valueFields: [
+                    ...(valueFieldsObj.valueFields || []),
+                    defaultFields.description,
+                ],
+            };
 
         return (
             <ReactiveComponent
@@ -417,6 +435,7 @@ class Search extends Component {
                     sectionLabel:
                         '<h3 class="section-label">Index Suggestions</h3>',
                     size: 3,
+                    ...valueFieldsObj,
                 }}
                 size={6}
                 onChange={(val) => {
