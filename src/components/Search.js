@@ -379,7 +379,7 @@ class Search extends Component {
                     defaultFields.title,
                 ],
             };
-        if (defaultFields.description)
+        else if (defaultFields.description)
             valueFieldsObj = {
                 ...valueFieldsObj,
                 valueFields: [
