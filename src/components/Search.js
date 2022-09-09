@@ -506,7 +506,7 @@ class Search extends Component {
                         newBody.metadata = {
                             app: fusionSettings.app,
                             profile: fusionSettings.profile,
-                            search_profile: fusionSettings.searchProfile,
+                            suggestion_profile: fusionSettings.searchProfile,
                         };
                         // eslint-disable-next-line
                         props.body = JSON.stringify(newBody);
