@@ -369,7 +369,7 @@ class Search extends Component {
             'searchButton.text',
             'Search for products...',
         );
-        let valueFieldsObj = {};
+        let valueFieldsObj = { valueFields: ['term_s'] };
         const defaultFields = get(this.resultSettings, 'fields', {});
         if (defaultFields.title)
             valueFieldsObj = {
