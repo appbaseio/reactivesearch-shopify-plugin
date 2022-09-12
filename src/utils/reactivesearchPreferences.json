@@ -86,7 +86,6 @@
                             "showSearch": true,
                             "showMissing": false,
                             "missingLabel": null,
-                            "multiSelect": false,
                             "selectAllLabel": null,
                             "componentType": "MULTILIST"
                         },
@@ -105,13 +104,7 @@
                             "title": "Year",
                             "dataField": "year",
                             "filterType": "range",
-                            "sortBy": "count",
-                            "showCount": true,
-                            "showCheckbox": true,
-                            "showSearch": true,
-                            "showMissing": false,
                             "missingLabel": null,
-                            "multiSelect": false,
                             "queryFormat": null,
                             "selectAllLabel": null,
                             "componentType": "RANGEINPUT",
@@ -123,139 +116,6 @@
                         },
                         "componentType": "RANGEINPUT",
                         "facetType": "dynamic"
-                    },
-                    "productType": {
-                        "name": "productType",
-                        "enabled": false,
-                        "isCollapsible": true,
-                        "customMessages": {
-                            "loading": "Fetching Options",
-                            "noResults": "No items Found"
-                        },
-                        "rsConfig": {
-                            "title": null,
-                            "filterType": "list",
-                            "queryFormat": "or",
-                            "sortBy": "count",
-                            "filterLabel": null,
-                            "showCount": true,
-                            "showCheckbox": true,
-                            "showSearch": true,
-                            "showMissing": false,
-                            "missingLabel": null,
-                            "multiSelect": false,
-                            "selectAllLabel": null,
-                            "componentType": "MULTILIST"
-                        },
-                        "componentType": "MULTILIST",
-                        "facetType": "static"
-                    },
-                    "collection": {
-                        "name": "collection",
-                        "enabled": false,
-                        "isCollapsible": true,
-                        "customMessages": {
-                            "loading": "Fetching Options",
-                            "noResults": "No items Found"
-                        },
-                        "rsConfig": {
-                            "title": null,
-                            "filterType": "list",
-                            "queryFormat": "or",
-                            "sortBy": "count",
-                            "filterLabel": null,
-                            "showCount": true,
-                            "showCheckbox": true,
-                            "showSearch": true,
-                            "showMissing": false,
-                            "missingLabel": null,
-                            "multiSelect": false,
-                            "selectAllLabel": null,
-                            "componentType": "MULTILIST"
-                        },
-                        "componentType": "MULTILIST",
-                        "facetType": "static"
-                    },
-                    "color": {
-                        "name": "color",
-                        "enabled": false,
-                        "isCollapsible": true,
-                        "customMessages": {
-                            "loading": "Fetching Options",
-                            "noResults": "No items Found"
-                        },
-                        "rsConfig": {
-                            "title": null,
-                            "dataField": null,
-                            "filterType": "list",
-                            "queryFormat": "or",
-                            "sortBy": "count",
-                            "filterLabel": null,
-                            "showCount": true,
-                            "showCheckbox": true,
-                            "showSearch": true,
-                            "showMissing": false,
-                            "missingLabel": null,
-                            "multiSelect": false,
-                            "selectAllLabel": null,
-                            "componentType": "MULTILIST"
-                        },
-                        "componentType": "MULTILIST",
-                        "facetType": "static"
-                    },
-                    "size": {
-                        "name": "size",
-                        "enabled": false,
-                        "isCollapsible": true,
-                        "customMessages": {
-                            "loading": "Fetching Options",
-                            "noResults": "No items Found"
-                        },
-                        "rsConfig": {
-                            "title": null,
-                            "dataField": null,
-                            "filterType": "list",
-                            "queryFormat": "or",
-                            "sortBy": "count",
-                            "filterLabel": null,
-                            "showCount": true,
-                            "showCheckbox": true,
-                            "showSearch": true,
-                            "showMissing": false,
-                            "missingLabel": null,
-                            "multiSelect": false,
-                            "selectAllLabel": null,
-                            "componentType": "MULTILIST",
-                            "showHistogram": false,
-                            "startValue": null,
-                            "endValue": null,
-                            "startLabel": null,
-                            "endLabel": null,
-                            "calendarInterval": null
-                        },
-                        "componentType": "MULTILIST",
-                        "facetType": "static"
-                    },
-                    "price": {
-                        "name": "price",
-                        "enabled": false,
-                        "isCollapsible": true,
-                        "customMessages": {
-                            "loading": "Fetching Options",
-                            "noResults": "No items Found"
-                        },
-                        "rsConfig": {
-                            "title": null,
-                            "dataField": null,
-                            "startValue": null,
-                            "endValue": null,
-                            "startLabel": null,
-                            "endLabel": null,
-                            "showHistogram": false,
-                            "componentType": "DYNAMICRANGESLIDER"
-                        },
-                        "componentType": "DYNAMICRANGESLIDER",
-                        "facetType": "static"
                     }
                 }
             }
