@@ -498,6 +498,7 @@ class Search extends Component {
                               return params.toString();
                           }
                 }
+                initialQueriesSyncTime={100}
             >
                 <Global
                     styles={css`
