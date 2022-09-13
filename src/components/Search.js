@@ -473,6 +473,8 @@ class Search extends Component {
             };
         }
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
+        const backend = get(this.preferences, 'backend', '');
+        const isFusion = backend === 'fusion';
         const fusionSettings = get(this.preferences, 'fusionSettings', {});
         const mapsAPIkey = get(
             this.resultSettings,
@@ -485,6 +487,21 @@ class Search extends Component {
                 i !== 'result' &&
                 !staticFacetsIds.includes(i),
         );
+        const transformRequest = isFusion
+            ? (props) => {
+                  if (Object.keys(fusionSettings).length) {
+                      const newBody = JSON.parse(props.body);
+                      newBody.metadata = {
+                          app: fusionSettings.app,
+                          profile: fusionSettings.profile,
+                          suggestion_profile: fusionSettings.searchProfile,
+                      };
+                      // eslint-disable-next-line
+                      props.body = JSON.stringify(newBody);
+                  }
+                  return props;
+              }
+            : undefined;
 
         return (
             <ReactiveBase
@@ -530,19 +547,7 @@ class Search extends Component {
                           }
                 }
                 initialQueriesSyncTime={100}
-                transformRequest={(props) => {
-                    if (Object.keys(fusionSettings).length) {
-                        const newBody = JSON.parse(props.body);
-                        newBody.metadata = {
-                            app: fusionSettings.app,
-                            profile: fusionSettings.profile,
-                            suggestion_profile: fusionSettings.searchProfile,
-                        };
-                        // eslint-disable-next-line
-                        props.body = JSON.stringify(newBody);
-                    }
-                    return props;
-                }}
+                transformRequest={transformRequest}
             >
                 <Global
                     styles={css`
