@@ -475,6 +475,10 @@ class Search extends Component {
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
         const backend = get(this.preferences, 'backend', '');
         const isFusion = backend === 'fusion';
+        const globalEndpoint = get(
+            this.preferences,
+            'appbaseSettings.endpoint',
+        );
         const fusionSettings = get(this.preferences, 'fusionSettings', {});
         const mapsAPIkey = get(
             this.resultSettings,
@@ -505,6 +509,7 @@ class Search extends Component {
 
         return (
             <ReactiveBase
+                endpoint={globalEndpoint}
                 app={this.index}
                 url={this.url}
                 credentials={this.credentials}
