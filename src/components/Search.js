@@ -509,7 +509,7 @@ class Search extends Component {
 
         return (
             <ReactiveBase
-                endpoint={globalEndpoint}
+                endpoint={isFusion ? undefined : globalEndpoint}
                 app={this.index}
                 url={this.url}
                 credentials={this.credentials}
