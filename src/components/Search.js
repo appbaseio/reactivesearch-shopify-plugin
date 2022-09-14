@@ -475,10 +475,7 @@ class Search extends Component {
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
         const backend = get(this.preferences, 'backend', '');
         const isFusion = backend === 'fusion';
-        const globalEndpoint = get(
-            this.preferences,
-            'appbaseSettings.endpoint',
-        );
+        const globalEndpoint = get(this.globalSettings, 'endpoint');
         const fusionSettings = get(this.preferences, 'fusionSettings', {});
         const mapsAPIkey = get(
             this.resultSettings,
