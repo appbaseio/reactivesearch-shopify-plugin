@@ -443,7 +443,15 @@ class Search extends Component {
         const { toggleFilters, isMobile } = this.state;
         const { isPreview } = this.props;
         const logoSettings = get(this.globalSettings, 'meta.branding', {});
+        const backend = get(this.preferences, 'backend', '');
+        const isFusion = backend === 'fusion';
+        const globalEndpoint = get(this.globalSettings, 'endpoint');
+        const pageEndpoint = get(
+            this.pageSettings,
+            `pages.${this.pageSettings.currentPage}.indexSettings.endpoint`,
+        );
         const fusionSettings = get(this.preferences, 'fusionSettings', {});
+        const endpoint = pageEndpoint || globalEndpoint;
         const mapsAPIkey = get(
             this.resultSettings,
             'mapsAPIkey',
@@ -455,9 +463,24 @@ class Search extends Component {
                 i !== 'result' &&
                 !staticFacetsIds.includes(i),
         );
-
+        const transformRequest = isFusion
+            ? (props) => {
+                  if (Object.keys(fusionSettings).length) {
+                      const newBody = JSON.parse(props.body);
+                      newBody.metadata = {
+                          app: fusionSettings.app,
+                          profile: fusionSettings.profile,
+                          suggestion_profile: fusionSettings.searchProfile,
+                      };
+                      // eslint-disable-next-line
+                      props.body = JSON.stringify(newBody);
+                  }
+                  return props;
+              }
+            : undefined;
         return (
             <ReactiveBase
+                endpoint={endpoint}
                 app={this.index}
                 url={this.url}
                 credentials={this.credentials}
@@ -500,19 +523,12 @@ class Search extends Component {
                           }
                 }
                 initialQueriesSyncTime={100}
-                transformRequest={(props) => {
-                    if (Object.keys(fusionSettings).length) {
-                        const newBody = JSON.parse(props.body);
-                        newBody.metadata = {
-                            app: fusionSettings.app,
-                            profile: fusionSettings.profile,
-                            suggestion_profile: fusionSettings.searchProfile,
-                        };
-                        // eslint-disable-next-line
-                        props.body = JSON.stringify(newBody);
-                    }
-                    return props;
-                }}
+                transformRequest={transformRequest}
+                transformResponse={
+                    endpoint
+                        ? (response, id) => Promise.resolve(response[id])
+                        : undefined
+                }
             >
                 <Global
                     styles={css`
