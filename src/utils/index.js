@@ -279,15 +279,18 @@ export const getSearchPreferences = () => {
 
             if (typeof prefs === 'string') return defaultTemplatePreferences;
 
-            return prefs;
+            // eslint-disable-next-line no-use-before-define
+            return transformPreferences(prefs);
         } catch (e) {
             console.warn(
                 'Appbase: Error encountered while parsing the search preferences, fall-backing to the default preferences',
             );
-            return defaultTemplatePreferences;
+            // eslint-disable-next-line no-use-before-define
+            return transformPreferences(defaultTemplatePreferences);
         }
     }
-    return defaultTemplatePreferences;
+    // eslint-disable-next-line no-use-before-define
+    return transformPreferences(defaultTemplatePreferences);
 };
 
 export const getRecommendationsPreferences = () => {
@@ -366,3 +369,58 @@ export const getNoRecommendationMessage = (recommendationType) => {
             return null;
     }
 };
+
+/* eslint-disable no-param-reassign */
+
+function parseJSON(str) {
+    let parsedObj;
+    try {
+        if (typeof str === 'string') parsedObj = JSON.parse(str);
+        else parsedObj = str;
+    } catch (e) {
+        console.error(e);
+    }
+    console.log({ parsedObj });
+    return parsedObj;
+}
+
+function transformPreferences(preferences) {
+    console.log({ preferences });
+    if (preferences.globalSettings && preferences.globalSettings.endpoint) {
+        const { endpoint } = preferences.globalSettings;
+        const { appbaseSettings } = preferences;
+        // We may get a url relative to cluster
+        const isRelative = endpoint.url[0] === '/';
+
+        preferences.globalSettings.endpoint = {
+            url: isRelative ? appbaseSettings.url + endpoint.url : endpoint.url,
+            headers: parseJSON(endpoint.headers),
+            method: endpoint.method,
+        };
+    }
+    if (preferences.pageSettings) {
+        Object.keys(preferences.pageSettings.pages).forEach((page) => {
+            const pagePreferences = preferences.pageSettings.pages[page];
+            if (
+                pagePreferences.indexSettings &&
+                pagePreferences.indexSettings.endpoint
+            ) {
+                const { endpoint } = pagePreferences.indexSettings;
+                const { appbaseSettings } = preferences;
+                // We may get a url relative to cluster
+                const isRelative = endpoint.url[0] === '/';
+
+                pagePreferences.indexSettings.endpoint = {
+                    url: isRelative
+                        ? appbaseSettings.url + endpoint.url
+                        : endpoint.url,
+                    headers: parseJSON(endpoint.headers),
+                    method: endpoint.method,
+                };
+            }
+        });
+    }
+
+    return preferences;
+}
+/* eslint-enable */
