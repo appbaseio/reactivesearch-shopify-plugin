@@ -555,11 +555,6 @@ class Search extends Component {
                 }
                 initialQueriesSyncTime={100}
                 transformRequest={transformRequest}
-                transformResponse={
-                    endpoint
-                        ? (response, id) => Promise.resolve(response[id])
-                        : undefined
-                }
             >
                 <Global
                     styles={css`
