@@ -476,7 +476,12 @@ class Search extends Component {
         const backend = get(this.preferences, 'backend', '');
         const isFusion = backend === 'fusion';
         const globalEndpoint = get(this.globalSettings, 'endpoint');
+        const pageEndpoint = get(
+            this.pageSettings,
+            `pages.${this.pageSettings.currentPage}.indexSettings.endpoint`,
+        );
         const fusionSettings = get(this.preferences, 'fusionSettings', {});
+        const endpoint = pageEndpoint || globalEndpoint;
         const mapsAPIkey = get(
             this.resultSettings,
             'mapsAPIkey',
@@ -506,7 +511,7 @@ class Search extends Component {
 
         return (
             <ReactiveBase
-                endpoint={globalEndpoint}
+                endpoint={endpoint}
                 app={this.index}
                 url={this.url}
                 credentials={this.credentials}
@@ -550,6 +555,11 @@ class Search extends Component {
                 }
                 initialQueriesSyncTime={100}
                 transformRequest={transformRequest}
+                transformResponse={
+                    endpoint
+                        ? (response, id) => Promise.resolve(response[id])
+                        : undefined
+                }
             >
                 <Global
                     styles={css`
