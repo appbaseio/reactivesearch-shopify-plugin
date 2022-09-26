@@ -385,7 +385,6 @@ function parseJSON(str) {
 }
 
 function transformPreferences(preferences) {
-    console.log({ preferences });
     if (preferences.globalSettings && preferences.globalSettings.endpoint) {
         const { endpoint } = preferences.globalSettings;
         const { appbaseSettings } = preferences;
