@@ -121,7 +121,13 @@ const Filters = ({
                     const facet = componentSettings[filter];
                     const type = get(facet, 'rsConfig.filterType', '');
                     let dateProps = {};
-
+                    if (
+                        type === 'list' &&
+                        facet.rsConfig.componentType ===
+                            componentTypes.tabDataList
+                    ) {
+                        return null;
+                    }
                     if (type === 'date') {
                         const calendarInterval = get(
                             facet,
