@@ -245,7 +245,7 @@ const Filters = ({
                                             title=""
                                         />
                                     ) : null}
-                                    {type === 'range' ? (
+                                    {type === 'range' || type === 'date' ? (
                                         <>
                                             {facet?.rsConfig?.startValue &&
                                             facet?.rsConfig?.endValue ? (
