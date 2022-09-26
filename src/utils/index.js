@@ -380,7 +380,7 @@ function parseJSON(str) {
     } catch (e) {
         console.error(e);
     }
-    console.log({ parsedObj });
+
     return parsedObj;
 }
 
