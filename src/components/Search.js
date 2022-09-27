@@ -463,6 +463,10 @@ class Search extends Component {
                 i !== 'result' &&
                 !staticFacetsIds.includes(i),
         );
+        const tabDataList = (Object.values(this.componentSettings).filter(
+            (component) =>
+                component.componentType === componentTypes.tabDataList,
+        ) ?? [])[0];
         const transformRequest = isFusion
             ? (props) => {
                   if (Object.keys(fusionSettings).length) {
@@ -619,7 +623,20 @@ class Search extends Component {
                                         get(this.theme, 'colors', {}),
                                     ),
                                 })}
-
+                            {tabDataList ? (
+                                <div
+                                    style={{
+                                        borderBottom: '1px solid lightgray',
+                                    }}
+                                >
+                                    <ReactiveComponent
+                                        componentId={`${tabDataList.rsConfig.componentId}`}
+                                        preferencesPath={`pageSettings.pages.search.componentSettings.${tabDataList.key}`}
+                                        URLParams
+                                        title=""
+                                    />
+                                </div>
+                            ) : null}
                             {get(this.globalSettings, 'showSelectedFilters') &&
                             !toggleFilters &&
                             this.themeType !== 'minimal' ? (
