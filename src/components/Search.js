@@ -662,7 +662,7 @@ class Search extends Component {
                                 >
                                     <ReactiveComponent
                                         componentId={`${tabDataList.rsConfig.componentId}`}
-                                        preferencesPath={`pageSettings.pages.search.componentSettings.${tabDataList.key}`}
+                                        preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.${tabDataList.rsConfig.componentId}`}
                                         URLParams
                                         title=""
                                     />
