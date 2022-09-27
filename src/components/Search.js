@@ -6,6 +6,7 @@ import {
     ReactiveBase,
     SelectedFilters,
     ReactiveComponent,
+    componentTypes,
 } from '@appbaseio/reactivesearch';
 import get from 'lodash.get';
 import { string, bool } from 'prop-types';
@@ -631,7 +632,7 @@ class Search extends Component {
                                 >
                                     <ReactiveComponent
                                         componentId={`${tabDataList.rsConfig.componentId}`}
-                                        preferencesPath={`pageSettings.pages.search.componentSettings.${tabDataList.key}`}
+                                        preferencesPath={`pageSettings.pages.${this.pageSettings.currentPage}.componentSettings.${tabDataList.rsConfig.componentId}`}
                                         URLParams
                                         title=""
                                     />

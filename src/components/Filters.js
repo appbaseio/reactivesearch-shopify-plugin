@@ -8,7 +8,7 @@ import {
     Checkbox,
 } from '@appbaseio/reactivesearch/lib/styles/FormControlList';
 import { Collapse, Tooltip } from 'antd';
-import { ReactiveComponent } from '@appbaseio/reactivesearch';
+import { ReactiveComponent, componentTypes } from '@appbaseio/reactivesearch';
 import createDOMPurify from 'dompurify';
 import {
     getReactDependenciesFromPreferences,
