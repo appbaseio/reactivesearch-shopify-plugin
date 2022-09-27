@@ -658,6 +658,7 @@ class Search extends Component {
                                 <div
                                     style={{
                                         borderBottom: '1px solid lightgray',
+                                        marginBottom: 20,
                                     }}
                                 >
                                     <ReactiveComponent
@@ -671,7 +672,10 @@ class Search extends Component {
                             {get(this.globalSettings, 'showSelectedFilters') &&
                             !toggleFilters &&
                             this.themeType !== 'minimal' ? (
-                                <div css={viewSwitcherStyles}>
+                                <div
+                                    css={viewSwitcherStyles}
+                                    style={{ marginBottom: 10 }}
+                                >
                                     <SelectedFilters showClearAll="default" />
                                 </div>
                             ) : null}
