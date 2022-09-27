@@ -42,10 +42,10 @@
   resolved "https://registry.yarnpkg.com/@ant-design/icons/-/icons-2.1.1.tgz#7b9c08dffd4f5d41db667d9dbe5e0107d0bd9a4a"
   integrity sha512-jCH+k2Vjlno4YWl6g535nHR09PwCEmTBKAG6VqF+rhkrSPRLfgpU2maagwbZPLjaHuU5Jd1DFQ2KJpQuI6uG8w==
 
-"@appbaseio/reactivecore@9.14.19":
-  version "9.14.19"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.14.19.tgz#bf7032f3ece40ed512b471a03280c68724b45249"
-  integrity sha512-hhg5NwmtqsWSJCPv4xb9mQ9rycVQqRMwDelKwEa1lFaCmuEGAfHuL+2OR021wbq36suiIXvX1eT9TFy4ZJGdZQ==
+"@appbaseio/reactivecore@9.14.24":
+  version "9.14.24"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.14.24.tgz#74cb34a1aad3b61ed177576de65634c1209cee9f"
+  integrity sha512-oyTfPfB1ptvev+Dz0XN5clZuBZVlY1pNYJ0fT/4Pom8bOCYcQFRsYjXgsrBVJT1/s08+KUEC/NCGMwhpPIH7ZQ==
   dependencies:
     cross-fetch "^3.0.4"
     prop-types "^15.6.0"
@@ -70,15 +70,15 @@
     react-leaflet "^2.1.3"
     rheostat "^2.1.1"
 
-"@appbaseio/reactivesearch@3.38.3":
-  version "3.38.3"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.38.3.tgz#e97ad7f187231524d73f75f63a1276517e886c7c"
-  integrity sha512-F/s3aOpxnJAZuGlggtJ8RnMMWkWxavT3CDPrYdpwqczoz0cPywrAYRsS6cYj+9/zw1krhGfAp1fj67LR+Pnf2A==
+"@appbaseio/reactivesearch@3.40.1":
+  version "3.40.1"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.40.1.tgz#4bff7c40cf32cff98d5aca74659454c2c7dccbf4"
+  integrity sha512-MNI6muAHpg11fNe1TdZlmYVq/82Paa4WlzPhDWS+bGfy7rudtRsHAoD6NAnOy88NC+eij2o0V6uAv7dmrx4ryw==
   dependencies:
-    "@appbaseio/reactivecore" "9.14.19"
+    "@appbaseio/reactivecore" "9.14.24"
     "@emotion/core" "^10.0.28"
     "@emotion/styled" "^10.0.27"
-    appbase-js "5.0.0"
+    appbase-js "5.1.0"
     cross-env "^5.2.0"
     downshift "^1.31.2"
     echarts "^5.3.3"
@@ -2553,10 +2553,10 @@ anymatch@^3.0.0, anymatch@^3.0.3, anymatch@~3.1.2:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-appbase-js@5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-5.0.0.tgz#9f3e25ad718251e153593f7559cfac7b4d4ac961"
-  integrity sha512-TOvBaXEpRd85Oo118X+NNQq7CMtZE3eyp7zYWZ7LO2o9mrdTQRUk+ADE0P8xFkga2c4WHHRyBhoeJglux12LZg==
+appbase-js@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/appbase-js/-/appbase-js-5.1.0.tgz#6896fad28376ee4d43ca03042e7c426e767eeed0"
+  integrity sha512-Nekeev62QtboYWtNp7L3GJgkavCYQNFzcDuyMAPgQ6ajr9Kp2xzM/xZT1KmAn97yk7TRcznjpvojMCH4zjv5eQ==
   dependencies:
     cross-fetch "^3.1.5"
     querystring "^0.2.0"
