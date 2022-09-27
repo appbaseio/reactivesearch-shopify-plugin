@@ -8,9 +8,9 @@
     "url": "https://github.com/divyanshu013"
   },
   "dependencies": {
-    "@appbaseio/enterprise-search-ui": "1.0.34-alpha",
+    "@appbaseio/enterprise-search-ui": "1.0.36-alpha",
     "@appbaseio/reactivemaps": "3.0.0",
-    "@appbaseio/reactivesearch": "3.39.4",
+    "@appbaseio/reactivesearch": "3.40.1",
     "@emotion/core": "^10.0.35",
     "antd": "3.26.20",
     "babel-eslint": "^10.1.0",
