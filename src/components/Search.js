@@ -506,6 +506,7 @@ class Search extends Component {
                           app: fusionSettings.app,
                           profile: fusionSettings.profile,
                           suggestion_profile: fusionSettings.searchProfile,
+                          sponsored_profile: fusionSettings.sponsoredProfile,
                       };
                       // eslint-disable-next-line
                       props.body = JSON.stringify(newBody);
