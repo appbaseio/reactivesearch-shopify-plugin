@@ -685,6 +685,11 @@ class Search extends Component {
                                 toggleFilters={toggleFilters}
                                 componentProps={{
                                     ...newProps,
+                                    highlight: get(
+                                        this.resultSettings,
+                                        'resultHighlight',
+                                        false,
+                                    ),
                                 }}
                             />
                         </div>
