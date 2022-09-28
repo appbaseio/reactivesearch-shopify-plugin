@@ -436,6 +436,7 @@ class Search extends Component {
                 }}
                 {...categorySearchProps}
                 showDistinctSuggestions
+                highlight={get(this.resultSettings, 'resultHighlight', false)}
             />
         );
     };

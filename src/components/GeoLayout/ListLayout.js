@@ -4,8 +4,6 @@ import { List, Button, Icon } from 'antd';
 import { css, jsx } from '@emotion/core';
 import { func, array } from 'prop-types';
 import get from 'lodash.get';
-import strip from 'striptags';
-import Truncate from 'react-truncate';
 import createDOMPurify from 'dompurify';
 import { mediaMax } from '../../utils/media';
 
@@ -70,6 +68,25 @@ export const listStyles = ({ titleColor, primaryColor }) => css`
     }
 `;
 
+const highlightStyle = ({
+    primaryColor,
+    titleColor,
+}: {
+    titleColor: string,
+    primaryColor: string,
+}) => css`
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    mark{
+        font-weight: 700;
+        padding: 0;
+        background: ${primaryColor}33;
+        color: ${titleColor}
+        fontSize: 1rem;
+    }
+`;
 export default function ListLayout({
     data,
     triggerClickAnalytics,
@@ -178,12 +195,16 @@ export default function ListLayout({
                                     title={
                                         <div>
                                             {title && (
-                                                <Truncate
-                                                    lines={1}
-                                                    ellipsis={<span>...</span>}
-                                                >
-                                                    {strip(title.toString())}
-                                                </Truncate>
+                                                <div
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: DOMPurify.sanitize(
+                                                            title,
+                                                        ),
+                                                    }}
+                                                    css={highlightStyle(
+                                                        get(theme, 'colors'),
+                                                    )}
+                                                />
                                             )}
                                         </div>
                                     }
@@ -191,30 +212,28 @@ export default function ListLayout({
                                         <div>
                                             <div style={{ height: 45 }}>
                                                 {description && (
-                                                    <Truncate
-                                                        lines={2}
-                                                        ellipsis={
-                                                            <span>...</span>
-                                                        }
-                                                    >
-                                                        {get(
-                                                            resultSettings,
-                                                            'resultHighlight',
-                                                            false,
-                                                        ) ? (
-                                                            <p
-                                                                dangerouslySetInnerHTML={{
-                                                                    __html: DOMPurify.sanitize(
-                                                                        description,
-                                                                    ),
-                                                                }}
-                                                            />
-                                                        ) : (
-                                                            strip(
-                                                                description.toString(),
-                                                            )
+                                                    <div
+                                                        dangerouslySetInnerHTML={{
+                                                            __html: DOMPurify.sanitize(
+                                                                description,
+                                                            ),
+                                                        }}
+                                                        className={highlightStyle(
+                                                            get(
+                                                                theme,
+                                                                'colors',
+                                                            ),
                                                         )}
-                                                    </Truncate>
+                                                        style={{
+                                                            display:
+                                                                '-webkit-box',
+                                                            WebkitBoxOrient:
+                                                                'vertical',
+                                                            WebkitLineClamp: 2,
+                                                            whiteSpace:
+                                                                'initial',
+                                                        }}
+                                                    />
                                                 )}
                                             </div>
                                             <div>

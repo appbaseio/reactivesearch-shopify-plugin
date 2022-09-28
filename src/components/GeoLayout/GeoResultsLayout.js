@@ -5,8 +5,7 @@ import React, { useState } from 'react';
 import { Card, Button, Icon, List } from 'antd';
 import { css, jsx } from '@emotion/core';
 import get from 'lodash.get';
-import strip from 'striptags';
-import Truncate from 'react-truncate';
+import createDOMPurify from 'dompurify';
 import {
     ReactiveOpenStreetMap,
     ReactiveGoogleMap,
@@ -19,6 +18,8 @@ import {
     defaultPreferences,
     getReactDependenciesFromPreferences,
 } from '../../utils';
+
+const DOMPurify = createDOMPurify(window);
 
 export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
     position: relative;
@@ -78,6 +79,26 @@ export const cardStyles = ({ textColor, titleColor, primaryColor }) => css`
             height: 100%;
             background: ${primaryColor}1a !important;
         }
+    }
+`;
+
+const highlightStyle = ({
+    primaryColor,
+    titleColor,
+}: {
+    titleColor: string,
+    primaryColor: string,
+}) => css`
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    mark{
+        font-weight: 700;
+        padding: 0;
+        background: ${primaryColor}33;
+        color: ${titleColor}
+        fontSize: 1rem;
     }
 `;
 
@@ -219,12 +240,30 @@ function GeoResultsLayout({
                                         />
                                     ) : null}
                                     <div className="title-container">
-                                        <p className="overflow-text">{title}</p>
+                                        <p
+                                            className="overflow-text"
+                                            dangerouslySetInnerHTML={{
+                                                __html: DOMPurify.sanitize(
+                                                    title,
+                                                ),
+                                            }}
+                                            css={highlightStyle(
+                                                get(theme, 'colors'),
+                                            )}
+                                        />
                                     </div>
                                     <div className="description-container">
-                                        <p className="overflow-text">
-                                            {description}
-                                        </p>
+                                        <p
+                                            className="overflow-text"
+                                            dangerouslySetInnerHTML={{
+                                                __html: DOMPurify.sanitize(
+                                                    description,
+                                                ),
+                                            }}
+                                            css={highlightStyle(
+                                                get(theme, 'colors'),
+                                            )}
+                                        />
                                     </div>
                                     <div style={{ margin: '3px 0' }}>
                                         {variants?.length || price
@@ -393,12 +432,30 @@ function GeoResultsLayout({
                                         />
                                     ) : null}
                                     <div className="title-container">
-                                        <p className="overflow-text">{title}</p>
+                                        <p
+                                            className="overflow-text"
+                                            dangerouslySetInnerHTML={{
+                                                __html: DOMPurify.sanitize(
+                                                    title,
+                                                ),
+                                            }}
+                                            css={highlightStyle(
+                                                get(theme, 'colors'),
+                                            )}
+                                        />
                                     </div>
                                     <div className="description-container">
-                                        <p className="overflow-text">
-                                            {description}
-                                        </p>
+                                        <p
+                                            className="overflow-text"
+                                            dangerouslySetInnerHTML={{
+                                                __html: DOMPurify.sanitize(
+                                                    description,
+                                                ),
+                                            }}
+                                            css={highlightStyle(
+                                                get(theme, 'colors'),
+                                            )}
+                                        />
                                     </div>
                                     <div style={{ margin: '3px 0' }}>
                                         {variants?.length || price
