@@ -339,6 +339,9 @@ function ResultsLayout({
                                             themeType === 'minimal'
                                                 ? '10px'
                                                 : 0,
+                                        border: item?._promoted
+                                            ? '1px solid #1890ff'
+                                            : '',
                                     }}
                                     bodyStyle={
                                         themeType === 'minimal'
@@ -524,6 +527,13 @@ function ResultsLayout({
                                     css={listStyles({
                                         ...get(theme, 'colors'),
                                     })}
+                                    style={{
+                                        padding: '10px',
+                                        border: item?._promoted
+                                            ? '1px solid #1890ff'
+                                            : '',
+                                        margin: 10,
+                                    }}
                                 >
                                     <List.Item.Meta
                                         avatar={

@@ -490,11 +490,11 @@ class Search extends Component {
             this.pageSettings,
             `pages.${this.pageSettings.currentPage}.indexSettings.fusionSettings`,
         );
-        const fusionSettings = Object.assign(
-            {},
-            globalFusionSettings,
-            pageFusionSettings,
-        );
+        const fusionSettings = {
+            ...globalFusionSettings,
+            ...pageFusionSettings,
+        };
+
         const endpoint = pageEndpoint || globalEndpoint;
         const mapsAPIkey = get(
             this.resultSettings,
