@@ -519,7 +519,11 @@ class Search extends Component {
                           app: fusionSettings.app,
                           profile: fusionSettings.profile,
                           suggestion_profile: fusionSettings.searchProfile,
-                          sponsored_profile: fusionSettings.sponsoredProfile,
+                          sponsored_profile: get(
+                            fusionSettings,
+                            'meta.sponsoredProfile',
+                            '',
+                        ),,
                       };
                       // eslint-disable-next-line
                       props.body = JSON.stringify(newBody);
