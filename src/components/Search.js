@@ -520,10 +520,10 @@ class Search extends Component {
                           profile: fusionSettings.profile,
                           suggestion_profile: fusionSettings.searchProfile,
                           sponsored_profile: get(
-                            fusionSettings,
-                            'meta.sponsoredProfile',
-                            '',
-                        ),,
+                              fusionSettings,
+                              'meta.sponsoredProfile',
+                              '',
+                          ),
                       };
                       // eslint-disable-next-line
                       props.body = JSON.stringify(newBody);
