@@ -378,9 +378,8 @@ function parseJSON(str) {
         if (typeof str === 'string') parsedObj = JSON.parse(str);
         else parsedObj = str;
     } catch (e) {
-        console.error(e);
+        // Silence error
     }
-
     return parsedObj;
 }
 
