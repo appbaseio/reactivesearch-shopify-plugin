@@ -42,10 +42,10 @@
   resolved "https://registry.yarnpkg.com/@ant-design/icons/-/icons-2.1.1.tgz#7b9c08dffd4f5d41db667d9dbe5e0107d0bd9a4a"
   integrity sha512-jCH+k2Vjlno4YWl6g535nHR09PwCEmTBKAG6VqF+rhkrSPRLfgpU2maagwbZPLjaHuU5Jd1DFQ2KJpQuI6uG8w==
 
-"@appbaseio/reactivecore@9.14.24":
-  version "9.14.24"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.14.24.tgz#74cb34a1aad3b61ed177576de65634c1209cee9f"
-  integrity sha512-oyTfPfB1ptvev+Dz0XN5clZuBZVlY1pNYJ0fT/4Pom8bOCYcQFRsYjXgsrBVJT1/s08+KUEC/NCGMwhpPIH7ZQ==
+"@appbaseio/reactivecore@9.14.26":
+  version "9.14.26"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivecore/-/reactivecore-9.14.26.tgz#3220f2db4d978842852feb0048c78fe793983844"
+  integrity sha512-ZAMn+AwZJu3LfxINh7+z3WhVLxGJNw2Pwb+Hmnuenlm7jE1MgYd/0pO6CER7HyIhQm3IkxGufNP2Kht7o1xRCw==
   dependencies:
     cross-fetch "^3.0.4"
     prop-types "^15.6.0"
@@ -70,12 +70,12 @@
     react-leaflet "^2.1.3"
     rheostat "^2.1.1"
 
-"@appbaseio/reactivesearch@3.40.1":
-  version "3.40.1"
-  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.40.1.tgz#4bff7c40cf32cff98d5aca74659454c2c7dccbf4"
-  integrity sha512-MNI6muAHpg11fNe1TdZlmYVq/82Paa4WlzPhDWS+bGfy7rudtRsHAoD6NAnOy88NC+eij2o0V6uAv7dmrx4ryw==
+"@appbaseio/reactivesearch@3.41.0":
+  version "3.41.0"
+  resolved "https://registry.yarnpkg.com/@appbaseio/reactivesearch/-/reactivesearch-3.41.0.tgz#68c64699dde29e344f6c3f13acb06023dca230fb"
+  integrity sha512-Yn3pSLjE/PzDh8qtn5yX0wOTuTk4jItmPpYBslkVmo8h7m4IHwHls1ZeKK9cP+Ovh1Xzz9LgelcjkZ78F4FEQA==
   dependencies:
-    "@appbaseio/reactivecore" "9.14.24"
+    "@appbaseio/reactivecore" "9.14.26"
     "@emotion/core" "^10.0.28"
     "@emotion/styled" "^10.0.27"
     appbase-js "5.1.0"
